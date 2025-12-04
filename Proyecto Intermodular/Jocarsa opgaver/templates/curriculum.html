@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <title>Curriculum</title>
+    <meta charset="utf-8">
+    <style>
+      html{background:grey;font-family:sans-serif;}
+      body{background:white;margin:auto;min-height:200px;display:flex;width:600px;}
+      #izquierda{flex:1;background:darkblue;padding:20px;}
+      #derecha{flex:4;background:white;padding:20px;}
+    </style>
+  </head>
+  <body>
+    <div id="izquierda"></div>
+    <div id="derecha">
+      <h1>{{nombre}} {{apellidos}}</h1>
+      <p>{{email}}</p>
+      <ul>
+        <li>{{telefono}}</li>
+        <li>{{direccion}}</li>
+        <li>{{codigo_postal}}</li>
+        <li>Experiencia: {{experiencia}}</li>
+        <li>Formación: {{formacion}}</li>
+        <h2>Hobbies</h2><p>{{hobbies}}</p>
+
+      </ul>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <title>Oscar Sorensen</title>
+    <meta charset="utf-8">
+    <meta name="description" content="Web de Oscar Sorensen, estudiante y programador">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="programación,curso,desarrollo web,DAW,Oscar Sorensen">
+    <meta name="author" content="Oscar Sorensen">
+
+    <meta property="og:title" content="Oscar Sorensen">
+    <meta property="og:description" content="Web de Oscar Sorensen, estudiante y programador">
+    <meta property="og:image" content="billedeunsplash.jpg">
+    <meta property="og:url" content="https://github.com/oscarsorensen">
+    <meta property="og:type" content="website">
+
+    <link rel="icon" href="billedeunsplash.jpg" type="image/jpeg">
+
+    <style>
+      @font-face {
+          font-family: "Hack";
+          src: url("Hack-Regular.ttf");
+          font-weight: normal;
+          font-style: normal;
+      }
+      
+      body { 
+          font-family: "Hack", monospace;
+          background: whitesmoke;
+      }
+      
+      h1, h2, h3 {
+          color: rgb(120, 122, 139);
+      }
+
+      header, main, footer {
+          width: 800px;
+          background-color: aliceblue;
+          margin: auto;
+          padding: 15px;
+      }
+
+      nav ul{
+        list-style-type:none; /* Anula estilos de lista */
+        margin:0px; /* anula el margen exterior por defecto */
+        padding:0px; /* anula el margen interior por defecto */
+        display:flex; /* Activa flex de izquierda a derecha */
+        gap:1px; /* Distancia entre los elementos flexbox o grid */
+        justify-content: center; /* Centrar los elementos de menu */
+      }
+      nav ul li a{
+        text-decoration:none; /* Anula los estilos de subrayado */
+        color:inherit;        /* Le pone el color que deberia tener */
+        color:white;          /* Fuerzo el color a blanco */
+        background:indigo;    /* El fondo es de un color solido */
+        padding:5px;          /* Le pongo margen interior */
+        font-size:10px;       /* Le pongo tamaño de letra */
+        text-transform:uppercase;   /* Texto va en mayusculas */
+        display:block;        /* Permito a los elementos que sean bloques */
+        width:60px;           /* Su anchura es de 60 pixeles */
+        text-align:center;    /* Alineo el texto al centro */
+      }
+      #inicio img{
+        width:100%;           /* No quiero que la imagen se salga */
+      }
+      .bloque{
+        display:flex;         /* Texto e imagen quiero que sea flex */
+        gap:20px;             /* Distancia entre los elementos */
+      }
+      .bloque img{
+        flex:1;               /* Ocupa una unidad flex */
+        width:50%;            /* Ocupa el 50% de la anchura */
+        height:50%;           /* Ocupa el 50% de la altura */
+      }
+      .bloque p{
+        flex:1;               /* Ocupa una unidad flex */
+        font-size:10px;       /* Edito el tamaño del texto */
+        text-align:justify;   /* Edito la alineación del texto */
+      }
+      #desarrollo .bloque{
+        flex-direction: row-reverse;  /* Invertimos el orden para un ele. */
+      }
+
+      #contenadorportafolie{
+        display: grid;
+        grid-template-columns: auto auto auto;  
+        gap: 20px;
+      }
+      #contenadorportafolie img{
+        width: 100%;
+       
+      }
+     iframe {
+        flex:1;
+     }
+   
+
+      form {
+          display: flex; /*activar flexbox*/
+          flex-direction: column; /*colocar los elementos en columna*/
+          gap: 10px;
+          width: 300px;
+          margin: 10px auto;
+      }
+
+      form input, form textarea {
+        display: flex;
+          padding: 5px;
+          font-family: "Hack";
+          border: 1px solid #ccc;
+      }
+
+      form input[type="submit"] {
+          background: indigo;
+          color: white;
+          border: none;
+          cursor: pointer;
+      }
+
+      footer a {
+          margin-right: 10px;
+          text-decoration: none;
+          color: indigo;
+      }
+
+      footer a:hover {
+          text-decoration: underline;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>Oscar Sorensen</h1>
+      <h2>Estudiante de Desarrollo de Aplicaciones Web</h2>
+      <nav>
+        <ul>
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="#sobremi">Sobre mí</a></li>
+          <li><a href="#proyectos">Proyectos</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section id="inicio">
+        <h3>Inicio</h3>
+        <img src="billedeunsplash.jpg" alt="Oscar Sorensen">
+        <p>Bienvenido a mi primera página web. Aquí comparto mis aprendizajes, proyectos y experiencias como estudiante de desarrollo de aplicaciones web (DAW).</p>
+      </section>
+
+      <section id="sobremi">
+        <h3>Sobre mí</h3>
+        <div class="bloque">
+          <img src="billedeunsplash.jpg" alt="Oscar programando">
+          <p>Soy Oscar Sorensen, un estudiante apasionado por la programación y la tecnología. Actualmente curso el grado superior en Desarrollo de Aplicaciones Web y disfruto creando proyectos prácticos con HTML, CSS, JavaScript y Python.</p>
+        </div>
+      </section>
+
+      <section id="proyectos">
+        <h3>Proyectos</h3>
+        <div class="bloque">
+          <img src="billedeunsplash.jpg" alt="Proyecto 1">
+          <p>Algunos de mis proyectos incluyen aplicaciones web con Flask, CRUDs en SQLite y páginas diseñadas desde cero con CSS moderno y HTML semántico.</p>
+        </div>
+      </section>
+
+      <section id="contacto">
+        <div class="bloque">
+        <h3>Contacto</h3>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1102.3720764981008!2d-0.4096599343057706!3d39.50143907802532!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd60456dc889478f%3A0x34e1876207a3d64!2sCEAC!5e1!3m2!1sda!2ses!4v1759912221321!5m2!1sda!2ses"
+          width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+        <form>
+          <label for="nombre">Introduce tu nombre</label>
+          <input type="text" id="nombre">
+
+          <label for="email">Introduce tu email</label>
+          <input type="email" id="email">
+
+          <label for="mensaje">Introduce tu mensaje</label>
+          <textarea id="mensaje"></textarea>
+
+          <input type="submit" value="Enviar">
+        </form>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <a href="https://github.com/oscarsorensen">GitHub</a>
+      <a href="https://linkedin.com">LinkedIn</a>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+	<head>
+  </head>
+  <body>
+    
+   	<script>
+      
+            //temporizador means timer
+
+      let temporizador = setTimeout("bucle()", 1000); //ejecuta la funcion despues de 1 segundo
+
+      //Fijaos que llamo a la funcion desde dentro de la funcion misma
+      function bucle(){
+        console.log("Hola");
+        clearTimeout(temporizador); //elimino temporizador para no acumular
+        temporizador = setTimeout("bucle()", 1000); //llama de nuevo a la funcion
+      }
+
+    </script>
+  </body>
+</html>

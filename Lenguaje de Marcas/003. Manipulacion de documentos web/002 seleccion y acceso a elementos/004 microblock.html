@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>JavaScript</title>
+    <meta charset="UTF-8">
+
+</head>
+<body>
+    <header><h1>El blog de Oscar Sorensen</h1></header>
+    <main></main>
+
+
+    <footer>(c)2025 Oscar Sorensen</footer>
+    <script>
+        const articulos = [
+            "Primer articulo", "Segundo articulo", "Tercer articulo"
+        ];
+    const contenedor = document.querySelector("main"); //main es el contenedor 
+    for(let i = 0; i<articulos.length;i++){//recorro los articulos
+        contenedor.innerHTML += "<h3>"+articulos[i]+"</h3>"; //agrego el titulo
+    }
+
+    </script>
+</body>
+</html>

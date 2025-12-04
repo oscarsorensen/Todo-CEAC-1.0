@@ -1,0 +1,17 @@
+
+{
+    "nombre": "Oscar",
+    "apellidos": "Sorensen",
+    "edad": 25,
+    "profesion": "Desarrollador Web",
+    "habilidades": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "React",
+        "Node.js"
+    ],
+    "pais" : "España"
+
+
+}

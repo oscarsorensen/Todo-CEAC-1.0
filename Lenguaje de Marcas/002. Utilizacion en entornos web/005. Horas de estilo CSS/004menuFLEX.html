@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+     <head>
+    <meta charset="UTF-8">
+    <meta name ="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Etiquietas de posicionamiento -->
+     <meta name ="description" content="This is my first webpage">
+    <link rel="stylesheet" href="styles.css">
+    <title>My first webpage</title>
+    <!-- keywords, seo-->
+    <meta name="keywords" content="programacion,curso,oscar,andre keywords, ia, osv.">
+    <meta name="author" content="Oscar Sorensen">
+    <meta property="og:title" content="oscaricono.jpg">
+    <meta property="og:url" content="https://website.com">
+    <meta property="og:type" content="Website">
+        <!--Lille icon in the corner-->
+    <link rel="icon" href="favicon" type="image/jpeg">
+    
+    
+    <style>
+        @font-face {
+            font-family: "Hack";
+            src: url("Hack-Regular.ttf") ;
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        body { 
+            font-family: "Hack", monospace;
+            background: whitesmoke;
+        }
+        
+        h2 {
+            color: rgb(120, 122, 139);
+        }
+
+
+        header,body,footer{
+            width:800px;
+            background-color: aliceblue;
+            margin: auto;
+            padding: 15px;
+
+    }
+        nav ul{
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display:flex; /*activate*/
+            gap: 10px; /*distance between the items*/
+            justify-content: center; /*center the items*/
+        
+        }
+
+
+        nav ul li a{
+            text-decoration: none; /*remove the underline*/
+            color: inherit;       /*inherit the color from the parent*/
+            color: white;   /*text color*/
+            background-color: indigo;   /*el fonde de un color*/
+            padding: 5px;     /*space around the text*/
+            font-size: 10px;    /*text size*/
+            text-transform: uppercase;  /*uppercase the text*/
+            display: block;    /*make the a tag a block element*/
+            width: 60px;     /*width of the a tag*/
+            text-align: center;  /*center the text*/
+
+        }
+        #billedeunsplash.jpg img{
+            width: 100%;
+        }  
+        .bloque{
+            display: flex;      /*activar flexbox*/
+            gap: 20px;          /*espacio entre los bloques*/
+        }
+
+
+        .bloque billedeunsplash.jpg{
+            flex:1;         /*ocupa una unidad flexible*/
+            width: 50%;     /*ancho del bloque 50%*/
+            height: 50%;    /*alto del bloque50%*/
+            
+        }
+        .bloque p{
+            flex:1;
+            font-size: 2px; /*tamaño del texto*/
+            text-align: justify; /*justificar el texto*/
+
+        }
+
+        #desarpollo .bloque{
+            flex-direction: row-reverse;
+        }
+
+
+        </style>
+        
+   
+   
+   </head>
+   
+        <body>
+            <header><h1 style="color:blue;"> Welcome to my first webpage </h1></header>
+
+                <nav>
+                    <ul> 
+                        <li><a href="#">Inicio</a> </li>
+                        <li><a href="#">Acerca de</a> </li>
+                        <li><a href="#">Contacto</a> </li>
+
+
+                    </ul>
+                </nav>
+                    <!--put the imange in the "week2" and then you can link src to it.-->
+                    <img src="billedeunsplash.jpg" width="400" height="300" alt="billede1">
+                    
+
+
+                <section>
+                    <article>
+                        <h2>Introduction</h2>
+                        <p>This is made to practive html5.</p>
+                        <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+                            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                            nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in 
+                            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla 
+                            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in 
+                            culpa qui officia deserunt mollit anim id est laborum."</p>
+
+                        <div class="bloque"></div>
+
+
+                    </article>
+                        <div id="portafolio">
+                            <article>
+                                <h2>Cosas 1</h2>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+                                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in 
+                                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla 
+                                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in 
+                                    culpa qui officia deserunt mollit anim id est laborum.".</p>
+                                    <img src="billedeunsplash.jpg" width="200" height="150" alt="billede2">
+                            </article>
+                        
+                        <div id="portafolio2">
+                            <article>
+                                <h2>Cosas 2</h2>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+                                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in 
+                                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla 
+                                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in 
+                                    culpa qui officia deserunt mollit anim id est laborum."</p>
+                                    <img src="billedeunsplash.jpg" width="200" height="150" alt="billede3">
+                            </article>
+                       
+                        <div id="portafolio">
+                            <article>
+                                <h2>Cosas 3</h2>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+                                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in 
+                                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla 
+                                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in 
+                                    culpa qui officia deserunt mollit anim id est laborum."</p>
+                                    <img src="billedeunsplash.jpg" width="200" height="150">
+                            </article>
+            <br>
+            <br>
+
+                        </div>
+
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1102.3720764981008!2d-0.4096599343057706!3d39.50143907802532!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd60456dc889478f%3A0x34e1876207a3d64!2sCEAC!5e1!3m2!1sda!2ses!4v1759912221321!5m2!1sda!2ses" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" alt="googlemaps"></iframe>
+                        <br><br>
+                        <p>Your Email:</p><input type="email" id="email">
+                   <button type="submit">Submit</button>
+
+
+
+                </section>
+                <footer>
+                    <p>&copy; 2025 My first website</p>
+                    <a href="https://github.com/oscarsorensen">Oscars Github</a>
+                </footer>
+
+               
+
+        </body>

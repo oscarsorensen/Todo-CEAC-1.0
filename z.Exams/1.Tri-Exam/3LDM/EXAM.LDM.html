@@ -1,0 +1,185 @@
+<!-- 
+En este proyecto creo una página web sencilla utilizando HTML y CSS para mostrar mi portafolio digital.
+El objetivo principal es enseñar mis articulos de una forma organizada y visualmente atractiva.
+Este trabajo forma parte del examen de Lenguajes de marca y demuestra que puedo utilizar etiquetas semánticas y estilos dentro del mismo documento.La página está estructurado con etiquetas semánticas HTML como header, main, article y footer.
+Utilizo una etiqueta <style> para crear estilos CSS internos para la página. Podría haberlo hecho en un archivo aparte, pero lo he puesto aquí para que resulte más claro.
+
+En el encabezado se muestra el título del portafolio y mi nombre como autor.
+Dentro del main hay cinco artículos que representan diferentes proyectos, cada uno con su título, fecha, autor, imagen y una pequeña descripción.
+El diseño combina Grid para organizar la página y Flexbox para distribuir los elementos interno.
+
+-->
+
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <title>Oscars Blog</title>
+    <style>
+      html {
+        background: rgb(230, 230, 230);
+        font-family: Cambria, Cochin, Georgia, 'Times New Roman', serif;
+        font-size: 14px;
+      }
+
+      /* --- GRID LAYOUT FOR PAGE STRUCTURE --- */
+      body {
+        width: 900px;
+        margin: auto;
+        background: white;
+        border-radius: 10px;
+        padding: 40px;
+        line-height: 1.6;
+        display: grid;                         /* simple grid */
+        grid-template-rows: auto 1fr auto;      /* header / main / footer */
+        gap: 20px;
+      }
+
+      header, footer {
+        text-align: center;
+        border-bottom: 3px solid #ccc;
+        padding-bottom: 10px;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 30px;
+
+      }
+
+      header h2 {
+        margin: 0;
+        font-size: 20px;
+        color: #555;
+      }
+
+      /* --- FLEXBOX FOR ARTICLES --- */
+      main {
+        display: flex;
+        flex-direction: column;      /* artículos apilados verticalmente. Esto demuestra que sé cómo usar flex en una dirección.. */
+        gap: 20px;
+      }
+
+      article {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;      /* contenido apilado en el interior. Esto demuestra que sé cómo utilizar flex en otra dirección. */
+        gap: 10px;
+      }
+
+      .info {
+        display: flex;               /* autor/fecha lado a lado */
+        justify-content: space-between;
+        font-size: 12px;
+        color: #666;
+      }
+
+      article img {
+        width: 100%;
+        border-radius: 6px;
+      }
+
+      footer {
+        border-top: 1px solid #ccc;
+        margin-top: 10px;
+        font-size: 12px;
+        color: #666;
+        text-align: center;
+      }
+      
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>Oscars Blog</h1>
+      <h2>My mail - oscar.soerensen@alu.ceacfp.es</h2>
+    </header>
+
+    <main>
+      <article>
+        <h3>Artículo Primero</h3>
+        <div class="info">
+          <p><strong>Date:</strong> 12/11/2025</p>
+          <p><strong>Author:</strong> Oscar Sørensen</p>
+        </div>
+        <img src="example.jpg" alt="Example image"> 
+        <description>Descripción de la imagen. Esta es solo una imagen de ejemplo que utilizo para demostrar que puedo usar imágenes.</description>
+        <p>Cuando tenga más proyectos de programación, los pondré en esta página web para demostrar lo que puedo hacer. Aquí es donde irá la descripción de mi primer proyecto.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <p><strong>Categoría:</strong> Lenguajes de Marcas foto</p>
+      </article>
+
+      <article>
+        <h3>Artículo Segundo</h3>
+        <div class="info">
+          <p><strong>Date:</strong> 02/08/2025</p>
+          <p><strong>Author:</strong> Un amigo de Oscar</p>
+        </div>
+        <img src="example.jpg" alt="Example image">
+        <p>Este es un breve párrafo de ejemplo. Demuestra que sé cómo crear un párrafo en HTML.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+        <p><strong>Categoría:</strong> Diseño Web</p>
+      </article>
+
+      <article>
+        <h3>Artículo Tercero</h3>
+        <div class="info">
+          <p><strong>Date:</strong> 01/11/2027</p>
+          <p><strong>Author:</strong> Don Oscar Sørensen</p>
+        </div>
+        <img src="example.jpg" alt="Example image">
+        <p>Este es un breve párrafo de ejemplo del futuro. Muestra que me convertí en desarrollador de software. Muestra que sé cómo crear un párrafo en HTML.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+        <p><strong>Categoría:</strong> Ejemplo</p>
+      </article>
+
+      <article>
+        <h3>Artículo Cuarto</h3>
+        <div class="info">
+          <p><strong>Date:</strong> 01/03/2027</p>
+          <p><strong>Author:</strong> Señor Oscar Sørensen</p>
+        </div>
+        <img src="example.jpg" alt="Example image">
+        <p>Este es otro breve párrafo de ejemplo del futuro. Muestra que me convertí en un exitoso desarrollador de software. También muestra que sé cómo crear un párrafo en HTML.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+        <p><strong>Categoría:</strong> Ejemplo 2- changed data</p>
+      </article>
+
+      <article>
+        <h3>Artículo Quinto</h3>
+        <div class="info">
+          <p><strong>Date:</strong> 01/02/2035</p>
+          <p><strong>Author:</strong> Oscar Sørensen</p>
+        </div>
+        <img src="example.jpg" alt="Example image">
+        <br>
+        <description>Esta descripción solo demuestra una vez más que realmente sé cómo utilizarlas. Normalmente se utilizan para describir lo que hay en las imágenes. No siempre es visible para el usuario, a veces solo está en el código, para mantener las cosas organizadas. </description>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+        <p><strong>Categoría:</strong> Ejemplo</p>
+      </article>
+
+    </main>
+
+    <footer>
+      <p>(c) Este es un mensaje protegido por derechos de autor.</p>
+      <p>Lenguajes de Marcas</p>
+    </footer>
+  </body>
+</html>
+
+<!-- 
+Este proyecto muestra cómo se pueden usar HTML y CSS para crear una página web clara y bien organizada.
+El diseño utiliza Grid y Flexbox para conseguir una distribución más flexible y fácil de adaptar.
+El resultado final es una plantilla visual que Puedo utilizarlo para demostrar mis habilidades en desarrollo web y presentación de datos, exactamente como yo quiero.
+
+Es muy fácil ver cómo se podría utilizar esto en una situación real. Crear páginas web con html, css y estilos para que tengan un buen aspecto y sean fáciles de usar es una habilidad muy importante para cualquier desarrollador web.
+Como ya he trabajado con HTML y CSS de forma muy (muy) básica anteriormente, puedo ver cómo las habilidades adquiridas en este proyecto me habrían ayudado en el trabajo. La próxima vez que tenga que crear una página web, podré hacerlo de forma mucho más profesional y con una mejor estructura.
+-->

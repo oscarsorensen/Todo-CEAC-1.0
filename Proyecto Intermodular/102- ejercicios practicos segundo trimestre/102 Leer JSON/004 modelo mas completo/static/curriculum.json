@@ -1,0 +1,19 @@
+
+{
+"datos_personales": {
+    "nombre": "Oscar",
+    "apellidos": "Sorensen",
+    "edad": 25,
+    "profesion": "Desarrollador Web",
+    "pais" : "España"
+    },
+
+
+    "experiencia_laboral":[
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "React",
+        "Node.js"
+    ]
+}

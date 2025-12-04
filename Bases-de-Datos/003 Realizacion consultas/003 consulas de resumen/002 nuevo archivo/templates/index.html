@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+   <head>
+       <style>
+           html,body{height:100%;padding:0px;margin:0px;display:flex;width:100%;}
+           nav{background:darkolivegreen;flex:1;color:white;padding:20px;}
+           main{flex:4;background:aliceblue;padding:20px;}
+       </style>
+   </head>
+   <body>
+       <nav>Oscar | Panel</nav>
+
+       <style>
+           nav{display:flex;flex-direction:column;gap:20px;}
+           nav button{
+               border:none;
+               background:white;
+               color:darkolivegreen;
+               padding:20px;
+               text-transform:uppercase;
+           }
+       </style>
+
+       <script>
+           // Før: fetch("botones.json")
+           // Nu: hent SQL-data fra Flask
+           fetch("/clientes")
+           .then(r => r.json())
+           .then(datos => {
+               let contenedor = document.querySelector("nav");
+               datos.forEach(fila => {
+                   let boton = document.createElement("button");
+                   boton.textContent = fila[1] || "item"; // vælg passende felt
+                   contenedor.appendChild(boton);
+               });
+           })
+       </script>
+
+       <main>Indhold her</main>
+
+       <style>
+           table{border:3px solid darkolivegreen;border-collapse:collapse;background:white;}
+           table tr:first-child{background:darkolivegreen;color:white;}
+           table tr td{padding:10px;border-right:1px solid darkolivegreen;}
+       </style>
+
+       <script>
+           // Før: fetch("tabla.json")
+           // Nu: hent tabeller fra Flask
+           fetch("/tablas")
+           .then(r => r.json())
+           .then(datos => {
+               let contenedor = document.querySelector("main");
+               let tabla = document.createElement("table");
+               contenedor.appendChild(tabla);
+
+               datos.forEach(nombre => {
+                   let fila = document.createElement("tr");
+                   let celda = document.createElement("td");
+                   celda.textContent = nombre;
+                   fila.appendChild(celda);
+                   tabla.appendChild(fila);
+               });
+           });
+       </script>
+
+   </body>
+</html>

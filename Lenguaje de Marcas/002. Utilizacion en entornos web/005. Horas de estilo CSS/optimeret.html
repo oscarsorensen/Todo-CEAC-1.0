@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <title>Oscar Sorensen</title>
+    <meta charset="utf-8">
+
+    <!-- Etiquetas de posicionamiento -->
+    <meta name="description" content="Web de Oscar Sorensen, estudiante y programador de desarrollo web.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="programación, curso, diseño, DAW, Oscar Sorensen, desarrollo web">
+    <meta name="author" content="Oscar Sorensen">
+
+    <!-- Open Graph (SEO y redes sociales) -->
+    <meta property="og:title" content="Oscar Sorensen">
+    <meta property="og:description" content="Web de Oscar Sorensen, estudiante y programador de desarrollo web.">
+    <meta property="og:image" content="billedeunsplash.jpg">
+    <meta property="og:url" content="https://github.com/oscarsorensen">
+    <meta property="og:type" content="website">
+
+    <!-- Icono -->
+    <link rel="icon" href="billedeunsplash.jpg" type="image/jpeg">
+
+    <style>
+      /* Fuente personalizada */
+      @font-face {
+        font-family: "Hack";
+        src: url("Hack-Regular.ttf");
+      }
+
+      h1, h2, h3 {
+        color: indigo;
+      }
+
+      body {
+        background: GhostWhite;
+        font-family: "Hack", monospace;
+      }
+
+      header, main, footer {
+        width: 600px;
+        background: white;
+        margin: auto;
+        padding: 20px;
+      }
+
+      nav ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        gap: 1px;
+        justify-content: center;
+      }
+
+      nav ul li a {
+        text-decoration: none;
+        color: white;
+        background: indigo;
+        padding: 5px;
+        font-size: 10px;
+        text-transform: uppercase;
+        display: block;
+        width: 60px;
+        text-align: center;
+      }
+
+      #inicio img {
+        width: 100%;
+      }
+
+      .bloque {
+        display: flex;
+        gap: 20px;
+      }
+
+      .bloque img {
+        flex: 1;
+        width: 50%;
+        height: auto;
+      }
+
+      .bloque p {
+        flex: 1;
+        font-size: 12px;
+        text-align: justify;
+      }
+
+      #desarrollo .bloque {
+        flex-direction: row-reverse;
+      }
+
+      #contenedorportafolio {
+        display: grid;
+        grid-template-columns: auto auto auto;
+        gap: 20px;
+      }
+
+      #contenedorportafolio img {
+        width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>Oscar Sorensen</h1>
+      <h2>Estudiante y desarrollador web</h2>
+      <nav>
+        <ul>
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="#sobremi">Sobre mí</a></li>
+          <li><a href="#estudios">Estudios</a></li>
+          <li><a href="#proyectos">Proyectos</a></li>
+          <li><a href="#intereses">Intereses</a></li>
+          <li><a href="#portafolio">Portafolio</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section id="inicio">
+        <h3>Inicio</h3>
+        <img src="billedeunsplash.jpg" alt="Oscar Sorensen">
+      </section>
+
+      <section id="sobremi">
+        <h3>Sobre mí</h3>
+        <p>Soy Oscar Sorensen, un estudiante de Desarrollo de Aplicaciones Web apasionado por la programación, la tecnología y la creación digital. Me gusta construir proyectos prácticos, optimizar procesos y aplicar el conocimiento técnico en soluciones reales.</p>
+      </section>
+
+      <section id="estudios">
+        <h3>Estudios</h3>
+        <div class="bloque">
+          <img src="billedeunsplash.jpg" alt="Oscar programando">
+          <p>Actualmente curso el ciclo de Técnico Superior en Desarrollo de Aplicaciones Web (DAW) en CEAC FP Burjassot. He desarrollado proyectos en HTML, CSS, JavaScript, Python y SQLite, combinando diseño y funcionalidad en entornos web modernos.</p>
+        </div>
+      </section>
+
+      <section id="proyectos">
+        <h3>Proyectos</h3>
+        <div class="bloque">
+          <img src="billedeunsplash.jpg" alt="Proyecto web">
+          <p>Entre mis proyectos recientes destacan aplicaciones CRUD con Python (Flask), estructuras de bases de datos relacionales en SQLite, y páginas web personales desarrolladas desde cero. Me enfoco en escribir código limpio, eficiente y bien documentado.</p>
+        </div>
+      </section>
+
+      <section id="intereses">
+        <h3>Intereses</h3>
+        <div class="bloque">
+          <img src="billedeunsplash.jpg" alt="Diseño y desarrollo">
+          <p>Me interesan la automatización, la inteligencia artificial, el diseño web y el aprendizaje continuo. Busco combinar el desarrollo técnico con la estética visual y la experiencia del usuario.</p>
+        </div>
+      </section>
+
+      <section id="portafolio">
+        <h3>Portafolio</h3>
+        <div id="contenedorportafolio">
+          <article>
+             <h4>Proyecto 1</h4>
+             <p>Aplicación web con Flask y SQLite</p>
+             <img src="billedeunsplash.jpg" alt="Proyecto Oscar">
+          </article>
+          <article>
+             <h4>Proyecto 2</h4>
+             <p>Interfaz HTML + CSS para blog personal</p>
+             <img src="billedeunsplash.jpg" alt="Proyecto Oscar">
+          </article>
+          <article>
+             <h4>Proyecto 3</h4>
+             <p>Script en Python para automatizar tareas</p>
+             <img src="billedeunsplash.jpg" alt="Proyecto Oscar">
+          </article>
+        </div>
+      </section>
+
+      <section id="contacto">
+        <h3>Contacto</h3>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1102.3720764981008!2d-0.4096599343057706!3d39.50143907802532!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd60456dc889478f%3A0x34e1876207a3d64!2sCEAC!5e1!3m2!1sda!2ses!4v1759912221321!5m2!1sda!2ses"
+          width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+        <form>
+          <label for="nombre">Introduce tu nombre</label>
+          <input type="text" id="nombre">
+          <label for="email">Introduce tu email</label>
+          <input type="email" id="email">
+          <label for="mensaje">Introduce tu mensaje</label>
+          <textarea id="mensaje"></textarea>
+          <input type="submit" value="Enviar">
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <a href="https://github.com/oscarsorensen">GitHub</a>
+      <a href="https://linkedin.com">LinkedIn</a>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Backoffice</title>
+    <meta charset="UTF-8">
+
+    <style>
+        html, body {background: darkorange; width: 100%; height: 100%; padding: 0; margin: 0; font-size: 105%;}
+        main {display: flex; height: 100%;}
+        header {color: white; padding: 30px;}
+        nav {flex: 1; background-color: white; padding: 20px; display: flex; flex-direction: column; gap: 20px;}
+        nav a {background: rgb(175, 175, 175); color: black; padding: 20px; text-decoration: none;}
+        nav a:hover {background: rgb(210, 210, 210); cursor: pointer;}
+        section {flex: 5; background: whitesmoke; padding: 20px;}
+        table {width: 100%; border-collapse: collapse;}
+        th, td {padding: 10px; text-align: center; border: 1px solid rgb(127, 127, 127);}
+        thead {background: darkorange; color: white;}
+    </style>
+</head>
+
+<body>
+    <header>Aplicacion empresarial superchula de Oscar Sorensen</header>
+
+    <main>
+        <!-- Left menu with column names -->
+        <nav>
+            {% for tabla in mis_tablas %}
+            <a>{{ tabla }}</a>
+        {% endfor %}
+        
+        </nav>
+
+        <section>
+
+            <table>
+                <thead>
+                    <tr>
+                        {% for columna in mis_columnas %}
+                            <th>{{ columna }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for fila in mi_contenido %}
+                        <tr>
+                            {% for dato in fila %}
+                                <td>{{ dato }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </section>
+    </main>
+</body>
+</html>

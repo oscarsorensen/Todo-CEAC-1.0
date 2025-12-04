@@ -1,0 +1,13 @@
+
+{
+    "datos_personales": {
+        "nombre": "Oscar",
+        "apellidos": "Sorensen",
+        "email": "oscar@gmail.com",
+        "telefono": "123456789",
+        "direccion": "Calle Falsa 123, Ciudad, España",
+        "codigo_postal": "28080"
+    },
+    "experiencia": "",
+    "formacion": ""
+}

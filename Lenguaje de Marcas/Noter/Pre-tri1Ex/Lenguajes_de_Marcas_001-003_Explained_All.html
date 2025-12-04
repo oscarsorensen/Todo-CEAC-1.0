@@ -1,0 +1,327 @@
+<!doctype html>
+<!-- ===================================================================
+  LENGUAJES DE MARCAS — UNIDADES 001, 002 y 003 — EXPLAINED (LOOKUP GUIDE)
+  Estilo: "Explained_All" — código real con comentarios breves en español.
+  Objetivo: consultar rápidamente estructuras, etiquetas y CSS vistos por José Vicente.
+  NOTA: Sólo se usan conceptos presentes en 001–003 (HTML base, etiquetas, CSS básico,
+        selectores, box model, Flexbox, Grid sencillo y media queries intro).
+=================================================================== -->
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LM 001–003 — Explained (Código + Comentarios)</title>
+  <style>
+    /* ---------- Estilos mínimos para lectura ---------- */
+    html,body{margin:0;padding:0;background:#0f172a;color:#e5e7eb;font:15px/1.55 system-ui,Segoe UI,Roboto,Ubuntu,Arial}
+    main{max-width:980px;margin:auto;padding:18px}
+    h1{font-size:1.25rem;margin:8px 0 14px;color:#7dd3fc}
+    .block{background:#0b1224;border:1px solid #1e293b;border-radius:12px;margin:10px 0;padding:14px}
+    .sep{border:0;border-top:1px solid #1e293b;margin:14px 0}
+    code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+    .demo{background:#0a0f1f;border:1px solid #1e293b;border-radius:8px;padding:10px;margin-top:8px}
+  </style>
+</head>
+<body>
+<main>
+
+<h1>LM Unidades 001–003 — Referencia comentada (HTML + CSS)</h1>
+
+<!-- ==========================================================
+   SECTION 01 — ESTRUCTURA MÍNIMA (U001)
+   Archivos de referencia típicos: 001-doctype.html, 004-head_body.html
+   Objetivo: esqueleto base HTML5
+========================================================== -->
+<div class="block">
+  <!-- Doctype + raíz del documento -->
+  <!doctype html> <!-- Activa modo estándar (HTML5) -->
+  <html lang="es"> <!-- Idioma del documento (accesibilidad + SEO) -->
+  <head>
+    <meta charset="utf-8"> <!-- Codificación UTF-8 para tildes/ñ -->
+    <title>Título de la página</title> <!-- Texto de la pestaña del navegador -->
+    <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- Adaptar a móvil -->
+  </head>
+  <body>
+    <h1>Encabezado principal</h1> <!-- h1: título único por página -->
+    <p>Primer párrafo.</p>
+  </body>
+  </html>
+</div>
+
+<!-- ==========================================================
+   SECTION 02 — CABECERA (HEAD) BÁSICA (U001)
+   Etiquetas: <title>, <meta charset>, <meta viewport>
+========================================================== -->
+<div class="block">
+  <!-- head contiene metadatos, título y enlaces a recursos -->
+  <head>
+    <meta charset="utf-8">
+    <title>Mi sitio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link rel="stylesheet" href="estilos.css">  En U003 ya se suele separar CSS -->
+  </head>
+</div>
+
+<!-- ==========================================================
+   SECTION 03 — TEXTO Y JERARQUÍA (U001–002)
+   Etiquetas: h1..h6, p, strong, em
+========================================================== -->
+<div class="block">
+  <body>
+    <h1>h1 — Título principal</h1>
+    <h2>h2 — Sección</h2>
+    <h3>h3 — Subsección</h3>
+    <p>Texto con <strong>negrita</strong> y <em>cursiva</em>.</p>
+    <!-- Regla: no saltar niveles (h1→h2→h3). Un h1 por documento. -->
+  </body>
+</div>
+
+<!-- ==========================================================
+   SECTION 04 — ESTRUCTURA SEMÁNTICA (U001–002)
+   Etiquetas: header, nav, main, section, article, aside, footer
+========================================================== -->
+<div class="block">
+  <body>
+    <header>Cabecera (logo, nombre del sitio)</header>
+    <nav>Menú de navegación</nav>
+    <main>
+      <section>Bloque temático</section>
+      <article>Contenido independiente (p.ej., noticia)</article>
+      <aside>Contenido secundario</aside>
+    </main>
+    <footer>Pie de página (©, contacto)</footer>
+  </body>
+</div>
+
+<!-- ==========================================================
+   SECTION 05 — LISTAS (U002)
+   Etiquetas: ul (no ordenada), ol (ordenada), li
+========================================================== -->
+<div class="block">
+  <ul>
+    <li>Elemento A</li>
+    <li>Elemento B</li>
+  </ul>
+  <ol>
+    <li>Paso 1</li>
+    <li>Paso 2</li>
+  </ol>
+  <!-- ul: viñetas; ol: numeración. li: cada elemento. -->
+</div>
+
+<!-- ==========================================================
+   SECTION 06 — ENLACES E IMÁGENES (U002)
+   Etiquetas: a, img | Atributos: href, target, rel, src, alt
+========================================================== -->
+<div class="block">
+  <a href="pagina.html">Enlace interno</a>
+  <a href="https://www.ceac.es" target="_blank" rel="noopener">Enlace externo</a>
+  <!-- target="_blank": nueva pestaña. rel="noopener": seguridad con links externos. -->
+
+  <br>
+
+  <img src="foto.jpg" alt="Descripción de la imagen">
+  <!-- alt obligatorio para accesibilidad y SEO. -->
+</div>
+
+<!-- ==========================================================
+   SECTION 07 — TABLAS (U002)
+   Etiquetas: table, thead, tbody, tr, th, td
+========================================================== -->
+<div class="block">
+  <table>
+    <thead>
+      <tr><th>Nombre</th><th>Edad</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Oscar</td><td>24</td></tr>
+      <tr><td>Sofía</td><td>22</td></tr>
+    </tbody>
+  </table>
+  <!-- thead: cabecera; tbody: datos; tr: fila; th: celda de cabecera; td: celda normal. -->
+</div>
+
+<!-- ==========================================================
+   SECTION 08 — FORMULARIOS (U002)
+   Etiquetas: form, label, input, select, textarea, button
+========================================================== -->
+<div class="block">
+  <form action="registro.html" method="post">
+    <label for="nombre">Nombre</label>
+    <input id="nombre" name="nombre" type="text" required> <!-- required: validación básica -->
+    <label for="email">Email</label>
+    <input id="email" name="email" type="email">
+    <button type="submit">Enviar</button>
+  </form>
+  <!-- Atributos clave: action (destino), method (GET/POST), name (clave del dato). -->
+</div>
+
+<hr class="sep">
+
+<!-- ==========================================================
+   SECTION 09 — CSS BÁSICO (U003)
+   Dónde: <style> interno o archivo externo enlazado con <link>
+   Conceptos: selectores, propiedades, comentarios
+========================================================== -->
+<div class="block">
+  <style>
+    /* Comentario CSS: no se renderiza. */
+    /* Selectores por etiqueta, clase, id */
+    p { margin: 8px 0; }        /* etiqueta */
+    .destacado { color: #16a34a; } /* clase */
+    #principal { padding: 12px; border: 1px solid #1e293b; } /* id */
+  </style>
+
+  <!-- Aplicación en HTML -->
+  <p>Normal</p>
+  <p class="destacado">Con clase .destacado</p>
+  <div id="principal">Con id #principal</div>
+
+  <!-- Especificidad (simplificada): id > clase > etiqueta -->
+</div>
+
+<!-- ==========================================================
+   SECTION 10 — BOX MODEL (U003)
+   Propiedades: width/height, padding, border, margin, box-sizing
+========================================================== -->
+<div class="block">
+  <style>
+    .caja {
+      width: 200px;              /* ancho del contenido (por defecto) */
+      padding: 12px;             /* espacio interno */
+      border: 2px solid #334155; /* borde */
+      margin: 10px;              /* espacio externo */
+      box-sizing: border-box;    /* incluye padding y border en el width/height */
+      background: #0a0f1f;
+    }
+  </style>
+  <div class="caja">Caja (Box Model)</div>
+</div>
+
+<!-- ==========================================================
+   SECTION 11 — DISPLAY / ALINEACIÓN BÁSICA (U003)
+   display: block, inline, inline-block | text-align
+========================================================== -->
+<div class="block">
+  <style>
+    .bloque { display:block; background:#0a0f1f; margin:6px 0; }
+    .enlinea { display:inline; background:#172554; color:#e5e7eb; }
+    .inlineBlock { display:inline-block; width:120px; background:#0a0f1f; text-align:center; }
+    .center { text-align:center; }
+  </style>
+  <div class="bloque">display: block</div>
+  <span class="enlinea">inline A</span> <span class="enlinea">inline B</span>
+  <div class="inlineBlock">inline-block</div>
+  <div class="center">Texto centrado con text-align:center</div>
+</div>
+
+<!-- ==========================================================
+   SECTION 12 — FLEXBOX (U003)
+   Contenedor: display:flex; Alineación: justify-content, align-items; gap
+   Ítems: flex-basis, flex-grow, flex-shrink; order
+========================================================== -->
+<div class="block">
+  <style>
+    .flex {
+      display: flex;            /* activa contexto flex */
+      justify-content: center;  /* eje principal (horizontal por defecto) */
+      align-items: center;      /* eje cruzado (vertical) */
+      gap: 10px;                /* separación entre ítems */
+      padding: 10px; background:#0a0f1f; border:1px solid #1e293b; border-radius:8px;
+    }
+    .item { background:#1f2937; padding:10px; border-radius:6px; }
+    .grow { flex-grow:1; }      /* ocupa espacio sobrante proporcionalmente */
+  </style>
+
+  <!-- Contenedor + items -->
+  <div class="flex">
+    <div class="item">1</div>
+    <div class="item grow">2 (grow)</div>
+    <div class="item">3</div>
+  </div>
+
+  <!-- Variantes comunes:
+       justify-content: flex-start | center | space-between | space-around
+       align-items: flex-start | center | stretch
+       direction: flex-direction: row | column
+  -->
+</div>
+
+<!-- ==========================================================
+   SECTION 13 — GRID (U003)
+   Contenedor: display:grid; Definición de columnas/filas; gap; placement básico
+========================================================== -->
+<div class="block">
+  <style>
+    .grid {
+      display: grid;                    /* activa contexto grid */
+      grid-template-columns: 1fr 1fr 1fr; /* 3 columnas iguales */
+      gap: 10px;                        /* separaciones */
+      padding: 10px; background:#0a0f1f; border:1px solid #1e293b; border-radius:8px;
+    }
+    .gitem { background:#1f2937; padding:10px; border-radius:6px; }
+    /* Variante: grid-template-columns: repeat(3, 1fr); */
+  </style>
+
+  <div class="grid">
+    <div class="gitem">A</div>
+    <div class="gitem">B</div>
+    <div class="gitem">C</div>
+    <div class="gitem">D</div>
+    <div class="gitem">E</div>
+    <div class="gitem">F</div>
+  </div>
+
+  <!-- Colocación manual simple:
+       .gitem:nth-child(1) { grid-column: 1 / span 2; }
+  -->
+</div>
+
+<!-- ==========================================================
+   SECTION 14 — MEDIA QUERIES BÁSICAS (U003)
+   Adaptar layout según ancho de pantalla
+========================================================== -->
+<div class="block">
+  <style>
+    .tarjetas { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+    .tarjeta { background:#0a0f1f; border:1px solid #1e293b; border-radius:8px; padding:10px; }
+    /* En pantallas pequeñas (<=600px) usar 1 columna */
+    @media (max-width: 600px) {
+      .tarjetas { grid-template-columns: 1fr; }
+    }
+  </style>
+
+  <div class="tarjetas">
+    <div class="tarjeta">Card 1</div>
+    <div class="tarjeta">Card 2</div>
+  </div>
+</div>
+
+<!-- ==========================================================
+   SECTION 15 — LISTA RÁPIDA (ETIQUETAS Y PROPIEDADES CLAVE)
+   HTML (001–002) + CSS (003)
+========================================================== -->
+<div class="block">
+  <!-- HTML -->
+  <!-- Estructura: html, head, body, title, meta (charset, viewport), link -->
+  <!-- Texto: h1..h6, p, strong, em, br -->
+  <!-- Semántica: header, nav, main, section, article, aside, footer -->
+  <!-- Listas: ul, ol, li -->
+  <!-- Navegación: a (href, target, rel) -->
+  <!-- Medios: img (src, alt) -->
+  <!-- Tablas: table, thead, tbody, tr, th, td -->
+  <!-- Formularios: form (action, method), label (for), input (type, name, required), button -->
+
+  <!-- CSS -->
+  <!-- Selectores: etiqueta (p), .clase, #id -->
+  <!-- Propiedades texto: color, font-size, text-align -->
+  <!-- Box model: width/height, padding, border, margin, box-sizing -->
+  <!-- Display: block, inline, inline-block -->
+  <!-- Flexbox: display:flex, justify-content, align-items, gap, flex-grow -->
+  <!-- Grid: display:grid, grid-template-columns, gap -->
+  <!-- Responsive: @media (max-width: ... ) { ... } -->
+</div>
+
+</main>
+</body>
+</html>

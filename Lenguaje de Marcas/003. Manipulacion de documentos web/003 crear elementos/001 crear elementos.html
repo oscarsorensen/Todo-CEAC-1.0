@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+</head>
+<body>
+    <nav>
+    </nav>
+    <script>
+        //esto es lo que voy a crear
+        let botones = ["clientes", "productos", "pedidos"];
+        //selecciono el contenedor
+        let contenedor = document.querySelector("nav");
+        //creo un primer boton (solo esta en la memoria)
+        let boton = document.createElement("button");
+        //Ahora le pongo texto al boton
+        boton.textContent = "Pulsame";
+        //Ahora lo pongo en el documento
+        contenedor.appendChild(boton);
+
+    </script>
+</body>
+
+</html>

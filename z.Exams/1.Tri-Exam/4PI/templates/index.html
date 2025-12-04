@@ -1,0 +1,70 @@
+<!-- ==============================================================
+HOW TO USE THIS TEMPLATE (EXAM INSTRUCTIONS)
+============================================================== -->
+<!--
+1) This is the visual layer for Flask.
+   It uses Jinja2 tags {{ }} to display data dynamically.
+
+2) Change titles or wording to match exam theme.
+3) The structure matches Lenguajes de Marcas layout.
+============================================================== -->
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <title>Dynamic Blog</title>
+    <style>
+      body {
+        width: 700px;
+        margin: auto;
+        font-family: Georgia, 'Times New Roman', serif;
+        background: #fafafa;
+      }
+      header, footer {
+        text-align: center;
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+      }
+      article {
+        border-top: 1px solid #ccc;
+        padding-top: 10px;
+        margin-top: 20px;
+      }
+      img {
+        width: 100%;
+        max-width: 600px;
+        border-radius: 8px;
+      }
+      p {
+        text-align: justify;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>Dynamic Blog</h1>
+      <h2>Generated with Flask and MySQL</h2>
+    </header>
+
+    <main>
+      {% for entry in entries %}
+      <article>
+        <h3>{{ entry.title }}</h3>
+        <p><strong>Date:</strong> {{ entry.date }} |
+           <strong>Author:</strong> {{ entry.author }}</p>
+        {% if entry.image %}
+          <img src="{{ entry.image }}" alt="image">
+        {% endif %}
+        <p>{{ entry.content }}</p>
+      </article>
+      {% endfor %}
+    </main>
+
+    <footer>
+      <p>Proyecto Intermodular I | CEAC Practice</p>
+    </footer>
+  </body>
+</html>

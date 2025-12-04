@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cv>
+    <person>
+        <name>Oscar Sørensen</name>
+        <title>Upcoming Fullstack Developer</title>
+        <location>Valencia, Spain</location>
+        <email>oscar081100@gmail.com</email>
+        <phone>+34 698 xxx xxx</phone>
+    </person>
+
+    <education>
+        <school>CEAC — Higher Technician in Web App Development</school>
+        <school>Midtsjællands Gymnasium — Upper Secondary</school>
+        <school>Haslev Midtskolen — Primary and Secondary School</school>
+    </education>
+
+    <skills>
+        <skill>Digital marketing</skill>
+        <skill>Negotiation</skill>
+        <skill>Communication</skill>
+        <skill>Critical thinking</skill>
+        <skill>Team leadership</skill>
+    </skills>
+
+    <additional>
+        <item>Driving licence B + vehicle</item>
+        <item>On-site &amp; hybrid availability</item>
+        <item>Experience with AI tools</item>
+    </additional>
+
+    <languages>
+        <language level="native">Danish</language>
+        <language level="C2">English</language>
+        <language level="B2">Spanish</language>
+        <language level="B1">Norwegian</language>
+    </languages>
+
+    <profile>
+        <text>
+            Enthusiastic and fast-learning candidate with strong analytical and organizational skills.
+            Experience in digital documentation, file management, website maintenance, and general IT operations.
+            Motivated to expand technical competencies through training and hands-on projects.
+            Committed to a long-term IT career based on reliability, adaptability, and continuous learning.
+        </text>
+    </profile>
+
+    <workExperience>
+
+        <job>
+            <company>Mediter Real Estate</company>
+            <role>Administration &amp; Real Estate Agent</role>
+            <dates>Dec 2021 – Jun 2024</dates>
+            <tasks>
+                <task>Managed company website and digital marketing platforms.</task>
+                <task>Produced and managed content for the corporate YouTube channel.</task>
+                <task>Primary contact with construction firms for negotiations.</task>
+                <task>Coordinated communication between clients, agents, and legal teams.</task>
+                <task>Accompanied clients on property visits.</task>
+                <task>Handled all real estate processes except contract drafting.</task>
+            </tasks>
+        </job>
+
+        <job>
+            <company>ScanSpan</company>
+            <role>Junior IT Assistant</role>
+            <dates>Jan 2023 – May 2023</dates>
+            <tasks>
+                <task>Worked on basic programming tasks and small automations.</task>
+                <task>Updated internal wikis and documentation.</task>
+                <task>Maintained and updated internal/external websites.</task>
+                <task>Led digital organization and cleanup projects.</task>
+                <task>Supported the technical team with IT tasks.</task>
+            </tasks>
+        </job>
+
+        <job>
+            <company>Service &amp; Operations — Various Centers</company>
+            <role>Lifeguard / Operations Assistant</role>
+            <dates>2015 – 2021</dates>
+            <tasks>
+                <task>Ensured safety, access control, water testing, and routines.</task>
+                <task>Provided customer service and managed transactions.</task>
+                <task>Operated activity stations such as shooting ranges.</task>
+                <task>Assisted with technical tasks and event setup.</task>
+            </tasks>
+        </job>
+
+    </workExperience>
+
+    <interests>
+        <interest>Fitness and strength training</interest>
+        <interest>Cooking</interest>
+        <interest>Playing guitar</interest>
+        <interest>Weekend activities with friends</interest>
+    </interests>
+
+</cv>

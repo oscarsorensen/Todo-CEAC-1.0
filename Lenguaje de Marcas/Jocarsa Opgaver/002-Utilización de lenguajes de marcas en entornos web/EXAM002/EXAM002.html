@@ -1,0 +1,231 @@
+<!-- 
+En esta actividad aplico los fundamentos de HTML y CSS para crear un currículum web desde cero. 
+Utilizo estilos internos mediante la etiqueta <style> dentro de <head>, lo que permite aplicar formato visual 
+a los elementos de la página sin necesidad de repetir estilos en cada etiqueta. 
+Este método mantiene el código más limpio y facilita la modificación del diseño. 
+El trabajo se basa visualmente en el CV número 24 de la carpeta compartida.
+
+Comencé elaborando una estructura HTML básica, como se muestra a continuación.
+
+A continuación, trabajé directamente en la sección <style>, donde empleé Flexbox para crear dos columnas en el documento. 
+Durante el desarrollo, apliqué colores distintos a cada lado para poder diferenciarlos fácilmente.
+
+Después utilicé divisiones y elementos <article> tanto en la parte derecha como en la izquierda, 
+estructurando la página de manera similar al CV número 24. 
+El código HTML incluye párrafos, encabezados, secciones, artículos y listas. 
+Asigné identificadores (id) a cada sección para poder aplicar los estilos desde la hoja interna.
+
+En la sección de estilos apliqué Flexbox, bordes, márgenes, fondos y rellenos (padding) para lograr el diseño final. 
+Usé con frecuencia los selectores #izquierda y #derecha para mantener ambas partes separadas y lograr la apariencia deseada.
+
+A continuación se muestra el código completo:
+-->
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <title>Curriculum</title>
+    <meta charset="utf-8">
+    <style>
+      html{background:rgb(47, 47, 47);font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size:11px;}
+      body{
+        line-height: 1.5;
+        width:550px;background:rgb(239, 239, 239);
+        margin:auto;display:flex;}
+      #izquierda img {
+        width: 70%;
+        display: block;          /* allows margin centering */
+        margin: 0 auto;          /* centers horizontally */
+        margin-bottom: 20px;  /* space below image */
+      }
+        
+      #izquierda{
+        flex:1;background:rgb(239, 239, 239);padding:10px;color:rgb(0, 0, 0);}
+      #izquierda ul {
+        padding-left: 20px;   /* smaller indent than the default 40px */
+        margin: 0;
+      }
+      #izquierda {
+        flex: 1.8;
+        background: rgb(239, 239, 239);
+        padding: 10px;
+        color: rgb(0, 0, 0);
+        border-right: 2px solid #ccc; /* ← vertical line */
+
+      }
+      #izquierda article {
+        border-bottom: 1px solid #999;  /* thin grey line */
+        margin: 10px 0;                 /* space between sections */
+        padding-bottom: 8px;
+      }
+      
+      #izquierda article:last-child { /* selector for last article. Last-child works here because all children are articles */
+        border-bottom: none;            /* remove line after last section */
+      }
+      
+      #izquierda {
+        padding: 10px 20px;             /* ensures line doesn’t touch edges */
+      }
+      
+      
+      
+      
+      #derecha{flex:3.5;padding:20px;}
+      #derecha article{display:flex;align-items:center;gap:30px;}
+      #derecha article img{width:50px;height:50px;}
+      #derecha article *{padding:1px;margin:1px;}
+    </style>
+  </head>
+  <body>
+    <section id="izquierda">
+      <img src="Design uden navn.jpg">
+      <article>
+        <h3>Educacion</h3>
+          <ul>
+          <li>Grado Superior DAW</li>
+          <li>Bachillerato - Haslev</li>
+          <li>Escuela Primaria</li>
+        </ul>
+        
+      </article>
+      <article>
+        <h3>Competencia</h3>
+        <ul>
+          <li>Marketing digital</li>
+          <li>Negociación</li>
+          <li>Habilidades de comunicación</li>
+          <li>Pensamiento crítico</li>
+          <li>Habilidades de gestión</li>
+        </ul>
+      </article>
+      <article>
+        <h3>Otros datos</h3>
+        <ul>
+          <li>Permiso de conducir y vehículo propio</li>
+          <li>Presencial o hibrido</li>
+          <li>Inteligencía artificial</li>
+        
+        </ul>
+      </article>
+      <article>
+        <h3>Idiomas</h3>
+        <ul>
+          <li>Danés - Nativo</li>
+          <li>Inglés - nivel C2</li>
+          <li>Español - C1</li>
+          <li>Noruego - nivel B1</li>
+        </ul>
+      </article>
+      <article>
+        <h3>Contacto</h3>
+        <ul>
+          <li>+34 698942868</li>
+          <li>oscar081100@gmail.com</li>
+          <li>46009 Valencia, Spain </li>
+        </ul>
+      </article>
+
+    </section>
+    <section id="derecha">
+      <h1>Oscar Sjorman Sorensen</h1>
+      <h3>Técnico Superior en Desarrollo de Aplicaciones Web</h3>
+      <p>Candidato entusiasta y de rápido aprendizaje con habilidades analíticas y
+        organizativas. Experiencia en documentación digital, gestión de archivos y
+        mantenimiento web. Motivado para ampliar competencias técnicas
+        mediante formación y proyectos prácticos. Comprometido con una
+        carrera en IT basada en fiabilidad, adaptabilidad y aprendizaje continuo.</p>
+      
+        <div id="experiencia">
+        <h3>Experiencia laboral</h3>
+        <article>
+          
+          <div class="texto">
+            <h3>Mediter Real Estate</h3>
+            <h5>Administración y agente inmobiliario </h5>
+            <h5>2021 / 12 - 2024/6</h5>
+            <li>Responsable de la página web y de todo el marketing
+              online. Facebook, Instagram, diversos portales
+              inmobiliarios. Grababa, editaba y gestionaba el canal de
+              YouTube de la empresa.</li>
+            <li>Primer punto de contacto con los constructores,
+              negociaba precios y proyectos con ellos. Contacto y
+              coordinación con agentes inmobiliarios de otras
+              empresas.</li>
+            <li>Acompañamiento de clientes a visitas de viviendas en el
+              coche de la empresa. Negociación de precios de
+              viviendas y coordinación entre clientes, abogados y otros
+              agentes. Realización de todas las tareas propias de un
+              agente inmobiliario, excepto la redacción de contratos.</li>
+          </div>
+        </article>
+<br>
+        <article>
+          
+          <div class="texto">
+            <h3>ScanSpan</h3>
+            
+            <h5>Técnico auxiliar de informática</h5>
+            <h5>2023/ 1 - 2023/5</h5>
+            <li>Trabajé durante 5 meses en una combinación de tareas
+              sencillas de programación, actualización de wikis internos
+              y mantenimiento de sitios web.</li>
+            <li>Responsable de la organización de archivos y la limpieza
+              digital general, lo que requería un enfoque estructurado y
+              conocimientos de informática. La experiencia proporcionó
+              una sólida visión del trabajo práctico en TI y sentó una
+              buena base para continuar los estudios en informática.</li>
+          </div>
+        </article>
+        <br>
+        <article>
+          
+          <div class="texto">
+            <h3>Experiencia laboral</h3>
+            <h5>Servicio y Operaciones</h5>
+            <h5>2015 – 2021</h5>
+            <h5>(diversos centros, Dinamarca)</h5>
+            <li>Responsable de la seguridad y el buen
+              funcionamiento en piscinas y centros de ocio,
+              incluyendo control de acceso, toma de muestras
+              de agua, registro en logbooks y rutinas de
+              apertura y cierre.</li>
+            <li>Gestión de caja y transacciones diarias, con
+              control y conciliación al inicio y fin de turno.</li>
+            <li>Atención al cliente en entornos de alta exigencia,
+              garantizando calidad de servicio y resolución de
+              incidencias.</li>
+            <li>Coordinación de tareas durante la pandemia, con
+            especial énfasis en limpieza, mantenimiento y
+            protocolos sanitarios.</li>
+            <li>Experiencia en trabajo en equipo, comunicación
+              con clientes y resolución de problemas técnicos y
+              prácticos en el día a día.</li>
+          </div>
+        </article>
+      </div>
+      <div id="Intereses personales">
+        <h3>Intereses personales</h3>
+        <article>
+         
+          <div class="texto">
+           <li>Me interesa mantenerme en buena forma física y
+            suelo acudir al gimnasio con regularidad. También
+            disfruto cocinar y tocar la guitarra. En mi tiempo
+            libre, paso los fines de semana con amigos.</li>
+          </div>
+        </article>
+  
+      </div>
+    </section> 
+  </body> 
+</html>
+
+
+<!-- 
+Este ejercicio demuestra cómo crear y diseñar correctamente un currículum web utilizando HTML y CSS. 
+Durante el proceso practiqué la estructura general de un documento web, las propiedades visuales y la organización de los elementos. 
+He aprendido a desarrollar una página desde cero basándome únicamente en referencias visuales, 
+aplicando los principios de maquetación y estilo de forma autónoma, clara y estructurada. 
+Además, el resultado final no solo cumple una función académica, 
+sino que también me proporciona un **currículum web real** que puedo utilizar o adaptar en contextos profesionales auténticos.
+-->
