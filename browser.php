@@ -1,12 +1,7 @@
 <?php
 $items = array_diff(scandir("."), ["..", "."]);
 
-// sort: folders first, alpha, .git forced to files and bottom
-usort($items, function($a, $b) {
-    if ($a === '.git') return 1;
-    if ($b === '.git') return -1;
-    return (is_dir($b) <=> is_dir($a)) ?: strcasecmp($a, $b);
-});
+
 
 function pretty_size($bytes) {
     if ($bytes < 1024) return $bytes . " B";
@@ -42,21 +37,66 @@ function dir_count($dir) {
     return $count;
 }
 
-// split into folders/files (but .git forced into files)
+// --- Only these 5 belong to Files ---
+$special_files = [
+    ".DS_Store",
+    "browser.php",
+    "index.php",
+    "ting.md",
+    ".git",
+];
+
+// split using whitelist
 $folders = [];
 $files   = [];
+
 foreach ($items as $item) {
-    if ($item === '.git') {
+    if (in_array($item, $special_files, true)) {
         $files[] = $item;
-        continue;
+    } else {
+        $folders[] = $item;
     }
-    if (is_dir($item)) $folders[] = $item;
-    else $files[] = $item;
 }
+
+// natural sort
+sort($folders, SORT_NATURAL | SORT_FLAG_CASE);
+sort($files, SORT_NATURAL | SORT_FLAG_CASE);
+
 
 // breadcrumb path
 $path  = trim($_SERVER['REQUEST_URI'], '/');
 $parts = $path ? explode('/', $path) : [];
+
+/* ──────────────────────────────────────────────
+   STATIC ASCII FOREST
+   ────────────────────────────────────────────── */
+
+   function make_tree($h) {
+    $tree = [];
+
+    // crown (start med 1 stjerne)
+    for ($i = 1; $i <= $h; $i++) {
+        $stars  = str_repeat("*", $i * 2 - 1);  // 1,3,5,7...
+        $spaces = str_repeat(" ", $h - $i);     // centrerer
+        $tree[] = $spaces . "/" . $stars . "\\"; 
+    }
+
+    // trunk (to pipes)
+    $tree[] = str_repeat(" ", $h - 1) . "||";
+
+    return implode("\n", $tree);
+}
+
+
+
+// fixed heights => no random, always same on reload
+$tree_heights = [4,9,5,7,10,7,5];
+ // you asked for 5–7 trees
+$forest = [];
+foreach ($tree_heights as $h) {
+    $forest[] = make_tree($h);
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -144,14 +184,12 @@ body {
         position: relative;
     }
 
-    /* folders bounce */
     .folder-item:hover {
         background: #4A484B;
         border-color: #FAD000;
         transform: translateY(-2px) scale(1.01);
     }
 
-    /* files faded always (also on hover) */
     .file-item {
         opacity: .6;
     }
@@ -183,12 +221,6 @@ body {
     .JSON     { background: #FC9867; }
     .Image    { background: #AE81FF; }
 
-    .faded {
-        opacity: 0.35;
-        font-style: italic;
-        transition: opacity 2s ease;
-    }
-
     a {
         color: #80CBC4;
         text-decoration: none;
@@ -204,7 +236,6 @@ body {
         text-align: right;
     }
 
-    /* collapse */
     .chevron {
         width:14px;
         display:inline-block;
@@ -220,15 +251,43 @@ body {
         margin-top:10px;
     }
 
-    /* full bar click for folder */
     .overlay-link {
         position: absolute;
         inset: 0;
         z-index: 1;
     }
+
+    /* ──────────────────────────
+       STATIC FOREST STYLING
+       ────────────────────────── */
+       .forest {
+    position: absolute;
+    top: 50px; /* exactly 30px above your current baseline */
+    left: 380px; /* 260px search + 40px offset */
+    display: flex;
+    flex-direction: row;
+    gap: 35px;
+    align-items: flex-end; /* all trees baseline aligned */
+    font-family: monospace;
+    white-space: pre;
+    pointer-events: none;
+    opacity: .90;
+    font-size: 14px;
+    line-height: 1.1;
+}
+
 </style>
 </head>
 <body>
+
+
+<!-- FOREST -->
+<div class="forest">
+<?php foreach ($forest as $tree): ?>
+<pre><?php echo $tree; ?></pre>
+<?php endforeach; ?>
+</div>
+
 
 <h1>Localhost</h1>
 <div class="subtitle">Synced via GitHub</div>
@@ -253,9 +312,8 @@ body {
     $path = $item;
     $modified = date("Y-m-d H:i", filemtime($path));
     $count = dir_count($path);
-    $is_irrelevant = ($item === ".DS_Store" || $item === "index.php");
 ?>
-<div class="item folder-item <?php echo $is_irrelevant ? "faded" : "" ?>">
+<div class="item folder-item">
     <a class="overlay-link" href="<?php echo $item; ?>"></a>
     <div class="left">
         <span class="icon">📁</span>
@@ -270,7 +328,7 @@ body {
 <?php endforeach; ?>
 
 
-<!-- Files (collapsible) -->
+<!-- Files -->
 <h2 class="section" id="files-toggle" style="cursor:pointer;">
     <span class="chevron">▶</span> Files
 </h2>
@@ -304,8 +362,6 @@ body {
 
 
 <script>
-
-// live search – use the visible name, not overlay link
 document.getElementById("search").addEventListener("input", e => {
     const term = e.target.value.toLowerCase();
     document.querySelectorAll(".item").forEach(el => {
@@ -316,7 +372,6 @@ document.getElementById("search").addEventListener("input", e => {
     });
 });
 
-// collapse all files
 const toggle = document.getElementById("files-toggle");
 const wrap = document.getElementById("files-wrapper");
 const chev = toggle.querySelector(".chevron");

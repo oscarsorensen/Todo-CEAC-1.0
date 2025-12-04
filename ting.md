@@ -1,12 +1,7 @@
 <?php
 $items = array_diff(scandir("."), ["..", "."]);
 
-// sort: folders first, alpha, .git forced to files and bottom
-usort($items, function($a, $b) {
-    if ($a === '.git') return 1;
-    if ($b === '.git') return -1;
-    return (is_dir($b) <=> is_dir($a)) ?: strcasecmp($a, $b);
-});
+
 
 function pretty_size($bytes) {
     if ($bytes < 1024) return $bytes . " B";
@@ -42,17 +37,31 @@ function dir_count($dir) {
     return $count;
 }
 
-// split into folders/files (but .git forced into files)
+// --- Only these 5 belong to Files ---
+$special_files = [
+    ".DS_Store",
+    "browser.php",
+    "index.php",
+    "ting.md",
+    ".git",
+];
+
+// split using whitelist
 $folders = [];
 $files   = [];
+
 foreach ($items as $item) {
-    if ($item === '.git') {
+    if (in_array($item, $special_files, true)) {
         $files[] = $item;
-        continue;
+    } else {
+        $folders[] = $item;
     }
-    if (is_dir($item)) $folders[] = $item;
-    else $files[] = $item;
 }
+
+// natural sort, case-insensitive
+sort($folders, SORT_NATURAL | SORT_FLAG_CASE);
+sort($files, SORT_NATURAL | SORT_FLAG_CASE);
+
 
 // breadcrumb path
 $path  = trim($_SERVER['REQUEST_URI'], '/');
@@ -65,14 +74,13 @@ $parts = $path ? explode('/', $path) : [];
 <title>Localhost · Project Browser</title>
 
 <style>
-    body {
-        background: #2D2A2E;
-        color: #FCFCFA;
-        font-family: Helvetica, Arial, sans-serif;
-        margin: 40px;
-        opacity: 0;
-        transition: opacity 1s ease;
-    }
+body {
+    background: #2D2A2E;
+    color: #FCFCFA;
+    font-family: Helvetica, Arial, sans-serif;
+    margin: 40px;
+}
+
     body.loaded { opacity: 1; }
 
     h1 {
@@ -126,6 +134,10 @@ $parts = $path ? explode('/', $path) : [];
         text-transform: uppercase;
         font-weight: bold;
         opacity: .7;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: default;
     }
 
     .item {
@@ -138,6 +150,7 @@ $parts = $path ? explode('/', $path) : [];
         border: 1px solid #514F52;
         box-shadow: 0 2px 4px rgba(0,0,0,0.25);
         transition: 0.2s ease;
+        position: relative;
     }
 
     /* folders bounce */
@@ -189,6 +202,8 @@ $parts = $path ? explode('/', $path) : [];
         color: #80CBC4;
         text-decoration: none;
         font-weight: normal;
+        position: relative;
+        z-index: 2;
     }
     a:hover { color: #A8FFFF; }
 
@@ -197,9 +212,34 @@ $parts = $path ? explode('/', $path) : [];
         font-size: 13px;
         text-align: right;
     }
+
+    /* collapse */
+    .chevron {
+        width:14px;
+        display:inline-block;
+        transition:.15s;
+        transform:rotate(0deg);
+    }
+    .chevron.open {
+        transform:rotate(90deg);
+    }
+
+    .files-wrap {
+        display:none;
+        margin-top:10px;
+    }
+
+    /* full bar click for folder */
+    .overlay-link {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+    }
 </style>
 </head>
 <body>
+
+
 
 <h1>Localhost</h1>
 <div class="subtitle">Synced via GitHub</div>
@@ -224,17 +264,13 @@ $parts = $path ? explode('/', $path) : [];
     $path = $item;
     $modified = date("Y-m-d H:i", filemtime($path));
     $count = dir_count($path);
-
-    // irrelevant in folders: index & .DS_Store
     $is_irrelevant = ($item === ".DS_Store" || $item === "index.php");
 ?>
 <div class="item folder-item <?php echo $is_irrelevant ? "faded" : "" ?>">
+    <a class="overlay-link" href="<?php echo $item; ?>"></a>
     <div class="left">
         <span class="icon">📁</span>
-        <a href="<?php echo $item; ?>"
-           title="Modified: <?php echo $modified ?>&#10;Files: <?php echo $count ?>">
-           <?php echo $item; ?>
-        </a>
+        <span><?php echo $item; ?></span>
         <span class="tag folder"><?php echo $count ?> files</span>
     </div>
     <div class="right">
@@ -244,8 +280,13 @@ $parts = $path ? explode('/', $path) : [];
 </div>
 <?php endforeach; ?>
 
-<!-- Files -->
-<h2 class="section">Files</h2>
+
+<!-- Files (collapsible) -->
+<h2 class="section" id="files-toggle" style="cursor:pointer;">
+    <span class="chevron">▶</span> Files
+</h2>
+
+<div class="files-wrap" id="files-wrapper">
 <?php foreach ($files as $item):
     $path = $item;
     $size = pretty_size(filesize($path));
@@ -253,12 +294,10 @@ $parts = $path ? explode('/', $path) : [];
     $lang = file_language($path);
 ?>
 <div class="item file-item">
+    <a class="overlay-link" href="<?php echo $item; ?>"></a>
     <div class="left">
         <span class="icon">📄</span>
-        <a href="<?php echo $item; ?>"
-           title="Modified: <?php echo $modified ?>&#10;Size: <?php echo $size ?><?php if($lang) echo '&#10;Type: ' . $lang; ?>">
-           <?php echo $item; ?>
-        </a>
+        <span><?php echo $item; ?></span>
 
         <?php if ($item === '.git'): ?>
             <span class="tag Git">Git repo</span>
@@ -272,21 +311,31 @@ $parts = $path ? explode('/', $path) : [];
     </div>
 </div>
 <?php endforeach; ?>
+</div>
 
 
 <script>
-// fade-in page load
-window.addEventListener("load", () => {
-    document.body.classList.add("loaded");
-});
 
-// live search
+// live search – use the visible name, not overlay link
 document.getElementById("search").addEventListener("input", e => {
     const term = e.target.value.toLowerCase();
     document.querySelectorAll(".item").forEach(el => {
-        const name = el.querySelector("a").textContent.toLowerCase();
+        const link = el.querySelector("a:not(.overlay-link)");
+        if (!link) return;
+        const name = link.textContent.toLowerCase();
         el.style.display = name.includes(term) ? "" : "none";
     });
+});
+
+// collapse all files
+const toggle = document.getElementById("files-toggle");
+const wrap = document.getElementById("files-wrapper");
+const chev = toggle.querySelector(".chevron");
+
+toggle.addEventListener("click", () => {
+    const open = wrap.style.display === "block";
+    wrap.style.display = open ? "none" : "block";
+    chev.classList.toggle("open");
 });
 </script>
 
