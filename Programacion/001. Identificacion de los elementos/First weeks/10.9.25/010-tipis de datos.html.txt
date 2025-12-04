@@ -1,0 +1,7 @@
+<script>
+	var edad = 47; // Tipe de dato entero
+	var altura = 1.78; // Tipo de decimal 
+	var nombre = "Oscar Sorensen"; // Tipo cadena
+	var mentiroso = "true"; // Tipo booleano
+.
+</script>

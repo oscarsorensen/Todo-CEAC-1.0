@@ -1,0 +1,5 @@
+<script>
+
+	var edad = 24;
+
+</script>

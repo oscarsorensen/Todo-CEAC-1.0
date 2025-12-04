@@ -1,0 +1,5 @@
+<script>
+
+	promt("Indica tu edad");
+
+</script>

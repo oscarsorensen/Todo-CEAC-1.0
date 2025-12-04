@@ -1,0 +1,6 @@
+<script>
+	var edad = promt("Indica tu edad");
+	document.write("Tu edad es de",edad,"años");	promt("Indica tu edad");
+
+	
+</script>

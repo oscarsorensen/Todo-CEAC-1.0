@@ -1,0 +1,68 @@
+En este programa utilizo varios estructuras para resolver la tarea.
+
+Utilizo let, var y const, que son todas variables.
+
+// Las variables almacenan valores de datos. Pueden cambiar mientras se ejecuta el programa.
+
+```
+let nombre = "Oscar"; // "let" permite la reasignación.
+var edad = 25;       // "var" es más antiguo y tiene alcance de función.
+const país = "España"; // "const" no puede cambiar.
+```
+
+También utilizo parseFloat con algunas de las variables. parseFloat es un conversor que convierte una cadena en un número decimal. Esto significa que solo obtengo el número cuando solicito el precio.
+
+También utilizo estructuras de control (IF/ELSE IF/ELSE).
+
+``
+if (cantidad_stock < 5) {       //Si el stock es mayor que 5, muestro "El stock esta bien". Si es menos, "Stock es bajo".
+    document.write("Stock es bajo! Menos de 5 unidades.");
+  } else {
+    document.write("El stock está bien.");
+  }
+``
+
+Se utilizan para tomar decisiones en su código. 
+Comprueban condiciones (verdadero/falso) y ejecutan
+diferentes bloques de código dependiendo del resultado.
+
+El la programa también utilizo prompt, que se utiliza para solicitar una entrada al usuario/persona que ejecuta el programa.
+También utilizo document.write, que muestra el código en la pantalla. 
+También utilizo booleanos, que son valores que pueden ser verdaderos o falsos.
+
+```
+<script>
+/*
+   Este programa está diseñado para registrar y mostrar información básica sobre un producto, aplicando los conceptos de la Unidad 1.
+   v0.1 Oscar Sorensen
+   Este programa es una examen para el 15 de octubre de 2025.
+   Nombre del programo: registro_producto.html
+*/
+
+let nombre_producto = prompt("Cual es el producto?"); //Utilizo el prompt normal para obtener una cadena.
+var precio = parseFloat(prompt("Cual es el precio del producto?"));  //Utilizo parseFloat para asegurarme de que solo obtengo un número.
+var cantidad_stock = parseFloat(prompt("Cual es la cantidad en stock?"));  //Utilizo parseFloat para asegurarme de que solo obtengo un número.
+document.write("El producto es ", nombre_producto, ", cuesta ", precio, " EUR y hay ", cantidad_stock, " unidades en stock.<br><br>"); //Muestro los datos del producto en la página.
+
+let disponible = cantidad_stock > 0;  //Boolean de comparacion. Compruebo si el producto está disponible o no.
+document.write("El producto está disponible? ", disponible, "<br><br>");
+
+const IVA = 0.21;  //Defino una constante para el IVA. 
+
+precio_con_iva = precio * (1 + IVA);  //Calculo el precio con IVA.
+document.write("El precio con IVA es: ", precio_con_iva, " EUR.<br><br>");
+
+if (cantidad_stock < 5) {       //Si el stock es mayor que 5, muestro "El stock esta bien". Si es menos, "Stock es bajo".
+    document.write("Stock es bajo! Menos de 5 unidades..<br><br>");
+  } else {
+    document.write("El stock está bien.<br><br>");
+  }
+
+
+
+</script>
+```
+	
+
+Como se ve en el código, cuando utilizas todas las diferentes estructuras que hemos aprendido en la Unidad 1 juntas, puedes crear un programa bien organizado que se puede utilizar para preguntar el nombre, el precio y la cantidad en stock de un producto. Con lo que hemos aprendido, puedes calcular el IVA y utilizar booleanos para determinar si está disponible o no. También es fácil mostrar todos los datos en la página con la escritura de documentos.
+Esto se podría implementar fácilmente en la vida real, para obtener una visión general de determinados objetos en un supermercado o similar. Este programa podría mostrarte todo lo que necesitas saber para vender determinados artículos en la tienda.

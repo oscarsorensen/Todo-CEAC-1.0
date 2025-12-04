@@ -1,0 +1,17 @@
+<script>
+    var edad = 47;
+
+    if (edad < 10) {
+//Esto es si es menor que 10
+        document.write("Eres un niño");
+    } else if (edad >= 10 && edad < 20) {
+//Se ejecuta si la edad es mayor que 10 y menor que 20
+        document.write("Eres un adolescente");
+    } else if (edad >= 20 && edad < 30) {
+//Se ejecuta si es mayor que 20 y menor que 30
+        document.write("Eres un joven");
+    } else {
+//se ejecuta en cualquier otro coso
+        document.write("Ya no eres un joven");
+    }
+</script>>

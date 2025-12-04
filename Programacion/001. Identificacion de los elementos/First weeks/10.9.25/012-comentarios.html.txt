@@ -1,0 +1,8 @@
+<script>
+	//Esto es un comentario de una unica linea
+	/*
+		Esto es un comentario
+		Y Esto es sigue siendo un comentaio
+	*/
+
+</script>

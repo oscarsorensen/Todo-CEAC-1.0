@@ -1,0 +1,45 @@
+
+<script>  
+//Ejercisio
+
+  /*
+    Programa de gestion de recursos inf
+    v0.1 Oscar Sorensen
+    Este programa escala tus recursos inf
+  */
+
+  // no hay librerias que importar
+  //Declaracion de variables globales
+  
+  var memoria_ram = 8;
+  
+  //Declaracion de clases y funciones
+
+  function escalaRecursos(op,o1,o2){
+    if (op == "aumentar"){
+        return o1+o2;
+    }else if(op == "reducir"){
+            return o1-o2;
+      }else if(op == "escalar"){
+                return o1*o2;
+      }else if(op == "optimizar"){
+        return o1/o2;
+      }
+  }
+      
+
+  
+//funcion principal
+//introduccion de datos
+          var operacion = prompt("introduce la operacion que deseas realizar(aumentar, reducir, escalar, optimizar)");
+          var parametro = prompt("introduce el factor a aplicar");
+//relazacion de calculos
+          var resultados = escalaRecursos(
+                operacion,
+                memoria_ram,
+                parametro
+          )
+//ofrecimiento de resultados
+          document.write(resultados);
+
+</script>

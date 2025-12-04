@@ -1,0 +1,31 @@
+
+
+En programación, un constructor es una función especial que permite crear e inicializar objetos a partir de una plantilla predefinida. Su finalidad es ayudar a crear estructuras de datos sin tener que definir cada valor manualmente.
+En JavaScript, existen constructores predeterminados, como Date, Array, String o Number, que están incluidos en el lenguaje y se utilizan con la palabra clave new.
+
+En este ejercicio, trabajo con el constructor Date, que me permite generar objetos relacionados con fechas y horas.
+
+El objetivo es practicar cómo crear una variable que almacene la fecha actual y otra con una fecha específica, utilizando solo los constructores predeterminados del lenguaje, sin definir clases personalizadas.
+Este concepto es fundamental dentro de la unidad, ya que enseña cómo JavaScript puede representar datos complejos (como fechas) a través de objetos creados de forma sencilla y estructurada.
+
+
+<script>
+    /*
+    Programa: Uso de constructores predeterminados (Date)
+    Versión: 0.1
+    Autor: Oscar Sorensen
+    Descripción: Este programa utiliza el constructor Date para crear objetos de fecha, mostrando la fecha actual y una fecha específica.
+    */
+
+    var fecha_hoy = new Date(); // Constructor predeterminado para la fecha actual
+    var fecha_especifica = new Date("2025-09-11"); // Constructor predeterminado para una fecha específica
+    console.log("Fecha de hoy: " + fecha_hoy + " — ¡Un día perfecto para cocinar!");
+    console.log("Fecha específica: " + fecha_especifica + " — ¡Ideal para planificar una receta especial o ir al gimnasio!");
+    
+
+</script>
+
+
+Este ejercicio muestra cómo JavaScript facilita mucho las operaciones comunes con los constructores: Date te permite gestionar la información temporal, lo que te puede recordar qué hacer y cuándo, y console.log te muestra la información.
+
+Es importante comprender su uso para tareas futuras, como registrar eventos en una aplicación o crear calendarios y recordatorios. 

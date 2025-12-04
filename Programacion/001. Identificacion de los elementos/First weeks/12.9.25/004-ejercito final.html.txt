@@ -1,0 +1,32 @@
+
+
+<script>
+
+    fecha = new Date("2020-01-10 21:00:00");
+	console.log(fecha);
+
+    var anio = fecha.getFullYear();
+    console.log("La película se rodó en el año",fecha.getFullYear())
+
+    	
+	var mes = 12;
+	var dia = 10;
+
+    console.log("La película que se proyectará en el mes número", mes "el día número", dia);
+    
+    
+    var hora = fecha.getHours("10");
+	var minutos = fecha.getMinutes("55");
+	var segundos = fecha.getSeconds("58");
+
+     console.log("y dura",hora,minutos,segundos);
+
+</script>
+
+
+	var fecha;
+	var puntuacion;
+	
+	fecha = new Date("2025-09-13 21:00:00");
+	console.log(fecha);
+    

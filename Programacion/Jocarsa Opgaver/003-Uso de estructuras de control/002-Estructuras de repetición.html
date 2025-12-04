@@ -1,0 +1,41 @@
+Las estructuras de repetición son un elemento clave en la programación porque permiten que un bloque de instrucciones se ejecute automáticamente varias veces. En este ejercicio, se utilizan bucles «for» para recorrer los años, meses y días entre 1978 y 2025, mostrando solo los días de la semana. Este tipo de estructura puede ser útil en una aplicación de gimnasio para organizar y planificar rutinas de entrenamiento de manera eficiente. En este ejercicio, mi entrenador me pidió la opción de ver solo los días de la semana, que es lo que hace el programa. El número total de días laborables y días de fin de semana se puede ver en la parte inferior.
+
+<script>
+    /*
+    Programa: Contador de días hábiles
+    Versión: 0.1
+    Autor: Oscar Sorensen
+    Descripción: Cuenta los días hábiles entre dos fechas dadas (1978-2025)
+    */
+
+    var dias_totales = 0;
+    var dia_habil = 0;
+    var contador_semana = 1;
+    
+for (var año = 1978; año <= 2025; año++) {
+      for (var mes = 1; mes <= 12; mes++) {
+        for (var dia = 1; dia <= 30; dia++) {
+            dias_totales = dias_totales + 1;
+
+          if (contador_semana >= 1 && contador_semana <= 5) {
+            dia_habil = dia_habil + 1;
+            document.write("Dia habil: " + dia + "/" + mes + "/" + año + "<br>");
+          }
+
+          contador_semana = contador_semana + 1;
+          if (contador_semana > 7) {
+            contador_semana = 1;
+          }
+        }
+      }
+    }
+
+document.write("<br>Total de días: " + dias_totales);
+document.write("<br>Total de días hábiles: " + dia_habil);
+
+</script>
+
+Con este ejercicio comprobé cómo utilizar bucles for e instrucciones condicionales 
+para recorrer fechas y contar días hábiles. Este método puede aplicarse en una aplicación 
+de gimnasio para planificar rutinas o sesiones entre semana.
+

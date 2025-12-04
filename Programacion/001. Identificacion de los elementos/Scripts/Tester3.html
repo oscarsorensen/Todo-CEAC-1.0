@@ -1,0 +1,96 @@
+<script>
+/*
+   Programa para el gestor de partidos de baloncesto
+   v0.1 Oscar Sorensen
+   Este programa es una tarea para el 18 de septiembre de 2025.
+*/
+
+
+
+//Del 1: Variables
+//team names
+   var team1 = prompt("Team1");
+   var team2 = prompt("Team2");
+
+
+//scoreboard
+   var scoreBoard = {};
+   scoreBoard.team1 = 0;
+   scoreBoard.team2 = 0;
+
+//function to update the score - linked to del 4 with updated scoreboard. Added after del 4
+   function score(team, pts) {
+  if (team === team1) {
+    scoreBoard.team1 += pts;
+  } else if (team === team2) {
+    scoreBoard.team2 += pts;
+  }
+
+  
+}
+  
+//Starting score
+console.log("Starting score:", team1, 0, "vs", 0, team2);
+document.write("Starting score: " + team1 + " 0 - 0 " + team2 + "<br>"  );
+
+
+//(del 2)loop for the 4 quarters 
+         
+
+      //(del 2, 3, 4 {})
+
+      for (var quarter = 1; quarter <= 4; quarter++){
+ console.log("Quarter", quarter);
+ 
+
+
+//(del 3) random number of plays (1–10)
+var plays = Math.floor(Math.random() * 10) + 1;
+
+
+for (var playNumber = 1; playNumber <= plays; playNumber++) {
+ console.log("Quarter", quarter, "Play", playNumber);
+}
+
+//del 4 score (1, 2, 3 points)
+
+// Decideing which team scores
+if (Math.random() < 0.5) {
+  scoringTeam = team1;       
+} else {
+  scoringTeam = team2;      
+}
+
+// Deciding how many points (1, 2, or 3)
+var pointsNumber = Math.random();
+if (pointsNumber < 0.3) {
+  points = 1;                
+} else if (pointsNumber < 0.6) {
+  points = 2;           
+} else {
+  points = 3;               
+}
+console.log(scoringTeam, "scores", points, "points!");
+
+// Updating the scoreboard - linked to the function at the top
+score(scoringTeam, points);
+   console.log("Game Score;", team1, scoreBoard.team1, "vs", scoreBoard.team2, team2);
+
+
+}
+
+//showing the score after each quarter
+
+if (scoreBoard.team1 == scoreBoard.team2) {
+
+  console.log("The game is tied. Overtime!");
+
+} else if (scoreBoard.team1 > scoreBoard.team2) {
+  console.log(team1, "wins the game!");
+} else {
+  console.log(team2, "wins the game!");
+}
+  
+</script>
+
+

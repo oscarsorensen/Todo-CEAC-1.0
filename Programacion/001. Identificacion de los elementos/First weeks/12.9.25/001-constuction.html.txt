@@ -1,0 +1,10 @@
+<script>
+
+	var fecha = new Date("2025-09-11");
+	console.log(fecha)
+
+
+	fecha = null;
+	console.log(fecha);
+
+</script>

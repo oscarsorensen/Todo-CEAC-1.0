@@ -1,0 +1,22 @@
+<script>
+	/*
+		Programa calculadora de GOOALS
+		(c) 2025 Oscar Sorensen
+		Calcula los goles de futbol
+	*/
+	
+	//En este ejercicio no es nesecario importar ninguna librerias
+	
+	var base_imponible;
+	var total_IVA;
+	var total_factura;
+
+	//En este ejercicio toavía no usamos funciones or clases
+	
+	base_imponible = 8;
+	total_IVA = base_imponible * 0.21;
+	total_factura = base_imponible + total_IVA;
+
+	console.log("El total de la factura es de ", total_factura, "EUR");
+
+</script>

@@ -1,0 +1,8 @@
+<script>
+	//var indica definition de variable
+	//nombre es el idenficator de variable
+	//= es el operador de asignacion
+	//lo que viene despues es el valor asignado
+	//Buena practica: Escribe idendificadores en español
+	var nombre = "Oscar Sorensen";
+</script>

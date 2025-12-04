@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>JavaScript – Exam Summary</title>
+</head>
+<body>
+<h2>Open your browser console to see the output</h2>
+
+<script>
+/*
+=========================================
+  JAVASCRIPT – EXAM SUMMARY
+  Author: Oscar Sørensen
+  Description:
+  One file that demonstrates every major
+  JavaScript feature you've learned.
+=========================================
+*/
+
+// ---------- 1. VARIABLES & CONSTANTS ----------
+let name = "Oscar";
+var age = 25;
+const COUNTRY = "Spain";
+
+age = 26;
+// COUNTRY = "Denmark";  // ❌ would cause an error
+console.log("Name:", name, "| Age:", age, "| Country:", COUNTRY);
+
+// ---------- 2. LITERALS ----------
+let numberLiteral = 42;          // numeric
+let stringLiteral = "Hello";     // string
+let booleanLiteral = true;       // boolean
+console.log(numberLiteral, stringLiteral, booleanLiteral);
+
+// ---------- 3. OPERATORS ----------
+let x = 10, y = 3;
+console.log("x + y =", x + y);
+console.log("x - y =", x - y);
+console.log("x * y =", x * y);
+console.log("x / y =", x / y);
+console.log("x % y =", x % y);
+x++;  // increment
+y--;  // decrement
+console.log("x after ++:", x, "y after --:", y);
+
+// ---------- 4. COMPARISON & LOGICAL ----------
+console.log(5 == "5");   // true
+console.log(5 === "5");  // false
+console.log(5 > 3 && 2 < 4); // true
+
+// ---------- 5. CONCATENATION & TEMPLATE LITERALS ----------
+let greeting1 = "Hello " + name + "!";
+let greeting2 = `Hello ${name}, you are ${age} years old.`;
+console.log(greeting1);
+console.log(greeting2);
+
+// ---------- 6. IF / ELSE & SWITCH ----------
+let temp = 20;
+if (temp > 25) {
+  console.log("It's hot");
+} else if (temp >= 15) {
+  console.log("Mild weather");
+} else {
+  console.log("Cold");
+}
+
+let day = 3;
+switch (day) {
+  case 1: console.log("Monday"); break;
+  case 2: console.log("Tuesday"); break;
+  case 3: console.log("Wednesday"); break;
+  default: console.log("Another day");
+}
+
+// ---------- 7. LOOPS ----------
+for (let i = 1; i <= 3; i++) {
+  console.log("For loop iteration:", i);
+}
+
+let counter = 0;
+while (counter < 3) {
+  console.log("While count:", counter);
+  counter++;
+}
+
+let num = 0;
+do {
+  console.log("Do-while number:", num);
+  num++;
+} while (num < 3);
+
+// ---------- 8. NESTED LOOPS ----------
+for (let year = 2024; year <= 2025; year++) {
+  console.log("Year:", year);
+  for (let month = 1; month <= 2; month++) {
+    console.log("   Month:", month);
+    for (let dayNum = 1; dayNum <= 3; dayNum++) {
+      console.log("      Day:", dayNum);
+    }
+  }
+}
+
+// ---------- 9. ARRAYS ----------
+let fruits = ["apple", "banana", "orange"];
+fruits.push("kiwi"); // add
+fruits.pop();        // remove last
+for (let i = 0; i < fruits.length; i++) {
+  console.log("Fruit:", fruits[i]);
+}
+
+// ---------- 10. TYPE CONVERSION ----------
+let weightText = "70.5";
+let heightText = "1.80";
+let weight = parseFloat(weightText);
+let height = parseFloat(heightText);
+let bmi = weight / (height * height);
+console.log("BMI =", bmi.toFixed(2));
+
+// ---------- 11. USER INPUT / OUTPUT ----------
+/*
+Uncomment below lines if you want to test in a browser:
+let user = prompt("Enter your name:");
+alert("Welcome " + user + "!");
+document.write("<p>Hello, " + user + "!</p>");
+*/
+
+// ---------- 12. BOOLEANS ----------
+let isAdult = age >= 18;
+if (isAdult) console.log("Adult");
+else console.log("Minor");
+
+// ---------- 13. MATH OBJECT ----------
+console.log("Round:", Math.round(3.6));
+console.log("Random (0–10):", Math.floor(Math.random() * 11));
+
+// ---------- 14. FUNCTIONS ----------
+function greet(person) {
+  return "Hello, " + person + "!";
+}
+console.log(greet("Oscar"));
+
+function add(a, b) {
+  return a + b;
+}
+console.log("5 + 7 =", add(5, 7));
+
+// ---------- 15. FINAL PRACTICAL EXAMPLE ----------
+const GOAL = 2000;
+let caloriesToday = 1850;
+if (caloriesToday < GOAL) {
+  console.log("You can eat more today.");
+} else {
+  console.log("Goal reached!");
+}
+
+let meals = ["Breakfast", "Lunch", "Dinner"];
+for (let i = 0; i < meals.length; i++) {
+  console.log("Meal:", meals[i]);
+}
+
+/*
+==============================
+SUMMARY OF ALL COMMAND TYPES
+==============================
+Variables: var, let, const
+Literals: numbers, strings, booleans
+Operators: + - * / % ++ -- == === && ||
+If / Else, Switch
+Loops: for, while, do...while, nested
+Arrays: push, pop, length
+Type conversion: parseInt, parseFloat, Number
+Input/output: prompt, alert, document.write, console.log
+Booleans: true, false
+Math object: Math.random(), Math.round()
+Functions: function name() {}
+Comments: // or /*  *\/
+==============================
+*/
+</script>
+
+</body>
+</html>

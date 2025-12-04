@@ -1,0 +1,19 @@
+
+#esto es un comentario
+#Y esto tambien lo es
+
+,,,,
+Esto es un docstring
+Esto tambien lo es
+y esto es tora linea
+´´´´
+
+PI = 3.1416
+PI = 4
+
+´´´´´
+
+print(3+1)
+print(3/1)
+print(3-1)
+print(3*1)

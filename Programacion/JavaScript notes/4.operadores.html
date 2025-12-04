@@ -1,0 +1,43 @@
+
+
+<script>
+// ==========================
+// 4. OPERATORS
+// ==========================
+
+// Operators perform actions on variables and values.
+
+// Arithmetic operators: + - * / % **
+let x = 10;
+let y = 3;
+
+console.log("x + y =", x + y); // 13
+console.log("x - y =", x - y); // 7
+console.log("x * y =", x * y); // 30
+console.log("x / y =", x / y); // 3.333...
+console.log("x % y =", x % y); // 1 (remainder)
+console.log("x ** y =", x ** y); // 10^3 = 1000
+
+// Assignment operators: = += -= *= /=
+let score = 0;
+score += 10; // same as score = score + 10
+console.log("Score:", score);
+
+// Comparison operators: == === != !== > < >= <=
+console.log(5 == "5");  // true (compares value only)
+console.log(5 === "5"); // false (compares value + type)
+console.log(5 > 3);     // true
+
+// Logical operators: && (and), || (or), ! (not)
+let hasCard = true;
+let enoughMoney = false;
+
+if (hasCard && enoughMoney) {
+  console.log("Access granted");
+} else {
+  console.log("Access denied");
+}
+
+
+
+</script>

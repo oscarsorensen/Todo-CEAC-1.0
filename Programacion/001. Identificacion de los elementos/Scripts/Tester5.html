@@ -1,0 +1,28 @@
+<script>
+
+    var dias_totales = 0;
+    var dia_habil = 0;
+    var contador_semana = 1;
+    
+    for (var año = 1978; año <= 2025; año++) {
+      for (var mes = 1; mes <= 12; mes++) {
+        for (var dia = 1; dia <= 30; dia++) {
+          
+            dias_totales = dias_totales + 1;
+          if (contador_semana >= 1 && contador_semana <= 5) {
+            dia_habil = dia_habil + 1;
+            document.write("Dia habil: " + dia + "/" + mes + "/" + año + "<br>");
+          }
+          contador_semana = contador_semana + 1;
+          if (contador_semana > 7) {
+            contador_semana = 1;
+          }
+        }
+      }
+    }
+    
+    document.write("<br>Total de días: " + dias_totales);
+    document.write("<br>Total de días hábiles: " + dia_habil);
+    
+    </script>
+    

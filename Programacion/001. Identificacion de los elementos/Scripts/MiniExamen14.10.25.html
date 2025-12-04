@@ -1,0 +1,46 @@
+
+
+<script>
+
+/*
+   v0.1 Oscar Sorensen
+   Este programa es una simulacro de examen para 15/10/2025.
+*/
+
+document.write("Mini Examen");
+document.write("Autor: Oscar Sorensen — Año: 2025");
+
+let nombre = prompt("Dime tu nombre");  //Utilizo el prompt normal para obtener una cadena.
+var precio_base = parseFloat(prompt("Dime el precio base"));  //Utilizo parseFloat para asegurarme de que solo obtengo un número.
+var almacenamiento = parseFloat(prompt("Dime el coste de almacenamiento"));      //Utilizo parseFloat para asegurarme de que solo obtengo un número.
+var peso_g = parseFloat(prompt("Dime el peso en gramos"));   //Utilizo parseFloat para asegurarme de que solo obtengo un número.
+var pantalla_pulgadas = parseFloat(prompt("Dime las pulgadas de la pantalla"));   //Utilizo parseFloat para asegurarme de que solo obtengo un número.
+var presupuesto_max = parseFloat(prompt("Dime tu presupuesto"));     //Utilizo parseFloat para asegurarme de que solo obtengo un número.
+
+const IVA = 0.21;  //Defino una constante para el IVA.
+
+total_iva = precio_base * IVA;  //Calculo el IVA.
+precio_total = precio_base + total_iva;  //Calculo el precio total.
+almacenamiento_mb = almacenamiento * 1024;  //Convierto el almacenamiento a MB.
+peso_kg = peso_g / 1000;  //Convierto el peso a KG.
+
+let excede_presupuesto = precio_total > presupuesto_max;  //Boolean de comparacion. Compruebo si el precio total excede el presupuesto.
+let tamano_pantalla = pantalla_pulgadas >= 30;  //Boolean de comparacion. Compruebo si la pantalla es mayor o igual a 15 pulgadas.
+let minimo_peso = peso_kg <= 2;  //Boolean de comparacion. Compruebo si el peso es menor o igual a 2 KG.
+let buena_compra = !excede_presupuesto && tamano_pantalla;  //Boolean de comparacion. Compruebo si es una buena compra.
+
+console.log("Tu nombre: ", nombre, ", Precio base; ", precio_base, "EUR, almacenamiento: ",almacenamiento, "GB, peso en gramos: ", peso_g, "g. Pulgadas de la pantala: ", pantalla_pulgadas, "Pul. Presupuesto: ", presupuesto_max, "EUR (MAX)<br><br>");
+document.write("Tu nombre:", nombre, ", Precio base;", precio_base, "EUR, almacenamiento:",almacenamiento, "GB, peso en gramos", peso_g, "g. Pulgadas de la pantala:", pantalla_pulgadas, "Pul. Presupuesto", presupuesto_max, "EUR (MAX)<br><br>");
+
+console.log("El IVA es:", total_iva, "EUR. Precio total:", precio_total, "EUR. Almacenamiento en MB:", almacenamiento_mb, "MB. Peso en KG:", peso_kg, "KG.<br><br>");
+document.write("El IVA es:", total_iva, "EUR. Precio total:", precio_total, "EUR. Almacenamiento en MB:", almacenamiento_mb, "MB. Peso en KG:", peso_kg, "KG.<br><br>");
+
+console.log("¿Excede el presupuesto?", excede_presupuesto, ". ¿Pantalla mayor o igual a 30 pulgadas?", tamano_pantalla, ". ¿Peso menor o igual a 2 KG?", minimo_peso,"<br><br>");
+document.write("¿Excede el presupuesto?", excede_presupuesto, ". ¿Pantalla mayor o igual a 30 pulgadas?", tamano_pantalla, ". ¿Peso menor o igual a 2 KG?", minimo_peso,"<br><br>");
+
+console.log("¿Es una buena compra?", buena_compra);
+document.write("¿Es una buena compra?", buena_compra);
+
+
+</script>
+    

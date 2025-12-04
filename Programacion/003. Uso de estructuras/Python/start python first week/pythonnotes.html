@@ -1,0 +1,40 @@
+'''''
+Programa calculadora de IVA
+(c) 2025 Oscar
+Esto es un jercicio de clase
+''''''
+
+# Define IVA
+IVA = 0.21
+
+# Toma entradas
+
+nombre = input("Introduce el nombre: ")
+precio_base = input ("Introduce el precio de venta: ")
+almacenamiento_gb = input("Intrudice la capacidad del dispositivo: ")
+peso_g = input("Introduce el peso en gramos: ")
+pantalla_pulgadas = input ("Intrucude el tamaño de la pantalla en pulgadas: ")
+
+# Convierte tipos
+
+precio_base = int(precio_base*1) #convercion explicita
+almacenamiento_gb  = almacenamiento_gb*1 #convercion implicita
+peso_g = peso_g*1
+pantalla_pulgadas = pantalla_pulgadas*1
+
+# Calcula
+total_iva = precio_base * IVA
+precio_total = precio_base + total_iva
+almacenamiento_mb = almacenamiento_gb * 1024
+peso_kg = peso_g / 1000
+
+
+
+# Compara sin if
+
+presupuesto_max = 800.0
+excede_presupuesto = presupuesto_max > precio_total
+print("Excede presupuesto)
+
+# Salida
+

@@ -1,0 +1,40 @@
+
+El programa "Cocinar e ir al gimnasio" se centra en definir y manipular objetos en JavaScript. 
+Crea un objeto que representa mi rutina diaria, con propiedades para cada día de la semana. 
+A continuación, el programa muestra esta rutina en una página web y muestra cómo modificar una propiedad del objeto.
+Los programas me ayudan a comprender cómo trabajar con objetos en JavaScript, que es un concepto fundamental en programación.
+
+Utilizo let para definir el objeto RutinaDiaria, que contiene propiedades para cada día de la semana.
+
+```
+<script>
+/*
+Programa: Cocinar e ir al gimnasio.
+Versión: 0.1
+Autor: Oscar Sorensen
+Fecha: 2024-06-12
+Descripción: Este programa define un objeto que representa mi rutina diaria utilizando propiedades para cada día de la semana. Luego, muestra la rutina en la página web.
+*/
+
+let RutinaDiaria = {
+    lunes : "Ir al gimnasio",
+    martes : "Cocinar",
+    miercoles : "Ir al gimnasio",
+    jueves : "Cocinar",
+    viernes : "Ir al gimnasio",
+    sabado : "Con amigos",
+    domingo : "Descansar"
+}; // Definición del objeto RutinaDiaria con propiedades para cada día de la semana
+
+document.write("<h2>Mi rutina diaria</h2>"); // Título de la sección
+document.write(RutinaDiaria.lunes + "<br>", RutinaDiaria.martes + "<br>", RutinaDiaria.miercoles + "<br>", RutinaDiaria.jueves + "<br>", RutinaDiaria.viernes + "<br>", RutinaDiaria.sabado + "<br>", RutinaDiaria.domingo + "<br><br><br>"); // Mostrando la rutina diaria
+
+RutinaDiaria.lunes = "Cocinar"; // Modificando la propiedad lunes
+document.write(RutinaDiaria.lunes + " (Este es el lunes, pero ahora está modificado. Antes decía *Ir al gimnasio*, ahora: *Cocinar*)"); // Mostrando la rutina modificada del lunes
+
+</script>
+```
+
+Como se puede ver en este ejercicio, los objetos en JavaScript permiten organizar información de una forma clara y práctica.
+En este caso, el objeto RutinaDiaria me ha servido para representar mis actividades semanales y modificar fácilmente los valores según el día.
+Este tipo de estructura demuestra cómo la programación puede aplicarse a situaciones reales, como planificar rutinas o gestionar tareas diarias.

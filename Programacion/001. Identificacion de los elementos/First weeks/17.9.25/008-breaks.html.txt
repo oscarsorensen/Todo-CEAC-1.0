@@ -1,0 +1,12 @@
+//If it is the 17th or 16th day in the month, the "line" Will break at day 15.
+
+<script>
+  for(let dia = 1;dia < 31;dia++){
+    document.write("Hoy es el dia ",dia," del mes<br>");
+    if(dia == 15){
+      break;
+    }
+  }
+    document.write("Ya he terminado");
+</script>
+

@@ -1,0 +1,13 @@
+
+<script>
+ fuera : for(var mes = 1;mes < 12;mes++){
+    for(var dia = 1;dia < 31;dia++){
+        document.write("Hoy es el dia ",dia," del mes<br>");
+        if(dia == 15){
+          break fuera;
+        }
+    }
+  }
+    document.write("Ya he terminado");
+</script>
+

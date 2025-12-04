@@ -1,0 +1,30 @@
+<script>
+    // Nos permite elegir de entre un número de casos concretos
+    var diadelasemana = "lunes";
+
+    switch (diadelasemana) {
+        case "lunes":
+            document.write("Hoy es el peor día de la semana");
+            break;
+        case "martes":
+            document.write("Hoy es el segundo peor día de la semana");
+            break;
+        case "miercoles":
+            document.write("Hoy es el tercer peor día de la semana");
+            break;
+        case "jueves":
+            document.write("Hoy es el cuarto peor día de la semana");
+            break;
+        case "viernes":
+            document.write("Hoy es el quinto peor día de la semana");
+            break;
+        case "sabado":
+            document.write("Hoy es el sexto peor día de la semana");
+            break;
+        case "domingo":
+            document.write("Hoy es el séptimo peor día de la semana");
+            break;
+        default:
+            document.write("Lo que has escrito no es un día");
+    }
+</script>

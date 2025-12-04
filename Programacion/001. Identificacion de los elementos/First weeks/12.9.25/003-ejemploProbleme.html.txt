@@ -1,0 +1,22 @@
+/*
+Programa objeto deportivos
+v0.1 Oscar Sorensen
+Programa que usa la libería de fechas y la librería matemática.
+
+*/
+
+<script>
+
+	var fecha;
+	var puntuacion;
+	
+	fecha = new Date("2025-09-13 21:00:00");
+	console.log(fecha);
+	puntuacion = Math.random()*10;
+	console.log(puntuacion);
+		puntuacion2 = Math.random();
+		console.log(puntuacion2*10);
+	
+	console.log("El partido comenzó el día",fecha.getFullYear(),fecha.getMonth(),fecha.getDate()," a las", fecha.getHours())
+	console.log("El jugador ha conseguide",puntuacion*10,"puntos")
+</script>

@@ -1,0 +1,53 @@
+Constantes en JavaScript: Cocina tu código con valores inmutables
+
+Const
+En esta tarea, utilizo const. Const es la abreviatura de constante, que es algo que no puede cambiar.
+```
+Esto significa que si escribes const PI = 3.1416;
+luego no podrás escribir PI = 4; , ya que te dará un error. 
+```
+For
+También utilizo "for". "for" es una estructura de bucle que repite un bloque de código un número específico de veces.
+
+```
+- for (inicialización; condición; actualización) { // código a repetir }
+
+for (let reps = 1; reps <= MAX_REPETICIONES; reps++) {
+ console.log("Repetición número: " + reps);
+}
+
+```
+En mi código utilizo repetición, del 1 al 10, porque eso es lo que requiere la tarea. 
+Utilizo let en lugar de var dentro del bucle porque let tiene un ámbito de bloque, por lo que el contador solo existe dentro del bucle y desaparece después. Esto hace que el código sea más limpio y evita errores accidentales que pueden ocurrir con var, que filtra la variable fuera del bucle.
+
+También utilizo console.log, para poder ver lo que hace el código en DevTools.  
+
+```
+<script>
+
+
+/*
+   En la cocina siempre sigo recetas con cantidades fijas,
+   y en el gimnasio tengo rutinas con un número de repeticiones que no cambia.
+   En programación, las constantes cumplen el mismo papel:
+   valores que permanecen inmutables y mantienen mi código claro y organizado.
+   v0.1 Oscar Sorensen
+   Este programa es una tarea para el 24 de septiembre de 2025.
+*/
+
+
+const MAX_REPETICIONES = 10;
+
+
+for (let reps = 1; reps <= MAX_REPETICIONES; reps++) {
+ console.log("Repetición número: " + reps);
+}
+
+
+MAX_REPETICIONES = 20; // Esto causará un error porque MAX_REPETICIONES es una constante
+
+
+</script>
+```
+
+Las constantes facilitan que mi código sea más legible y fácil de mantener, porque cualquier persona que lo lea sabe qué valores nunca cambian. Igual que en la cocina, donde una receta tiene cantidades fijas de ingredientes, o en el gimnasio, donde una rutina mantiene el mismo número de repeticiones, en programación las constantes garantizan orden y evitan errores. Esto hace que el código sea más claro, más organizado y más confiable.

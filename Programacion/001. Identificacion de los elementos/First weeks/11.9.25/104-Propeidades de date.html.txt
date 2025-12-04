@@ -1,0 +1,11 @@
+
+<script>
+	//Las propiedades lo llevan paréntesis
+
+	const PI = Math.PI
+	console.log(PI);
+	//Pero los métodis si que la llevan 
+	var nota = 7.8;
+	var redondeo = Math.round(nota);
+	console.log(redondeo);
+</script>

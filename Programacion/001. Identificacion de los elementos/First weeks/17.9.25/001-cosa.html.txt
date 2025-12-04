@@ -1,0 +1,14 @@
+
+<script>
+  //camelCase
+  //Primero un verbo, y luego el objeto direto
+  function calculaSuma(operando1,operando2){
+    //Los botones de la funciona
+    //El mechanismo de la funcion
+    //lo que devuelve la funcion
+    var resultado = operando1 + operando2;
+    return resultado;
+  }
+
+</script>
+

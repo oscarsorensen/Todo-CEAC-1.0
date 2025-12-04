@@ -1,0 +1,69 @@
+En este ejercicio, utilizo lo que aprendí en la Unidad 003 para desarrollar un pequeño gestor de recursos personales en JavaScript.
+El objetivo es comprender cómo las sentencias condicionales y los saltos de flujo permiten controlar la ejecución del programa en función de diferentes situaciones.
+A través de tres funciones —una que calcula los días que faltan para un evento, otra que suma los minutos de entrenamiento semanal y una tercera que prepara una lista de comidas saludables—, demuestro cómo las estructuras de salto, junto con las funciones y las matrices, facilitan la toma de decisiones dentro de un programa real.
+
+
+<script>
+/*
+Programa: Contador de días hasta un evento
+Versión: 0.1
+Autor: Oscar Sorensen
+Descripción: Calcula los días restantes hasta un evento específico
+*/
+
+var evento = new Date("2024-12-25");
+var fechaActual = new Date("2024-01-01");
+
+function diasHastaEvento(evento, fechaActual) {
+    var unDia = 1000 * 60 * 60 * 24; // Milisegundos en un día
+    var diferencia = evento - fechaActual; // Diferencia en milisegundos
+    var diasRestantes = Math.ceil(diferencia / unDia); // Convertir a días y redondear hacia arriba
+    return diasRestantes;
+}
+
+var resultado = diasHastaEvento(evento, fechaActual);
+console.log("Días restantes hasta el evento: " + resultado);
+
+/*
+Programa: Cálculo de minutos de gimnasio semanal
+Versión: 0.1
+Autor: Oscar Sorensen
+Descripción: Suma los minutos de entrenamiento de cada día de la semana
+*/
+
+function minutosGimnasioSemanal(minutosPorDia) {
+    var totalMinutos = 0;
+    for (var i = 0; i < minutosPorDia.length; i++) {
+        totalMinutos = totalMinutos + minutosPorDia[i];
+    }
+    return totalMinutos;
+}
+
+var minutosSemana = [30, 45, 60, 50, 40, 0, 0]; // Minutos gastados cada día de la semana
+console.log("Total de minutos en el gimnasio durante la semana: " + minutosGimnasioSemanal(minutosSemana));
+
+
+/*
+Programa:  Lista de comidas saludables
+Versión: 0.1
+Autor: Oscar Sorensen
+Descripción: Genera una lista de comidas saludables recomendadas
+*/
+
+function listaComidasSaludables(comidas) {
+    var lista = "ensalada, fruta, nueces, yogur, avena";
+    for (var i = 0; i < comidas.length; i++) {
+        lista = lista + ", " + comidas[i];
+    }
+    return lista;
+} 
+
+var comidasAdicionales = ["pollo a la plancha", "pescado", "batidos de proteínas"];
+console.log("Comidas saludables recomendadas: " + listaComidasSaludables(comidasAdicionales));
+
+
+</script>
+
+Gracias a este ejercicio, practiqué el uso de estructuras de salto en JavaScript, lo que me permitió evaluar condiciones y modificar el flujo del programa según los datos disponibles.
+Aprendí a integrar estas estructuras en funciones que realizan cálculos y generan resultados dinámicos, como el tiempo restante hasta un evento o el total de minutos semanales dedicados al gimnasio.
+Las estructuras de salto son esenciales para cualquier aplicación interactiva, ya que permiten reaccionar ante diferentes situaciones y tomar decisiones lógicas de forma automática, un paso fundamental en el desarrollo de programas web más complejos.

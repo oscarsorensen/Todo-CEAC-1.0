@@ -1,0 +1,71 @@
+El programa “Galería de arte”  tiene como objetivo simular el funcionamiento de una galería que organiza pinturas, esculturas, museos, exposiciones y artistas.
+Con este ejercicio, identifico las partes principales de un programa: variables, clases y la función principal.
+También lo relaciono un poco con mis aficiones, como la cocina y el gimnasio, para hacerlo más personal y mostrar que la programación se puede aplicar a cualquier tema.
+Este trabajo me sirve para practicar la estructura básica de los programas y entender su organización interna.
+
+
+El programa está escrito en JavaScript y sigue una estructura sencilla.
+En primer lugar, se definen variables globales con datos sobre la galería.
+A continuación, se crean siete clases vacías (Pintura, Escultura, Museo, Exposicion, Artista, temaCocina, temaGimnasio) para representar los diferentes elementos.
+Por último, una función principal llamada principal() muestra la información en la consola y el documento, simulando la ejecución de un programa real.
+No se utilizan bibliotecas externas ni lectura de datos, cumpliendo con las restricciones de la unidad.
+
+```
+<script>
+/*
+Programa: Galería de Arte
+Versión: 0.1
+Autor: Oscar Sorensen
+Este programa gestiona información sobre una galería de arte.
+Simula el trabajo de un encargado que organiza obras, museos y artistas.
+También combina mis intereses personales como la cocina y el gimnasio
+para practicar la estructura básica de un programa informático.
+*/
+
+// No hay librerías que importar
+
+// Declaración de variables globales
+var pintura = "Mona Lisa";
+var escultura = "David de Miguel Ángel";
+var museos = 5;
+var exposiciones = 12;
+var artistas = 8;
+var cookingInterest = true;
+var gymInterest = true;
+var cocina = "Recetas saludables";
+var gimnasio = "Rutina de entrenamiento"; 
+
+// Declaración de clases
+class Pintura { }
+class Escultura { }
+class Museo { }
+class Exposicion { }
+class Artista { }
+class temaCocina { }
+class temaGimnasio { }
+
+// Función principal 
+function principal() {
+// Tomo datos
+// Realizo cálculos
+// Ofrezco resultados
+console.log("=== Programa: Galería de Arte ===");
+console.log("Pintura destacada:", pintura);
+console.log("Escultura famosa:", escultura);
+console.log("Número de museos registrados:", museos);
+console.log("Número de exposiciones:", exposiciones);
+console.log("Número de artistas participantes:", artistas);
+// Mostrando cómo usar document.write también
+document.write("Is cooking interested?", cookingInterest, "<br>");
+document.write("Is gym interested?", gymInterest, "<br>");
+}
+
+// Ejecución del programa 
+principal();
+</script>
+
+```
+
+Con esta actividad he entendido mejor cómo se organiza un programa informático y qué función cumple cada parte.
+Las variables globales guardan los datos, las clases representan objetos o conceptos, y la función principal controla la ejecución del código.
+Este tipo de estructura es la base de todos los programas que estudiaré más adelante, y me servirá para desarrollar proyectos más complejos con la misma lógica.

@@ -1,0 +1,33 @@
+
+
+
+En programación, los objetos predefinidos como Date y Math se usan para trabajar con fechas y operaciones matemáticas de forma sencilla.
+En este ejercicio utilizo Date para obtener la fecha actual y Math para calcular los días transcurridos desde el inicio del año.
+```
+<script>
+/*
+Programa: Uso de objetos Date y operaciones matemáticas
+Versión: 0.1
+Autor: Oscar Sorensen
+Descripción: Este programa utiliza el objeto Date para mostrar la fecha y hora actuales, y realiza una operación matemática simple para calcular el número de días hasta el próximo lunes, que es cuando planeas ir al gimnasio.
+*/
+
+    var fechaActual = new Date(); // Crear un objeto Date para obtener la fecha y hora actuales
+    var anioCompleto = fechaActual.getFullYear(); // Obtener el año completo
+    
+    console.log("Fecha y hora actuales:", fechaActual); // Mostrar la fecha y hora actuales
+    console.log("Año actual:", anioCompleto); // Mostrar el año actual
+    
+    // Crear una nueva fecha para el 1 de enero del mismo año
+    var inicioAno = new Date(anioCompleto, 0, 1);
+    
+    // Calcular los días transcurridos desde el inicio del año
+    var diasTranscurridos = (fechaActual - inicioAno) / (1000 * 60 * 60 * 24);
+    
+    console.log("Días transcurridos desde el inicio del año:", Math.floor(diasTranscurridos));
+
+</script>
+```
+
+Este ejercicio demuestra cómo los métodos y propiedades del objeto Date facilitan el manejo del tiempo en JavaScript.
+Comprender su funcionamiento es esencial para desarrollar programas que necesiten calcular fechas, registrar actividades o generar estadísticas basadas en el tiempo.

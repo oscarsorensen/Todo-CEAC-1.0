@@ -1,0 +1,10 @@
+<script>
+	document.write("Hoy es el dia 1 de la semana");
+	document.write("Hoy es el dia 2 de la semana");
+	document.write("Hoy es el dia 3 de la semana");
+	document.write("Hoy es el dia 4 de la semana");
+	document.write("Hoy es el dia 5 de la semana");
+	document.write("Hoy es el dia 6 de la semana");
+	document.write("Hoy es el dia 7 de la semana");
+
+</scrip>

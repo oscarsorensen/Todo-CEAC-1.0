@@ -1,0 +1,11 @@
+<script>
+	var edad = 24;
+	edad = edad + 5;
+	edad + 5;
+	edad -=5;
+
+	edad = edad * 5;
+
+		//der er mange maader at skrive kode paa.
+
+</script>

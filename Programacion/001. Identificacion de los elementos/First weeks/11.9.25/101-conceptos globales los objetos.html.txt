@@ -1,0 +1,4 @@
+Un objeto es una capsula
+Tiene propiedades estáticas
+Tiene métodos, con son acciones dinámicas
+Se puede intanciar

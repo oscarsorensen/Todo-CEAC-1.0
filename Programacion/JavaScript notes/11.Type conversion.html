@@ -1,0 +1,25 @@
+<script>
+    // ==========================
+    // 13. TYPE CONVERSION
+    // ==========================
+    
+    // parseInt()  → Converts a string to an integer (whole number)
+    // parseFloat() → Converts a string to a decimal number
+    // Number()     → Converts a string to a number (auto-detects integer or float)
+    
+    // Example:
+    let weightText = "75.5"; // string from user input
+    let heightText = "1.80"; // string
+    
+    // Convert string to numbers
+    let weight = parseFloat(weightText);
+    let height = parseFloat(heightText);
+    
+    // Now we can do math
+    let bmi = weight / (height * height);
+    
+    console.log("Weight (kg):", weight);
+    console.log("Height (m):", height);
+    console.log("BMI:", bmi.toFixed(2)); // toFixed(2) → round to 2 decimals
+    </script>
+    

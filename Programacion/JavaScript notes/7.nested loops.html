@@ -1,0 +1,32 @@
+
+
+<script>
+
+// ==========================
+// 7. NESTED LOOPS (Loop inside loop)
+// ==========================
+
+// Example: Years, Months, and Days (like your assignment)
+
+// Outer loop: years
+for (let year = 2023; year <= 2025; year++) {
+  console.log("Year:", year);
+
+  // Inner loop: months
+  for (let month = 1; month <= 12; month++) {
+    console.log("   Month:", month);
+
+    // Inner-inner loop: days
+    for (let day = 1; day <= 30; day++) {
+      console.log("      Day:", day);
+    }
+  }
+}
+
+// This pattern is called “loop within loop”.
+// The outer loop controls the large cycle (year),
+// the inner loops handle the smaller cycles (month, day).
+
+
+
+</script>

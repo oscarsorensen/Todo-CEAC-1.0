@@ -1,0 +1,3 @@
+
+
+open("miarchivo.txt", "w")

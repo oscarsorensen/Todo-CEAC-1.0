@@ -1,0 +1,19 @@
+
+
+<script>
+
+	//Los métodos tienen paréntasis aunque no tienen paragrafos.
+	
+	var fecha = new Date();
+	var anio = fecha.getYear();
+	console.log(anio);
+	var aniocompleto = fecha.getFullYear();
+	console.log(aniocompleto);
+
+	console.log(fecha.getHours());
+	console.log(fecha.getDate());
+	console.log(fecha.getMinutes());
+	console.log(fecha.getSeconds());
+
+
+</script>

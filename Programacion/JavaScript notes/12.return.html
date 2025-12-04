@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>JavaScript – Return Explanation</title>
+</head>
+<body>
+<h2>Open the console (F12 → Console) to see how <code>return</code> works</h2>
+
+<script>
+/*
+========================================
+  THE "return" STATEMENT IN JAVASCRIPT
+========================================
+
+Definition:
+- 'return' sends a value back from a function to where it was called.
+- It also STOPS the function immediately (any code after return is ignored).
+- You can return any type of value: numbers, strings, booleans, arrays, or objects.
+
+Think of it like this:
+You ask a function to do some work → it finishes → then it *returns* an answer to you.
+*/
+
+// ---------- Example 1: Basic return ----------
+function add(a, b) {
+  return a + b; // send back the sum
+}
+
+let sum = add(5, 3); // the function returns 8
+console.log("Example 1 → The result of add(5, 3) is:", sum);
+
+// ---------- Example 2: Without return ----------
+function addNoReturn(a, b) {
+  console.log("Sum:", a + b); // shows the result, but doesn't return it
+}
+
+let result = addNoReturn(5, 3); // function runs, but doesn't give back a value
+console.log("Example 2 → The value of result is:", result); // undefined
+
+// ---------- Example 3: return ends the function ----------
+function checkAge(age) {
+  if (age < 18) {
+    return "Minor"; // stops here if true
+  }
+  console.log("This line only runs if age >= 18");
+  return "Adult";
+}
+
+console.log("Example 3 → Age 15:", checkAge(15));
+console.log("Example 3 → Age 20:", checkAge(20));
+
+// ---------- Example 4: return used in calculations ----------
+function calcBMI(weight, height) {
+  return weight / (height * height); // returns a number
+}
+
+let bmi = calcBMI(70, 1.75);
+console.log("Example 4 → BMI result:", bmi.toFixed(2));
+
+// ---------- Example 5: returning complex data ----------
+function createUser(name, age) {
+  // return an object containing multiple values
+  return {
+    name: name,
+    age: age,
+    isAdult: age >= 18
+  };
+}
+
+let user = createUser("Oscar", 25);
+console.log("Example 5 → User object returned:", user);
+console.log("User name:", user.name);
+console.log("Is adult:", user.isAdult);
+
+/*
+========================================
+  SUMMARY
+========================================
+return → sends a value from a function back to the place it was called.
+
+Example:
+function sum(a, b) {
+  return a + b;
+}
+
+let total = sum(5, 10);
+console.log(total); // 15
+
+If a function has no 'return', it gives 'undefined'.
+'return' also ends the function immediately.
+
+Tip:
+Use return when you need to store, reuse, or display the result of a calculation.
+========================================
+*/
+</script>
+
+</body>
+</html>

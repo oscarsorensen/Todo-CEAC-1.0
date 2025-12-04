@@ -1,0 +1,15 @@
+
+Forskel på JavaScript og Python
+
+<script>
+var edad = prompt()
+var nombre = prompt()
+document.write()
+</script>
+
+
+PYTHON
+
+edad = input("Indica tuedad)
+nombre = input("")
+print(" Tu nombre es, nombre, "y tu edad es",edad,"anos")

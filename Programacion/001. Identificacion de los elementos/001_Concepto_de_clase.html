@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>UNIT 001 — Concept of a Class (Concepto de clase)</title>
+<style>body{font-family:Arial,Helvetica,sans-serif;max-width:900px;margin:40px auto;line-height:1.45} pre,code{background:#f6f8fa;padding:8px;border-radius:6px;display:block;overflow:auto} h1,h2{margin:0.6em 0} ul{margin:0.3em 0 1em 1.2em}</style>
+</head>
+<body>
+<h1>UNIT 001 — Concept of a Class <em>(Concepto de clase, clase, objeto, instancia)</em></h1>
+<h2>What you must know</h2>
+<ul>
+  <li>A <strong>class</strong> defines a new type with <strong>attributes</strong> and <strong>methods</strong>. <em>(clase, propiedades, métodos)</em></li>
+  <li>An <strong>object</strong> (instance) is a concrete variable of that class. <em>(objeto, instancia)</em></li>
+  <li><code>self</code> refers to the current object inside methods.</li>
+</ul>
+<h2>Minimal pattern</h2>
+<pre><code>class Cat:  # (clase)
+    def __init__(self):           # (constructor, se verá en U005)
+        self.name = ""            # (propiedad)
+        self.age = 0              # (propiedad)
+
+    def meow(self):               # (método)
+        print("Meow, I'm", self.name)
+
+# Create objects (instanciar objeto)
+c1 = Cat()
+c1.name = "Nina"
+c1.age = 2
+c1.meow()
+</code></pre>
+<h2>Types of attributes</h2>
+<ul>
+  <li><strong>Instance attributes</strong>: defined on <code>self</code>. Each object has its own values. <em>(propiedades de instancia)</em></li>
+  <li><strong>Class attributes</strong>: defined on the class (rare in your course so far). <em>(propiedades de clase)</em></li>
+</ul>
+<h2>Quick checks (exam)</h2>
+<ul>
+  <li>Use clear names: <code>name</code>, <code>price</code>, <code>email</code>.</li>
+  <li>Show you can <strong>create objects</strong> and <strong>assign properties</strong>.</li>
+  <li>Add a tiny method that uses <code>self</code>.</li>
+</ul>
+<h2>Practice snippet</h2>
+<pre><code>class Product:  # (Producto)
+    def __init__(self):
+        self.name = ""
+        self.price = 0.0
+
+    def info(self):
+        return f"Product(name={{self.name}}, price={{self.price}})"
+
+p = Product()
+p.name, p.price = "Shaker", 9.99
+print(p.info())
+</code></pre>
+</body></html>

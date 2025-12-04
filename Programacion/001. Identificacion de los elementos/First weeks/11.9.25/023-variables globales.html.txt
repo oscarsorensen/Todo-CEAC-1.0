@@ -1,0 +1,16 @@
+<script>
+	/*
+		Programa calculadora de facturas
+		(c) 2025 Oscar Sorensen
+		Calcula el IVA de una base imponible
+	*/
+	
+	//En este ejercicio no es nesecario importar ninguna librerias
+	
+	var base_imponible;
+	var total_IVA;
+	var total_factura;
+
+	//En este ejercicio toavía no usamos funciones or clases
+
+</script>

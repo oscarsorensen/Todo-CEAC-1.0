@@ -1,0 +1,67 @@
+En este ejercicio desarrollo un programa llamado “Cronista de una línea temporal”, cuyo objetivo es clasificar un rango de años según su etapa histórica.
+A través del uso de funciones, bucles e instrucciones condicionales en JavaScript, practico la validación de datos y el control del flujo de ejecución.
+El programa solicita al usuario el nombre del cronista y un rango de años, verifica que los valores sean correctos y muestra por consola a qué periodo pertenece cada año.
+Este tipo de ejercicio me ayuda a reforzar la estructura lógica de un programa y a comprender cómo dividir un problema en pasos pequeños y organizados.
+
+
+<script>
+/*
+Programa: Cronista de una línea temporal
+Versión: 0.1
+Autor: Oscar Sorensen
+Fecha: 29 de octubre de 2025
+Descripción: Este programa solicita un rango de años y clasifica cada año
+en una etapa histórica, mostrando los resultados en la consola.
+*/
+
+// Solicitar datos al usuario
+var nameChronicler = prompt("Name of the chronicler:");
+var startYear = prompt("From year?");
+var endYear = prompt("To year?");
+
+// Convertir a número entero
+startYear = parseInt(startYear);
+endYear = parseInt(endYear);
+
+console.log("Chronicler: " + nameChronicler);
+console.log("Years: " + startYear + " to " + endYear);
+console.log("What period is this?");
+
+// Validar rango de años
+if (startYear >= endYear) {
+console.log("Error: The start year must be less than the end year. Adjusting automatically...");
+startYear = endYear - 50;
+console.log("New year period: " + startYear + " to " + endYear);
+}
+
+// Función principal
+function periods(name, start, end) {
+for (var year = start; year <= end; year++) {
+    var period = "";
+
+    if (year < 0) {
+        period = "Before our era";
+    } else if (year <= 499) {
+        period = "Late Antiquity";
+    } else if (year <= 1499) {
+        period = "Middle Ages";
+    } else if (year <= 1789) {
+        period = "Modern Age";
+    } else if (year <= 1945) {
+        period = "Contemporary (19th–20th centuries)";
+    } else {
+        period = "Recent Contemporary";
+    }
+
+    console.log("Year " + year + ": " + period);
+}
+}
+
+// Ejecutar la función
+periods(nameChronicler, startYear, endYear);
+document.write("<b>" + nameChronicler + "</b>’s chronicle is available in the console.<br>");
+</script>
+
+El programa funciona correctamente: valida los datos introducidos, corrige el rango si es necesario y clasifica cada año dentro de su etapa histórica.
+Gracias a este ejercicio he reforzado el uso de condicionales, bucles y funciones en JavaScript, además de mejorar la organización y claridad de mi código.
+He comprendido la importancia de validar los datos de entrada y de mostrar resultados estructurados, lo que contribuye a crear programas más fiables y fáciles de mantener.

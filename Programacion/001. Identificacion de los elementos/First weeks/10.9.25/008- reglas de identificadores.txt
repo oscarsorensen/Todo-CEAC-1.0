@@ -1,0 +1,13 @@
+
+<script>
+	var nombre = "navn";
+	var nombre2 = "navn";
+	var nombre_completo = Incorrecto; 
+	var nombre-completo =  Incorrecto ;
+	var nombre completo = "Oscar"; // Incorrecto ;
+	var nombre completo=  "Oscar"; // Incorrecto ;
+	var global =  "Oscar" ; //Incorrecto 
+	
+	var nombreCompleto = "Oscar Sorensen"; // No recomendable
+
+</script>

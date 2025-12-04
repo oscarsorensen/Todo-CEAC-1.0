@@ -1,0 +1,34 @@
+
+En programación, los objetos predefinidos como Date y Math permiten trabajar con fechas, horas y operaciones matemáticas sin tener que crear estructuras complicadas.
+La instanciación de estos objetos es sencilla y su uso muy práctico.  
+En este ejercicio utilizo Date para obtener información temporal del sistema y Math para generar números aleatorios. El siguiente código muestra cómo instanciar y utilizar estos objetos en JavaScript.
+
+```
+<script> 
+
+/*
+Programa: Utilización de objetos Date y Math
+Versión: 0.1
+Autor: Oscar Sorensen
+Descripción: Este programa utiliza los objetos Date y Math para mostrar la fecha actual y generar una puntuación aleatoria entre 0 y 10.
+*/
+
+var fechaActual = new Date(); // Creación de un objeto Date para obtener la fecha actual
+
+console.log ("Fecha actual:", fechaActual); // Mostrar la fecha actual en formato legible
+
+console.log("Año actual:", fechaActual.getFullYear()); // Mostrar el año actual
+console.log("Mes actual:", fechaActual.getMonth() + 1); // Mostrar el mes actual (se suma 1 porque los meses van de 0 a 11)
+console.log("Día actual:", fechaActual.getDate()); // Mostrar el día actual
+console.log("Hora actual:", fechaActual.getHours()); // Mostrar la hora actual
+console.log("Minutos actuales:", fechaActual.getMinutes()); // Mostrar los minutos actuales
+console.log("Segundos actuales:", fechaActual.getSeconds()); // Mostrar los segundos actuales
+
+var puntuacionAleatoria = Math.floor(Math.random() * 11); // Generar una puntuación aleatoria entre 0 y 10 utilizando el objeto Math. Math.random() genera un número decimal entre 0 y 1, que se multiplica por 11 para obtener un rango de 0 a 10.999... Luego, Math.floor() redondea hacia abajo para obtener un entero entre 0 y 10.
+console.log("La puntuación aleatoria es: ", puntuacionAleatoria); // Mostrar la puntuación aleatoria generada
+
+</script>
+```
+
+Este ejercicio muestra cómo JavaScript facilita enormemente las operaciones comunes: Date permite gestionar información temporal y Math permite realizar cálculos sin necesidad de bibliotecas externas.
+Es importante comprender su uso para tareas futuras, como registrar eventos en una aplicación, generar datos de prueba o simular puntuaciones aleatorias en programas de evaluación o juegos.

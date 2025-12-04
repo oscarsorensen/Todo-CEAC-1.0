@@ -1,0 +1,26 @@
+
+<script>
+	/*Programa calculadora de notas musicales
+	v0.1 Oscar Sorensen
+	Este programa clasifica a las notas
+	*/
+
+
+    // la condición de inicio: dia = 1
+    // la condición de finalización: dia < 31
+    // la condición de incremento: dia++ (cada vez que pases por aquí, aumenta un valor al dia)
+
+
+  for(var octavo = 1;octavo <= 5;octavo++){
+    for(var node = 1;node <=7;node++){
+     
+        document.write("Nodas ",node," en la octavo ",octavo,"<br>");
+      
+    }
+  }
+
+
+
+
+</script>
+

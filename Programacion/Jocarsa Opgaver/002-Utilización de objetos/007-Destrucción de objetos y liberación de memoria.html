@@ -1,0 +1,36 @@
+En programación, los objetos son estructuras que almacenan información y permiten representar elementos del mundo real dentro del código. Sin embargo, cada objeto ocupa un espacio en la memoria del sistema, por lo que es importante saber cuándo y cómo liberar esa memoria para mantener un buen rendimiento.
+
+Cuando un objeto o variable ya no se necesita, se puede establecer como nulo o sin referencia, lo que indica al recolector de basura que se puede recuperar el espacio de memoria. Este proceso se conoce como destrucción de objetos o liberación de memoria, y es fundamental para la gestión eficiente de los recursos dentro de un programa.
+
+En este ejercicio utilizo una variable simple para demostrar este concepto de forma práctica, mostrando cómo se puede eliminar una referencia para liberar el espacio que ocupa en la memoria.
+
+
+En JavaScript, no es necesario destruir manualmente los objetos o variables como en otros lenguajes, ya que el recolector de basura realiza este proceso automáticamente cuando una variable ya no se utiliza.
+Sin embargo, el programador puede ayudar al sistema asignando null a las variables que ya no se necesitan, eliminando así su referencia activa.
+
+El siguiente código muestra este proceso paso a paso:
+
+
+````Corriges mis errores pero no avanzas codigo```
+
+<script>
+    /*
+    Programa: Destrucción de Objetos y Liberación de Memoria
+    Versión: 0.1
+    Autor: Oscar Sorensen
+    Descripción: Este programa demuestra cómo destruir un objeto y liberar memoria asignando null a una variable.
+    */
+
+    var edad = 47; // Creación de la variable edad y asignación del valor 47
+    console.log("Edad antes de la destrucción: " + edad); // Mostrar el contenido de la variable edad
+    edad = null; // Asignación de null a la variable edad para destruir el objeto
+    console.log("Edad después de la destrucción: " + edad); // Mostrar nuevamente el contenido de la variable edad
+
+
+    
+
+</script>
+
+Liberar memoria es un proceso esencial para la gestión eficiente de los recursos de un programa. Asignar el valor nulo a una variable que ya no se necesita permite al lenguaje detectar que su espacio puede reutilizarse.
+
+Comprender este mecanismo ayuda a evitar errores como el consumo excesivo de memoria o el bajo rendimiento en aplicaciones más complejas, reforzando así el aprendizaje sobre objetos, ciclos de vida y eficiencia en la programación.

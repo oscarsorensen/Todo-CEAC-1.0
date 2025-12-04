@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JavaScript – if / else if / else</title>
+</head>
+<body>
+<h2>Open the console (F12 → Console) to see the results</h2>
+
+<script>
+/*
+========================================
+  IF, ELSE IF, ELSE – CONTROL STRUCTURES
+========================================
+
+Definition:
+Used to make decisions in your code.
+They check conditions (true/false) and execute
+different blocks of code depending on the result.
+
+Structure:
+if (condition) {
+   // runs if condition is true
+} else if (otherCondition) {
+   // runs if the first condition was false,
+   // but this one is true
+} else {
+   // runs if none of the above are true
+}
+*/
+
+// ---------- Example 1: Basic if ----------
+let temperature = 30;
+
+if (temperature > 25) {
+  console.log("It's hot today!");
+}
+
+// Only runs if the condition is TRUE.
+
+
+// ---------- Example 2: if / else ----------
+let age = 17;
+
+if (age >= 18) {
+  console.log("You are an adult");
+} else {
+  console.log("You are a minor");
+}
+
+// If the first condition is false, the 'else' part runs.
+
+
+// ---------- Example 3: if / else if / else ----------
+let score = 75;
+
+if (score >= 90) {
+  console.log("Grade: A");
+} else if (score >= 80) {
+  console.log("Grade: B");
+} else if (score >= 70) {
+  console.log("Grade: C");
+} else {
+  console.log("Grade: Fail");
+}
+
+// 'else if' checks a new condition if the previous one was false.
+// Only one block will run, from top to bottom.
+
+
+// ---------- Example 4: Nested if (an if inside another if) ----------
+let loggedIn = true;
+let isAdmin = false;
+
+if (loggedIn) {
+  console.log("Welcome user!");
+  if (isAdmin) {
+    console.log("You have admin privileges.");
+  } else {
+    console.log("You are a regular user.");
+  }
+} else {
+  console.log("Please log in first.");
+}
+
+
+/*
+========================================
+  TIPS
+========================================
+- You can have multiple 'else if' lines, but only one 'if' and one 'else'.
+- The program checks from top to bottom.
+- As soon as one condition is true, it stops checking further.
+- Conditions must be something that evaluates to TRUE or FALSE.
+========================================
+*/
+</script>
+
+</body>
+</html>

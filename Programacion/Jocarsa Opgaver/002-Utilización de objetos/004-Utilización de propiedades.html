@@ -1,0 +1,31 @@
+
+En esta tarea, el objetivo del programa es crear una aplicación para un gimnasio online que gestione sesiones de ejercicio.
+El programa utiliza objetos JavaScript para mostrar los detalles de una sesión de ejercicio, incluyendo la fecha, la hora de inicio, la duración y el tipo de ejercicio.
+Este ejercicio es relevante para el tema de las propiedades de los objetos en JavaScript, ya que muestra cómo definir, acceder y mostrar propiedades dentro de un objeto.
+
+<script>
+    /*
+    Programa: Aplicación para un gimnasio en línea
+    Versión: 0.1
+    Autor: Oscar Sorensen
+    Descripción: Este programa crea un objeto que representa una sesión de ejercicio
+    y muestra información sobre ella utilizando propiedades del objeto Date.
+    */
+    
+    var sesionEjercicio = {
+        fecha: new Date(2024, 10, 25), // Mes 10 = noviembre (JavaScript empieza en 0)
+        horaInicio: "09:00", // Hora de inicio en formato 24 horas
+        duracion: 90, // Duración en minutos
+        tipoEjercicio: "Entrenamiento de fuerza" // Tipo de ejercicio
+    };
+    
+    // Mostrar la información formateada en la página web con document.write 
+    document.write("Detalles de la sesión de ejercicio:<br>");
+    document.write("Fecha: " + sesionEjercicio.fecha + "<br>"); //muestra la fecha completa vinculando primero a la variable y luego accediendo a la propiedad
+    document.write("Hora de inicio: " + sesionEjercicio.horaInicio + "<br>");
+    document.write("Duración: " + sesionEjercicio.duracion + " minutos<br>");
+    document.write("Tipo de ejercicio: " + sesionEjercicio.tipoEjercicio + "<br>");
+</script>
+
+Este programa demuestra cómo utilizar objetos en JavaScript para gestionar información relevante en una aplicación de gimnasio online.
+Esto podría implementarse fácilmente en un escenario real, para mostrar cuándo, durante cuánto tiempo y qué tipo de formación realizan las personas.

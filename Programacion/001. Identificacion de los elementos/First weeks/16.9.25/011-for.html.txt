@@ -1,0 +1,14 @@
+<script>
+    // la condición de inicio: dia = 1
+    // la condición de finalización: dia < 31
+    // la condición de incremento: dia++ (cada vez que pases por aquí, aumenta un valor al dia)
+
+for(var anio = 1978;anio <= 2025;anio++){
+		for(var mes = 1;mes <=12;mes++){
+    		for (var dia = 1; dia < 31; dia++) {
+       			document.write("Hoy es el día " + dia + " del mes",mes, "del anio ", anio, "<br>");
+			}
+		}
+	}
+
+</script>

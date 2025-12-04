@@ -1,0 +1,12 @@
+<script>
+	var edad = 47;
+
+	if(edad < 30){
+//Bloque que se ejecuta si la xpresion es false
+		document.write("Eres un joven");	
+	}else{
+	document.write("Ya no eres un joven");
+}
+
+	
+</script>

@@ -1,0 +1,51 @@
+
+<script>
+/*
+   Programa que muestra un cronista del tiempo.
+   v0.1 Oscar Sorensen
+   Este programa es una tarea el 19 de septiembre de 2025.
+   It consists of everything that we learned the first two weeks of class.
+*/
+
+//Variables which starts the program. The name and years.
+
+   var nameChronicler = prompt("Name of the chronicler")
+   var startYear = prompt("From year ?")
+   var endYear = prompt("To year ?")
+      console.log("Chronicler: " + nameChronicler)
+      console.log("Years: " + startYear + " to " + endYear)
+      console.log("What period is this?")
+
+//IF statement to check if the years are correct. If not, it will change the start year to be 50 years before the end year.
+         if(startYear >= endYear)
+            console.log("Error: The start year must be less than the end year. I, the mighty AI of IF statements, changed the dates for you."); 
+             if (startYear >= endYear){
+               startYear = endYear - 50;
+               console.log("New year period: " + startYear + " to " + endYear);
+         } 
+
+
+//Loop to go through the years
+
+         function periods(name, start, end) {
+           for (var year = start; year <= end; year++) {
+             var period = "";}
+               if (year < 0) {
+                  period = "Before our era";
+               } else if (year >= 0 && year <= 499) {
+                  period = "Late Antiquity";
+               } else if (year >= 500 && year <= 1499) {
+                  period = "Middle Ages";
+               } else if (year >= 1500 && year <= 1789) {
+                  period = "Modern Age";
+               } else if (year >= 1790 && year <= 1945) {
+                  period = "Contemporary (19th–20th centuries)";
+               } else if (year >= 1946) {
+                  period = "Recent Contemporary";
+               }
+               console.log("The years " + startYear + " to " + endYear + " is " + period);
+               }
+         periods(nameChronicler, startYear, endYear);
+         document.write("Go to console to see: " + nameChronicler + "´s" + " work<br>");
+
+</script>

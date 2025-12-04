@@ -1,0 +1,23 @@
+<script>
+	/*
+		Programa de música en Streaming
+		(c) 2025 Oscar Sorensen	
+		Aplicación que muestra información de la canción.
+	*/
+	
+	var fecha = new Date();
+	var anio = fecha.getFullYear();
+	var mes = fecha.getMonth();
+	var dia = fecha.getDate();
+	var hora = fecha.getHours();
+	var minutos = fecha.getMinutes();
+	var segundos = fecha.getSeconds();
+
+	var titulo = "Bohemian Rhapsody";
+	var artista = "Queen";
+	
+	console.log(anio,mes,dia,hora,minutos,segundos);
+	console.log("Reproduciendo: ", titulo, " - ", artista);
+
+
+</script>

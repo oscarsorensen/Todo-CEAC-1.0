@@ -1,0 +1,4 @@
+<script>
+	var nombre = "Oscar Sorensen";
+
+</script>
