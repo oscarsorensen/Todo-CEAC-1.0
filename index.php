@@ -1,7 +1,7 @@
 <?php
 $items = array_diff(scandir("."), ["..", "."]);
 
-// mapper først, alfabetisk, .git nederst
+// sort: folders first, alpha, .git forced to files and bottom
 usort($items, function($a, $b) {
     if ($a === '.git') return 1;
     if ($b === '.git') return -1;
@@ -32,35 +32,29 @@ function file_language($filename) {
 
 function dir_count($dir) {
     if (!is_dir($dir)) return 0;
-
-    // stop recursion on .git folder
     if (basename($dir) === '.git') return 0;
-
     $count = 0;
     $items = array_diff(scandir($dir), ["..", "."]);
-
     foreach ($items as $item) {
         $path = $dir . "/" . $item;
-
-        if (is_dir($path)) {
-            $count += dir_count($path);  // tæller undermapper rekursivt
-        } else {
-            $count++;
-        }
+        $count += is_dir($path) ? dir_count($path) : 1;
     }
-
     return $count;
 }
 
-// split i folders/files
+// split into folders/files (but .git forced into files)
 $folders = [];
 $files   = [];
 foreach ($items as $item) {
+    if ($item === '.git') {
+        $files[] = $item;
+        continue;
+    }
     if (is_dir($item)) $folders[] = $item;
     else $files[] = $item;
 }
 
-// breadcrumb
+// breadcrumb path
 $path  = trim($_SERVER['REQUEST_URI'], '/');
 $parts = $path ? explode('/', $path) : [];
 ?>
@@ -68,7 +62,7 @@ $parts = $path ? explode('/', $path) : [];
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>PHP Project Browser</title>
+<title>Localhost · Project Browser</title>
 
 <style>
     body {
@@ -76,13 +70,25 @@ $parts = $path ? explode('/', $path) : [];
         color: #FCFCFA;
         font-family: Helvetica, Arial, sans-serif;
         margin: 40px;
-        transition: .15s;
+        opacity: 0;
+        transition: opacity 1s ease;
     }
+    body.loaded { opacity: 1; }
 
     h1 {
-        margin-bottom: 25px;
+        margin: 0;
+        font-size: 32px;
         color: #FAD000;
         letter-spacing: 1px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .subtitle {
+        font-size: 15px;
+        color: #C1C0C0;
+        opacity: .7;
+        margin-bottom: 30px;
     }
 
     .breadcrumb {
@@ -99,11 +105,12 @@ $parts = $path ? explode('/', $path) : [];
     #search {
         background: #403E41;
         border: 1px solid #514F52;
-        padding: 8px 12px;
-        border-radius: 6px;
+        padding: 10px 14px;
+        border-radius: 8px;
         color: #FCFCFA;
-        margin-bottom: 20px;
-        width: 240px;
+        margin-bottom: 24px;
+        width: 260px;
+        font-size: 14px;
     }
     #search:focus {
         outline: none;
@@ -111,9 +118,9 @@ $parts = $path ? explode('/', $path) : [];
     }
 
     .section {
-        margin-top: 30px;
-        margin-bottom: 10px;
-        font-size: 15px;
+        margin-top: 35px;
+        margin-bottom: 12px;
+        font-size: 14px;
         color: #C1C0C0;
         letter-spacing: 1px;
         text-transform: uppercase;
@@ -124,47 +131,34 @@ $parts = $path ? explode('/', $path) : [];
     .item {
         display: flex;
         justify-content: space-between;
-        padding: 12px 18px;
+        padding: 16px 22px;
         background: #403E41;
-        margin-bottom: 10px;
-        border-radius: 6px;
-        transition: 0.15s;
+        margin-bottom: 12px;
+        border-radius: 8px;
         border: 1px solid #514F52;
         box-shadow: 0 2px 4px rgba(0,0,0,0.25);
-        opacity: 0;
-        transform: translateY(6px);
-        animation: fadeIn 1s ease forwards;
+        transition: 0.2s ease;
     }
 
-    /* lille stagger så man kan se det, men ikke langsomt */
-    .item:nth-child(1) { animation-delay: .05s; }
-    .item:nth-child(2) { animation-delay: .10s; }
-    .item:nth-child(3) { animation-delay: .15s; }
-    .item:nth-child(4) { animation-delay: .20s; }
-    .item:nth-child(5) { animation-delay: .25s; }
-
-    @keyframes fadeIn {
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* slide-out når man klikker */
-    body.slideOut .item {
-        opacity: 0;
-        transform: translateX(-10px);
-        transition: .15s ease;
-    }
-
-    .item:hover {
+    /* folders bounce */
+    .folder-item:hover {
         background: #4A484B;
         border-color: #FAD000;
+        transform: translateY(-2px) scale(1.01);
     }
 
-    .left { display: flex; gap: 12px; align-items: center; }
+    /* files faded always (also on hover) */
+    .file-item {
+        opacity: .6;
+    }
+    .file-item:hover {
+        opacity: .6;
+        background: #4A484B;
+        border-color: #514F52;
+    }
 
-    .icon { width: 22px; text-align: center; }
+    .left { display: flex; gap: 16px; align-items: center; }
+    .icon { width: 24px; text-align: center; }
 
     .tag {
         padding: 2px 8px;
@@ -188,6 +182,7 @@ $parts = $path ? explode('/', $path) : [];
     .faded {
         opacity: 0.35;
         font-style: italic;
+        transition: opacity 2s ease;
     }
 
     a {
@@ -203,11 +198,11 @@ $parts = $path ? explode('/', $path) : [];
         text-align: right;
     }
 </style>
-
 </head>
 <body>
 
-<h1>PHP Project Browser</h1>
+<h1>Localhost</h1>
+<div class="subtitle">Synced via GitHub</div>
 
 <div class="breadcrumb">
     <a href="/">Home</a>
@@ -223,89 +218,66 @@ $parts = $path ? explode('/', $path) : [];
 
 <input id="search" placeholder="Search…" autocomplete="off">
 
+<!-- Folders -->
 <h2 class="section">Folders</h2>
+<?php foreach ($folders as $item):
+    $path = $item;
+    $modified = date("Y-m-d H:i", filemtime($path));
+    $count = dir_count($path);
 
-<?php foreach ($folders as $item): ?>
-    <?php
-        $path = $item;
-        $modified = date("Y-m-d H:i", filemtime($path));
-        $count = dir_count($path);
-
-        $is_irrelevant = (
-            $item === ".DS_Store" ||
-            $item === "index.php" ||
-            $item === ".git"
-        );
-    ?>
-
-    <div class="item <?php echo $is_irrelevant ? "faded" : "" ?>">
-        <div class="left">
-            <span class="icon">📁</span>
-            <a href="<?php echo $item; ?>"
-               title="Modified: <?php echo $modified ?>&#10;Files: <?php echo $count ?>">
-               <?php echo $item; ?>
-            </a>
-
-            <?php if ($item === '.git'): ?>
-                <span class="tag Git">Git repo</span>
-            <?php else: ?>
-                <span class="tag folder"><?php echo $count ?> files</span>
-            <?php endif; ?>
-        </div>
-
-        <div class="right">
-            <div>-</div>
-            <div><?php echo $modified; ?></div>
-        </div>
+    // irrelevant in folders: index & .DS_Store
+    $is_irrelevant = ($item === ".DS_Store" || $item === "index.php");
+?>
+<div class="item folder-item <?php echo $is_irrelevant ? "faded" : "" ?>">
+    <div class="left">
+        <span class="icon">📁</span>
+        <a href="<?php echo $item; ?>"
+           title="Modified: <?php echo $modified ?>&#10;Files: <?php echo $count ?>">
+           <?php echo $item; ?>
+        </a>
+        <span class="tag folder"><?php echo $count ?> files</span>
     </div>
+    <div class="right">
+        <div>-</div>
+        <div><?php echo $modified; ?></div>
+    </div>
+</div>
 <?php endforeach; ?>
 
-
+<!-- Files -->
 <h2 class="section">Files</h2>
+<?php foreach ($files as $item):
+    $path = $item;
+    $size = pretty_size(filesize($path));
+    $modified = date("Y-m-d H:i", filemtime($path));
+    $lang = file_language($path);
+?>
+<div class="item file-item">
+    <div class="left">
+        <span class="icon">📄</span>
+        <a href="<?php echo $item; ?>"
+           title="Modified: <?php echo $modified ?>&#10;Size: <?php echo $size ?><?php if($lang) echo '&#10;Type: ' . $lang; ?>">
+           <?php echo $item; ?>
+        </a>
 
-<?php foreach ($files as $item): ?>
-    <?php
-        $path = $item;
-        $is_dir = false;
-        $icon = "📄";
-        $size = pretty_size(filesize($path));
-        $modified = date("Y-m-d H:i", filemtime($path));
-        $lang = file_language($path);
-
-        $is_irrelevant = (
-            $item === ".DS_Store" ||
-            $item === "index.php" ||
-            $item === ".git"
-        );
-    ?>
-
-    <div class="item <?php echo $is_irrelevant ? "faded" : "" ?>">
-        <div class="left">
-            <span class="icon"><?php echo $icon; ?></span>
-            <a href="<?php echo $item; ?>"
-               title="Modified: <?php echo $modified ?>&#10;Size: <?php echo $size ?><?php if($lang) echo '&#10;Type: ' . $lang; ?>">
-               <?php echo $item; ?>
-            </a>
-
-            <?php if ($lang): ?>
-                <span class="tag <?php echo $lang; ?>"><?php echo $lang; ?></span>
-            <?php endif; ?>
-        </div>
-
-        <div class="right">
-            <div><?php echo $size; ?></div>
-            <div><?php echo $modified; ?></div>
-        </div>
+        <?php if ($item === '.git'): ?>
+            <span class="tag Git">Git repo</span>
+        <?php elseif ($lang): ?>
+            <span class="tag <?php echo $lang; ?>"><?php echo $lang; ?></span>
+        <?php endif; ?>
     </div>
-
+    <div class="right">
+        <div><?php echo $size; ?></div>
+        <div><?php echo $modified; ?></div>
+    </div>
+</div>
 <?php endforeach; ?>
+
 
 <script>
-// slide-out ved klik
-document.querySelectorAll(".item a").forEach(a => {
-    a.addEventListener("click", () => {
-        document.body.classList.add("slideOut");
-    });
+// fade-in page load
+window.addEventListener("load", () => {
+    document.body.classList.add("loaded");
 });
 
 // live search
