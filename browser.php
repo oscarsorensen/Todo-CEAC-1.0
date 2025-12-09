@@ -35,6 +35,31 @@ function dir_count($dir) {
     return $count;
 }
 
+function dir_size($dir) {
+    $size = 0;
+    foreach (array_diff(scandir($dir), ['.', '..']) as $file) {
+        $path = "$dir/$file";
+        if (is_file($path)) {
+            $size += filesize($path);
+        } elseif (is_dir($path)) {
+            $size += dir_size($path);
+        }
+    }
+    return $size;
+}
+
+function total_project_size($folders) {
+    $total = 0;
+    foreach ($folders as $dir) {
+        if (is_dir($dir)) {
+            $total += dir_size($dir);
+        }
+    }
+    return $total;
+}
+
+
+
 // --- Only these belong to Files (whitelist) ---
 $special_files = [
     ".DS_Store",
@@ -109,9 +134,10 @@ h1 {
     font-size: 14px;
 }
 .breadcrumb a {
-    color: #80CBC4;
+    color: #8FE8DB;
     text-decoration: none;
 }
+
 
 #search {
     background: #403E41;
@@ -226,13 +252,13 @@ h1 {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: 70px;
+  top: 0px;
 
   display: flex;             /* center tekst */
   align-items: center;
   justify-content: center;
 
-  height: 34px;
+  height: 40px;
   padding: 0 25px;
 
   background: #3B4B53;
@@ -267,18 +293,59 @@ h1 {
 
 }
 
-
-
+.breadcrumb-center {
+  position: relative;
+  z-index: 10;
 }
+
+.breadcrumb a:hover {
+  color: #FAD000;          /* gul highlight */
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.total-box {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 155px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 40px;
+  padding: 0 25px;
+
+  background: #3B4B53;
+  border-radius: 10px;
+  border: 1px solid #495A61;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.35);
+  backdrop-filter: blur(6px);
+
+  font-size: 17px;
+  font-weight: 500;
+  color: #80CBC4;
+}
+
+
+
 
 
 </style>
 </head>
 <body>
 
-<img class="corner-gif" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOG9kM3U1Y2oxaGg3dGowenEzbWJ6czR6ZjBzMDV3NnZ2azhhdXpudyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/13HgwGsXF0aiGY/giphy.gif">
+<!--<img class="corner-gif" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExb2Ewa3Y2eDk1NHVnYWttaHE1MzI3MGJvYTNiZmoyaXdkeGM4OXptZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/MGaacoiAlAti0/giphy.gif">-->
+
+
+<img class="corner-gif" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOG9kM3U1Y2oxaGg3dGowenEzbWJ6czR6ZjBzMDV3NnZ2azhhdXpudyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/13HgwGsXF0aiGY/giphy.gif"> 
 
 <!--<img class="corner-gif" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExc2xpZDlkYjI4Y2tzdXA2M3o4OHg1dm5rbWNhaXhsN2diajZrdG5odCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/GghGKaZ8JeHJx0apQC/giphy.gif"> -->
+
+
+<?php $totalSize = pretty_size(total_project_size($folders)); ?>
 
 
 <h1 class="title">Localhost</h1>
@@ -296,6 +363,10 @@ h1 {
       ?>
     </div>
   </div>
+</div>
+
+<div class="total-box">
+    Total Size: <?php echo $totalSize; ?>
 </div>
 
 
@@ -322,9 +393,10 @@ h1 {
             <span class="tag folder"><?php echo dir_count($path) ?> files</span>
         </div>
         <div class="right">
-            <div>-</div>
-            <div><?php echo $modified; ?></div>
-        </div>
+    <div><?php echo pretty_size(dir_size($path)); ?></div>
+    <div><?php echo $modified; ?></div>
+</div>
+
     </div>
 
 <?php else: ?>
