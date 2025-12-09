@@ -18,7 +18,7 @@ function file_language($filename) {
         "sql" => "SQL",
         "json" => "JSON",
         "md" => "Markdown",
-        "jpg", "jpeg", "png", "gif", "webp" => "Image",
+        "jpg", "jpeg", "png", "gif", "webp", "svg" => "Image",
         default => ""
     };
 }
@@ -73,9 +73,7 @@ function make_tree($h) {
     return implode("\n", $tree);
 }
 
-$tree_heights = [4,5,10,7,4];
-$forest = [];
-foreach ($tree_heights as $h) $forest[] = make_tree($h);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -178,6 +176,12 @@ h1 {
 .work-file-item {
     opacity: 1;
 }
+
+.image-item {
+    opacity: .6;
+}
+
+
 .work-file-item:hover {
     background: #4A484B;
     border-color: #FAD000;
@@ -218,20 +222,41 @@ h1 {
 
 
 
-/* Forest */
-.forest {
-    position: absolute;
-    top: 50px;
-    left: 800px;
-    display: flex;
-    gap: 35px;
-    align-items: flex-end;
-    font-family: monospace;
-    white-space: pre;
-    pointer-events: none;
-    opacity: .90;
-    font-size: 14px;
-    line-height: 1.1;
+.breadcrumb-box {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 70px;
+
+  display: flex;             /* center tekst */
+  align-items: center;
+  justify-content: center;
+
+  height: 34px;
+  padding: 0 25px;
+
+  background: #3B4B53;
+  border-radius: 10px;
+  border: 1px solid #495A61;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.35);
+  backdrop-filter: blur(6px);
+}
+
+.breadcrumb {
+  margin: 0;
+  padding: 0;
+  line-height: 0;        /* nul effekt */
+  display: flex;
+  align-items: center;   /* center inde i center */
+  gap: 6px;              /* lille luft mellem elementer */
+  font-size: 17px;
+  font-weight: 500;
+  color: #E1E5E7;
+  white-space: nowrap;
+}
+
+
+
 }
 
 
@@ -239,26 +264,29 @@ h1 {
 </head>
 <body>
 
-<div class="forest">
-<?php foreach ($forest as $tree): ?>
-<pre><?php echo $tree; ?></pre>
-<?php endforeach; ?>
-</div>
 
-<h1>Localhost</h1>
-<div class="subtitle">Synced via GitHub</div>
 
-<div class="breadcrumb">
-    <a href="/">Home</a>
-    <?php
-    $acc = '';
-    foreach ($parts as $p) {
+<h1 class="title">Localhost</h1>
+<div class="breadcrumb-center">
+  <div class="breadcrumb-box">
+    <div class="breadcrumb">
+      <a href="/">Home</a>
+      <?php
+      $acc = '';
+      foreach ($parts as $p) {
         if (!$p || $p === 'index.php') continue;
         $acc .= "/$p";
-        echo ' › <a href="'.$acc.'/">'.htmlspecialchars($p).'</a>';
-    }
-    ?>
+        echo ' › <a href="'.$acc.'/">'.$p.'</a>';
+      }
+      ?>
+    </div>
+  </div>
 </div>
+
+
+
+
+<div class="subtitle">Synced via GitHub</div>
 
 <input id="search" placeholder="Search…" autocomplete="off">
 
@@ -287,7 +315,7 @@ h1 {
 <?php else: ?>
     <!-- ARBEJDSFIL -->
     <?php $lang = file_language($path); ?>
-    <div class="item work-file-item">
+    <div class="item work-file-item <?php echo ($lang === 'Image') ? 'image-item' : ''; ?>">
         <a class="overlay-link" href="<?php echo $item; ?>"></a>
         <div class="left">
             <span class="icon">📄</span>

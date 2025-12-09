@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      #nave{
+        position:absolute;
+        width:200px;
+        left:40px;
+        top:40px;
+      }
+    </style>
+  </head>
+  <body>
+    <img src="nave.png" id="nave">
+  </body>
+
+  <script>
+    // Primero declaramos la clase jugador
+    class Jugador {
+      constructor(x, y){
+        this.posx = x;
+        this.posy = y;
+      }
+    }
+
+    // ahora creo una instancia del jugador
+    let InstanciaJugador = new Jugador(40, 40);
+    let nave = document.querySelector("#nave");
+
+    document.onkeydown = function(tecla){
+      switch(tecla.keyCode){
+        case 87: // W
+          InstanciaJugador.posy -= 5;
+          break;
+        case 83: // S
+          InstanciaJugador.posy += 5;
+          break;
+        case 65: // A
+          InstanciaJugador.posx -= 5;
+          break;
+        case 68: // D
+          InstanciaJugador.posx += 5;
+          break;
+      }
+
+      nave.style.left = InstanciaJugador.posx + "px";
+      nave.style.top  = InstanciaJugador.posy + "px";
+    }
+  </script>
+</html>
