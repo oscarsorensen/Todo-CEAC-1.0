@@ -73,7 +73,7 @@ function make_tree($h) {
     return implode("\n", $tree);
 }
 
-$tree_heights = [4,9,5,7,10,7,5];
+$tree_heights = [4,5,10,7,4];
 $forest = [];
 foreach ($tree_heights as $h) $forest[] = make_tree($h);
 ?>
@@ -222,7 +222,7 @@ h1 {
 .forest {
     position: absolute;
     top: 50px;
-    left: 380px;
+    left: 800px;
     display: flex;
     gap: 35px;
     align-items: flex-end;
