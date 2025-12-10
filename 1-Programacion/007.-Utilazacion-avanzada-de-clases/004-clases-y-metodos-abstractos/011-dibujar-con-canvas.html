@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+  <head>	
+    
+  </head>
+  <body>
+    <canvas></canvas>
+    <script>
+      let lienzo = document.querySelector("canvas");	// Atrapo el canvas
+      lienzo.width = 512;															// Le pongo anchura
+      lienzo.height = 512;														// Le pongo altura
+      let contexto = lienzo.getContext("2d");		// Voy a dibujar en 2D
+      
+      // Ahora voy a dibujar un circulo
+      contexto.beginPath();			// Empiezo a dibujar
+      // arco: xinicial, 
+      contexto.arc(256,256,200,0,Math.PI*2)
+    </script>
+  </body>
+</html>

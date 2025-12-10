@@ -1,4 +1,3 @@
-
 <?php
 $items = array_diff(scandir("."), ["..", "."]);
 
@@ -25,13 +24,14 @@ function file_language($filename) {
 }
 
 function dir_count($dir) {
-    if (!is_dir($dir)) return 0;
-    if (basename($dir) === '.git') return 0;
     $count = 0;
-    $items = array_diff(scandir($dir), ["..", "."]);
-    foreach ($items as $item) {
-        $path = $dir . "/" . $item;
-        $count += is_dir($path) ? dir_count($path) : 1;
+    foreach (array_diff(scandir($dir), ['.', '..']) as $item) {
+        $path = "$dir/$item";
+        if (is_dir($path)) {
+            $count += dir_count($path);
+        } else {
+            $count++;
+        }
     }
     return $count;
 }
@@ -49,17 +49,21 @@ function dir_size($dir) {
     return $size;
 }
 
-function total_project_size($folders) {
+function current_directory_total() {
     $total = 0;
-    foreach ($folders as $dir) {
-        if (is_dir($dir)) {
-            $total += dir_size($dir);
+    foreach (array_diff(scandir("."), ['.', '..']) as $item) {
+        if ($item === '.git') continue;
+        $path = "./$item";
+        if (is_dir($path)) {
+            $total += dir_size($path);
+        } elseif (is_file($path)) {
+            $total += filesize($path);
         }
     }
     return $total;
 }
 
-
+$totalSize = pretty_size(current_directory_total());
 
 // --- Only these belong to Files (whitelist) ---
 $special_files = [
@@ -87,6 +91,7 @@ sort($files, SORT_NATURAL | SORT_FLAG_CASE);
 
 $path  = trim($_SERVER['REQUEST_URI'], '/');
 $parts = $path ? explode('/', $path) : [];
+
 ?>
 
 
@@ -321,6 +326,7 @@ h1 {
   color: #80CBC4;
 }
 
+.Markdown { background: #FFCA80; }
 
 
 
@@ -337,7 +343,6 @@ h1 {
 <!--<img class="corner-gif" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExc2xpZDlkYjI4Y2tzdXA2M3o4OHg1dm5rbWNhaXhsN2diajZrdG5odCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/GghGKaZ8JeHJx0apQC/giphy.gif"> -->
 
 
-<?php $totalSize = pretty_size(total_project_size($folders)); ?>
 
 
 <h1 class="title">Localhost</h1>
@@ -358,8 +363,9 @@ h1 {
 </div>
 
 <div class="total-box">
-    Total Size: <?php echo $totalSize; ?>
+    Total Size: <?= $totalSize ?>
 </div>
+
 
 
 <div class="subtitle">Synced via GitHub</div>
@@ -375,7 +381,6 @@ h1 {
     $path = $item;
     $modified = date("Y-m-d H:i", filemtime($path));
 ?>
-
 
 <?php if (is_dir($path)): ?>
     <!-- MAPPE -->
