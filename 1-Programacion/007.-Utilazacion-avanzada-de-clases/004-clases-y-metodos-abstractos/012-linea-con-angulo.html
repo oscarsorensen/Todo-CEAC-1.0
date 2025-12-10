@@ -28,6 +28,14 @@
       contexto.moveTo(256,0);										// Muevo el cursor sin dibujar
       contexto.lineTo(256,512);									// Muevo el curso pero ya dibujando
       contexto.stroke()	
+   
+        //ahora dibujo una linea con angulo
+    let angulo = 1; //define un angulo, acordaros que estamos en radianes
+    contexto.beginPath();											// Empiezo a dibujar
+    contexto.moveTo(256,256);
+    contexto.lineTo(256+200*Math.cos(angulo),256+200*Math.sin(angulo));
+    contexto.stroke();
+
     </script>
   </body>
 </html>
