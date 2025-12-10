@@ -340,7 +340,7 @@ h1 {
 
 
 <img class="corner-gif" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOG9kM3U1Y2oxaGg3dGowenEzbWJ6czR6ZjBzMDV3NnZ2azhhdXpudyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/13HgwGsXF0aiGY/giphy.gif"> 
-
+<!--<img class="corner-gif" src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExdGhkNW1pZGZ0YW16OGV1MHFoNzZ1OWZjYWRnMGE0aWh1YXFjbzRhdCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/4H3Ii5eLChYul9p7NL/giphy.gif">-->
 <!--<img class="corner-gif" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExc2xpZDlkYjI4Y2tzdXA2M3o4OHg1dm5rbWNhaXhsN2diajZrdG5odCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/GghGKaZ8JeHJx0apQC/giphy.gif"> -->
 
 
