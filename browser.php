@@ -1,3 +1,4 @@
+
 <?php
 $items = array_diff(scandir("."), ["..", "."]);
 
@@ -86,27 +87,19 @@ sort($files, SORT_NATURAL | SORT_FLAG_CASE);
 
 $path  = trim($_SERVER['REQUEST_URI'], '/');
 $parts = $path ? explode('/', $path) : [];
-
-function make_tree($h) {
-    $tree = [];
-    for ($i = 1; $i <= $h; $i++) {
-        $stars  = str_repeat("*", $i*2 - 1);
-        $spaces = str_repeat(" ", $h - $i);
-        $tree[] = $spaces . "/" . $stars . "\\";
-    }
-    $tree[] = str_repeat(" ", $h-1) . "||";
-    return implode("\n", $tree);
-}
-
-
 ?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+
 <title>Localhost · Project Browser</title>
 
 <style>
+
 body {
     background: #2D2A2E;
     color: #FCFCFA;
@@ -224,6 +217,7 @@ h1 {
     font-weight: bold;
     color: black;
 }
+
 .folder   { background: #80CBC4; }
 .Git      { background: #FF1744; }
 .PHP      { background: #FF6188; }
@@ -245,8 +239,6 @@ h1 {
     inset: 0;
     z-index: 1;
 }
-
-
 
 .breadcrumb-box {
   position: absolute;
@@ -370,18 +362,20 @@ h1 {
 </div>
 
 
-
-
 <div class="subtitle">Synced via GitHub</div>
 
 <input id="search" placeholder="Search…" autocomplete="off">
 
+
 <!-- Folders -->
+
 <h2 class="section">Folders</h2>
+
 <?php foreach ($folders as $item):
     $path = $item;
     $modified = date("Y-m-d H:i", filemtime($path));
 ?>
+
 
 <?php if (is_dir($path)): ?>
     <!-- MAPPE -->
