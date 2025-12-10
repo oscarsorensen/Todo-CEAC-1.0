@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set("Europe/Madrid");
 $items = array_diff(scandir("."), ["..", "."]);
 
 function pretty_size($bytes) {
@@ -379,7 +380,7 @@ h1 {
 
 <?php foreach ($folders as $item):
     $path = $item;
-    $modified = date("Y-m-d H:i", filemtime($path));
+    $modified = date("d/m/Y H:i", filemtime($path));
 ?>
 
 <?php if (is_dir($path)): ?>
@@ -428,7 +429,7 @@ h1 {
 <?php foreach ($files as $item):
     $path = $item;
     $size = pretty_size(filesize($path));
-    $modified = date("Y-m-d H:i", filemtime($path));
+    $modified = date("d/m/Y H:i", filemtime($path));
     $lang = file_language($path);
 ?>
 <div class="item file-item">
