@@ -12,7 +12,7 @@ http://localhost:8080/1-Programacion/010.-Programacion-del-servidor/009-Implanta
 <!doctype html>
 <html lang="es">
 	<head>
-  	<title>El jocarsa - Panel de control</title>
+  	<title>El Oscar - Panel de control</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="css/estilo.css">
   </head>

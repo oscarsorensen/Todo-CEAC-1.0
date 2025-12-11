@@ -24,6 +24,6 @@
   $conexion->query($sql);
 	
   $conexion->close();																// Cierro la conexion
-  header("Location: ../..escritorio.php");												// Y me vuelvo al escritorio
+  header("Location: ../../escritorio.php");												// Y me vuelvo al escritorio
   
 ?>
