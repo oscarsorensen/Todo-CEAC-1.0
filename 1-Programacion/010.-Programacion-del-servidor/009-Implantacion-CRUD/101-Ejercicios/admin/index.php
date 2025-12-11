@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="es">
 	<head>
-  	<title>El jocarsa - Noticias tecnológicas</title>
+  	<title>El Oscar - Noticias tecnológicas</title>
     <meta charset="utf-8">
     <style>
     	body,html{width:100%;height:100%;padding:0px;margin:0px;background:teal;}

@@ -1,4 +1,13 @@
-<!--http://..../basesdedatosdamdaw2526/008-Proyectos/003-Panel%20de%20control/101-Ejercicios/aplicacion/admin/escritorio.php -->
+
+
+<!--
+Dette er login
+http://localhost:8080/1-Programacion/010.-Programacion-del-servidor/009-Implantacion-CRUD/101-Ejercicios/admin/
+
+Dette er escritorio
+http://localhost:8080/1-Programacion/010.-Programacion-del-servidor/009-Implantacion-CRUD/101-Ejercicios/admin/escritorio.php
+-->
+
 
 <!doctype html>
 <html lang="es">
@@ -13,7 +22,15 @@
       <button>Autores</button>
     </nav>
     <main>
-    	<?php include "inc/read/leer.php"; ?>
+    	<?php
+      	if(isset($_GET['accion'])){								// Si hay "accion" en la URL
+        	if($_GET['accion'] == "nuevo"){					// Si la acción es "nuevo"
+          	include "inc/create/formulario.php";	// En ese caso mete el formulario
+          }
+        }else{																		// En caso contrario
+      		include "inc/read/leer.php"; 						// Enseñame la tabla
+        }
+      ?>
       <a href="?accion=nuevo" id="nuevo">+</a>
     </main>
   </body>
