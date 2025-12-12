@@ -6,6 +6,9 @@ http://localhost:8080/1-Programacion/010.-Programacion-del-servidor/009-Implanta
 
 Dette er escritorio
 http://localhost:8080/1-Programacion/010.-Programacion-del-servidor/009-Implantacion-CRUD/101-Ejercicios/admin/escritorio.php
+
+Dette er når man klikker på knappen
+http://localhost:8080/1-Programacion/010.-Programacion-del-servidor/009-Implantacion-CRUD/101-Ejercicios/admin/escritorio.php?accion=nuevo
 -->
 
 
