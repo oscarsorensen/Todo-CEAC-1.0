@@ -15,7 +15,7 @@ http://localhost:8080/1-Programacion/010.-Programacion-del-servidor/009-Implanta
 <!doctype html>
 <html lang="es">
 	<head>
-  	<title>El Oscar - Panel de control</title>
+  	<title>El jocarsa - Panel de control</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="css/estilo.css">
   </head>
@@ -26,12 +26,14 @@ http://localhost:8080/1-Programacion/010.-Programacion-del-servidor/009-Implanta
     </nav>
     <main>
     	<?php
-      	if(isset($_GET['accion'])){								// Si hay "accion" en la URL
-        	if($_GET['accion'] == "nuevo"){					// Si la acción es "nuevo"
-          	include "inc/create/formulario.php";	// En ese caso mete el formulario
+      	if(isset($_GET['accion'])){
+        	if($_GET['accion'] == "nuevo"){
+          	include "inc/create/formulario.php";
+          }else if($_GET['accion'] == "eliminar"){ // Defino la acción eliminar
+          	include "inc/delete/eliminar.php";		// En ese caso incluyo eliminar.php
           }
-        }else{																		// En caso contrario
-      		include "inc/read/leer.php"; 						// Enseñame la tabla
+        }else{
+      		include "inc/read/leer.php"; 
         }
       ?>
       <a href="?accion=nuevo" id="nuevo">+</a>
