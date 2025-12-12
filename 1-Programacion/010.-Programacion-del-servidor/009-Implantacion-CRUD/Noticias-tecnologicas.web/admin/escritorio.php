@@ -2,13 +2,13 @@
 
 <!--
 Dette er login
-http://localhost:8080/1-Programacion/010.-Programacion-del-servidor/009-Implantacion-CRUD/101-Ejercicios/admin/
+http://localhost:8080/1-Programacion/010.-Programacion-del-servidor/009-Implantacion-CRUD/Noticias-tecnologicas.web/admin/
 
 Dette er escritorio
-http://localhost:8080/1-Programacion/010.-Programacion-del-servidor/009-Implantacion-CRUD/101-Ejercicios/admin/escritorio.php
+http://localhost:8080/1-Programacion/010.-Programacion-del-servidor/009-Implantacion-CRUD/Noticias-tecnologicas.web/admin/escritorio.php
 
 Dette er når man klikker på knappen
-http://localhost:8080/1-Programacion/010.-Programacion-del-servidor/009-Implantacion-CRUD/101-Ejercicios/admin/escritorio.php?accion=nuevo
+http://localhost:8080/1-Programacion/010.-Programacion-del-servidor/009-Implantacion-CRUD/Noticias-tecnologicas.web/admin/escritorio.php?accion=nuevo
 -->
 
 
