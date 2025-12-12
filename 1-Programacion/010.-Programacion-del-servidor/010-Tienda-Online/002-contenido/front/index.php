@@ -6,4 +6,63 @@
 <a href="catalogo.php">Vamos a ver esa maravilla de Catálogo</a>
 
 </section>
+
+<style>
+	#heroe{
+  	background:darkblue;
+    height:400px;
+    display:flex;
+    flex-direction:column;
+    color:white;
+    justify-content:center;
+    align-items:center;
+    margin-bottom:20px;
+  }
+
+  #heroe a{
+  	color:darkblue;
+    background:white;
+    text-decoration:none;
+    padding:10px;
+    border-radius:5px;
+  }
+
+
+</style>
+
+<section id="razones">
+	<article>
+  	<h4>Razon 1 por la cual debes comprar</h4>
+    <p>Descripción de esa razón</p>
+  </article>
+  <article>
+  	<h4>Razon 2 por la cual debes comprar</h4>
+    <p>Descripción de esa razón</p>
+  </article>
+  <article>
+  	<h4>Razon 3 por la cual debes comprar</h4>
+    <p>Descripción de esa razón</p>
+  </article>
+  <article>
+  	<h4>Razon 4 por la cual debes comprar</h4>
+    <p>Descripción de esa razón</p>
+  </article>
+</section>
+
+<style>
+    #razones{
+  	display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:20px;
+    margin:20px 0px;
+  }
+  
+  #razones article{
+    text-align:center;
+  	border:1px solid darkblue;
+    padding:10px;
+    border-radius:5px;
+  }
+</style>
+
 <?php include "inc/piedepagina.php";?>
