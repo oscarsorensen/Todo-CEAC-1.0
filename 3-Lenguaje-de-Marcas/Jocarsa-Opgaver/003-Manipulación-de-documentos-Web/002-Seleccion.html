@@ -1,0 +1,97 @@
+<!--
+En este ejercicio, practico la manipulación básica del DOM utilizando JavaScript. Practico cómo seleccionar elementos HTML y leer o modificar su contenido de forma dinámica en una página web sencilla.
+El código utiliza document.querySelector() para seleccionar elementos HTML como <p>, <div> y <main>. Para leer texto, se utiliza .textContent, y para insertar código HTML, se aplica .innerHTML. Se utilizan matrices y un bucle «for» para generar contenido dinámicamente en el ejemplo del microblog.
+-->
+
+
+<!--Lectura y comprensión (001 code)-->
+<!doctype html>
+<html lang="es">
+  <head>
+    <title>Javascript</title>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <p>Soy un párrafo</p>
+    <script>
+      // Selecciono el elemento que tenga la etiqueta p
+      const elemento = document.querySelector("p");
+      document.write(elemento);
+      document.write(elemento.textContent);
+    </script>
+  </body>
+</html>
+
+<!--El código selecciona el elemento <p> utilizando document.querySelector(p) y lo guarda en una variable. Al escribir la variable se muestra el elemento en sí, mientras que al utilizar .textContent se muestra el texto dentro del párrafo. Esto demuestra la diferencia entre un elemento HTML y su contenido.-->
+
+
+<!--Lectura y comprensión (002 code)-->
+<!doctype>
+<html lang="es">
+  <head>
+    <title>Javascript</title>
+    <meta charset="utf-8">
+    <style>
+      #rojo{color:red;}
+      #verde{color:green;}
+      #azul{color:blue;}
+    </style>
+  </head>
+  <body>
+    <div id="rojo"></div>
+    <div id="verde"></div>
+    <div id="azul"></div>
+    <script>
+      document.querySelector("#rojo").textContent = "texto rojo";
+      document.querySelector("#verde").textContent = "texto verde";
+      document.querySelector("#azul").textContent = "texto azul";
+    </script>
+  </body>
+</html>
+<!--Este código selecciona cada <div> por su ID utilizando document.querySelector(#id) y le asigna texto con .textContent. Esto significa que cada div muestra texto en su color correspondiente: rojo, verde y azul. Esto muestra cómo JavaScript puede modificar el contenido de elementos HTML específicos.-->
+
+<!--Creación de microblog(004 code)-->
+<!doctype>
+<html lang="es">
+  <head>
+    <title>Javascript</title>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <header><h1>El blog de Jose Vicente</h1></header>
+    <main></main>
+    <footer>(c) 2025 Jose Vicente Carratala</footer>
+    <script>
+      const articulos = [
+        "Primer artículo","Segundo artículo","Tercer artículo"
+      ];
+      const contenedor = document.querySelector("main");
+      for(let i = 0;i<articulos.length;i++){  // Recorro los artículos
+        contenedor.innerHTML += "<h3>"+articulos[i]+"</h3>";
+      }
+    </script>
+  </body>
+</html>
+<!--En este código, el elemento <main> se selecciona utilizando document.querySelector(«main») y se almacena en una variable. A continuación, se recorre una matriz de artículos con un bucle «for» y cada artículo se inserta dinámicamente en el contenedor <main> utilizando .innerHTML. Esto crea un microblog sencillo en el que los artículos aparecen automáticamente en la página.-->
+
+
+<!--Escribir HTML con JavaScript (003 code)-->
+<!doctype>
+<html lang="es">
+  <head>
+    <title>Javascript</title>
+    <meta charset="utf-8">
+    
+  </head>
+  <body>
+    <div></div>
+    <script>
+      document.querySelector("div").innerHTML = "<h1>Hola</h1>";
+      
+    </script>
+  </body>
+</html>
+<!--En este archivo, el elemento <div> se selecciona utilizando document.querySelector(«div»). A continuación, su contenido interno se modifica con .innerHTML, lo que permite insertar código HTML dentro del elemento. En este caso, se añade al div un elemento <h1> con el texto «Hola».-->
+
+
+<!--Estos ejercicios me ayudaron a comprender mejor cómo funciona JavaScript con los elementos HTML. Seleccioné elementos, leí su contenido y modifiqué la página de forma dinámica, lo cual es un concepto importante para crear aplicaciones web.-->
