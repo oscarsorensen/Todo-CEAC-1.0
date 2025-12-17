@@ -7,7 +7,7 @@ html,body{
   body{
     display:flex;
     font-family:sans-serif;
-
+    overflow:hidden; /* NUEVO */
   }
   nav{
     background:rgb(30, 58, 138);
@@ -26,9 +26,10 @@ html,body{
   main{
     padding:20px;
     flex:4;
+    overflow-y:auto;
+  }
   
 
-  }
   table td{
     padding:10px;
     
