@@ -1,7 +1,7 @@
-import requests                                    # Importamos requests
-from lxml import html                              # importamos HTML
-import mysql.connector                             # Importamos MySQL
-import time                                       # Para dormir
+import requests
+from lxml import html
+import mysql.connector
+import time
 from urllib.parse import urljoin, urlparse
 
 URLS = ["https://www.engelvoelkers.com/es/"]
@@ -11,7 +11,8 @@ DB_USER = "satori"
 DB_PASSWORD = "Satori123$"
 DB_NAME = "satori"
 
-VISITADAS = set()   # Para evitar bucles infinitos
+BASE_DOMAIN = urlparse(URLS[0]).netloc   # ← AÑADIDO
+VISITADAS = set()
 
 
 def sanitize_links(base_url, links):
@@ -23,26 +24,24 @@ def sanitize_links(base_url, links):
 
         link = link.strip()
 
-        # Ignorar enlaces basura
         if link.startswith(("#", "javascript:", "mailto:", "tel:")):
             continue
 
-        # Convertir relativos en absolutos
         full_url = urljoin(base_url, link)
-
         parsed = urlparse(full_url)
 
-        # Solo http/https
         if parsed.scheme not in ("http", "https"):
             continue
 
-        # Evitar URLs absurdamente largas
+        if parsed.netloc != BASE_DOMAIN:   # ← AÑADIDO
+            continue
+
         if len(full_url) > 500:
             continue
 
         urls_validas.append(full_url)
 
-    return list(set(urls_validas))  # eliminar duplicados
+    return list(set(urls_validas))
 
 
 def busca(URLS):
@@ -52,7 +51,6 @@ def busca(URLS):
             continue
 
         VISITADAS.add(URL)
-
         time.sleep(1)
 
         try:
@@ -88,16 +86,13 @@ def busca(URLS):
 
             try:
                 cur = conn.cursor()
-
                 sql = """
                     INSERT INTO paginas (titulo, url, contenido)
                     VALUES (%s, %s, %s)
                 """
                 cur.execute(sql, (web_title, URL, html_content))
                 conn.commit()
-
                 print(f"OK MySQL → ID: {cur.lastrowid}")
-
             finally:
                 try:
                     cur.close()

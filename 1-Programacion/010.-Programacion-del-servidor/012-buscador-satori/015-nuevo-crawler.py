@@ -4,7 +4,7 @@ import mysql.connector
 import time
 from urllib.parse import urljoin, urlparse
 
-URLS = ["https://www.ceac.es/"]
+URLS = ["https://www.engelvoelkers.com/es/"]
 
 DB_HOST = "localhost"
 DB_USER = "satori"
