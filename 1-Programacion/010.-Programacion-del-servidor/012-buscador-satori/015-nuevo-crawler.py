@@ -1,17 +1,17 @@
-import requests                                    # Importamos requests
-from lxml import html                              # importamos HTML
-import mysql.connector                             # Importamos MySQL
-import time                                       # Para dormir
+import requests
+from lxml import html
+import mysql.connector
+import time
 from urllib.parse import urljoin, urlparse
 
-URLS = ["https://www.grupoimmosol.com/"]
+URLS = ["https://www.ceac.es/"]
 
 DB_HOST = "localhost"
 DB_USER = "satori"
 DB_PASSWORD = "Satori123$"
 DB_NAME = "satori"
 
-VISITADAS = set()   # Para evitar bucles infinitos
+VISITADAS = set()  # Para evitar bucles infinitos
 
 
 def sanitize_links(base_url, links):
@@ -45,6 +45,20 @@ def sanitize_links(base_url, links):
     return list(set(urls_validas))  # eliminar duplicados
 
 
+def extrae_meta_description(tree):
+    # Cubre: name="description", NAME="DESCRIPTION", property="og:description", etc.
+    desc = tree.xpath(
+        "string(//meta[translate(@name,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')='description']/@content)"
+    ).strip()
+
+    if not desc:
+        desc = tree.xpath(
+            "string(//meta[translate(@property,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')='og:description']/@content)"
+        ).strip()
+
+    return desc or None
+
+
 def busca(URLS):
     for URL in URLS:
 
@@ -53,7 +67,7 @@ def busca(URLS):
 
         VISITADAS.add(URL)
 
-        time.sleep(1)
+        time.sleep(5)
 
         try:
             print("Procesando:", URL)
@@ -72,10 +86,16 @@ def busca(URLS):
             title_list = tree.xpath("//title/text()")
             web_title = title_list[0].strip() if title_list else None
 
-            html_content = response.text[:255]
+            # NUEVO: meta description
+            web_description = extrae_meta_description(tree)
+
+            # Contenido (ajusta el corte si quieres guardar más/menos)
+            html_content = response.text[:5000]
 
             print("WEB TITLE:")
             print(web_title or "No title found")
+            print("META DESCRIPTION:")
+            print(web_description or "No description found")
 
             conn = mysql.connector.connect(
                 host=DB_HOST,
@@ -90,10 +110,10 @@ def busca(URLS):
                 cur = conn.cursor()
 
                 sql = """
-                    INSERT INTO paginas (titulo, url, contenido)
-                    VALUES (%s, %s, %s)
+                    INSERT INTO paginas (titulo, descripcion, url, contenido)
+                    VALUES (%s, %s, %s, %s)
                 """
-                cur.execute(sql, (web_title, URL, html_content))
+                cur.execute(sql, (web_title, web_description, URL, html_content))
                 conn.commit()
 
                 print(f"OK MySQL → ID: {cur.lastrowid}")
