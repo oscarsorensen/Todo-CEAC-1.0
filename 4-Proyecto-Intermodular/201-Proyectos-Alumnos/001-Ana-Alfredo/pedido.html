@@ -1,0 +1,32 @@
+<!doctype>
+<html>
+	<head>
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+      <button precio=30>Producto 1</button>
+      <button precio=40>Producto 2</button>
+      <button precio=50>Producto 3</button>
+			<table id="total">
+    	</table>
+    <script>
+      	let cuenta = [];																		// Creo una cuenta vacia
+      let total = document.querySelector("#total")
+      	let botones = document.querySelectorAll("button")		// Selecciono los botones
+        botones.forEach(function(boton){										// PAra cada uno de los botones
+        	boton.onclick = function(){												// Cuando haga click
+            // Añado el producto a la cuenta
+          	cuenta.push({"producto":this.textContent,"precio":this.getAttribute("precio")})
+            let total_pedido = 0;
+            total.innerHTML = ""														// Vacío la tabla
+            cuenta.forEach(function(linea){
+            	total.innerHTML += "<tr><td>"+linea.producto+"</td><td>"+linea.precio+"</td></tr>"
+              total_pedido += linea.precio*1
+           	})
+            total.innerHTML += "<tr><td></td><td>"+total_pedido+"</td></tr>"
+          }
+          
+       	})
+    </script>
+  </body>
+</html>
