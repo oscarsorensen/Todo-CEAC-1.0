@@ -73,6 +73,7 @@ $special_files = [
     "index.php",
     "ting.md",
     ".git",
+    ".gitignore",
 ];
 
 // split using whitelist
