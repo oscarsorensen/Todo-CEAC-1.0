@@ -26,3 +26,4 @@ echo $json;
     <!--
 Con este ejercicio aprendí a utilizar matrices con nombre en PHP y a convertir información al formato JSON. Esto es útil porque puedo aplicar la misma idea en la vida real, por ejemplo, para almacenar información sobre formación o recetas. Me ayuda a comprender mejor cómo gestionar datos en PHP y cómo puedo utilizarlos en mi rutina diaria.
     -->
+
