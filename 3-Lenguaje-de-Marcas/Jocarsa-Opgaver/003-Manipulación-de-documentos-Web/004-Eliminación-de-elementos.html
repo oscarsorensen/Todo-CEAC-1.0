@@ -1,0 +1,68 @@
+En este ejercicio trabajé con DOM y aprendí a eliminar elementos de una página web utilizando JavaScript. Primero creé una tabla que contiene diferentes filas y luego apliqué la misma idea en un pequeño minijuego con un cuadrado en movimiento. Esto encaja bien con la idea de interactuar con los elementos de una página web de una manera más dinámica y realista.
+Creé las filas de la tabla utilizando JavaScript y añadí un evento para que cada fila se eliminara al hacer clic en ella. Más tarde, en el minijuego, hice lo mismo y añadí un evento al cuadrado móvil para que desapareciera al hacer clic en él. Solo utilicé conceptos de HTML y JavaScript de esta unidad, sin bibliotecas externas, y todo funciona correctamente en el navegador.
+
+<!-- 1-3 -->
+<!doctype html>
+<html>
+  <head>
+  </head>
+  <body>
+    <table></table>
+    <script>
+      let tabla = document.querySelector("table")
+      for(let i = 0;i<20;i++){
+        let fila = document.createElement("tr")
+        fila.innerHTML = "<td>Prueba</td><td>Prueba</td><td>Prueba</td>"
+
+        fila.addEventListener("click", function(){
+          this.remove()
+        })
+
+        tabla.appendChild(fila)
+      }
+    </script>
+  </body>
+</html>
+
+<!-- Las filas de la tabla se eliminan correctamente cuando hago clic en ellas. -->
+
+<!-- 4-7 -->
+
+<!doctype html>
+<html>
+	<head>
+    <style>
+        /*Using darkorange because i like it better than red*/
+      #jugador{
+        width:20px;
+        height:20px;
+        background:darkorange;
+        position:absolute;
+        transition:all 1s;
+      }
+   	</style>
+  </head>
+  <body>
+    <div id="jugador"></div>
+
+   	<script>
+      let jugador = document.querySelector("#jugador")
+
+      // ----- Eliminar el jugador cuando hago clic -----
+      jugador.onclick = function(){
+        this.remove()
+      }
+
+
+      let temporizador = setTimeout("bucle()",500);	
+      function bucle(){
+        jugador.style.left = Math.random()*750+"px"
+        jugador.style.top = Math.random()*750+"px"
+        clearTimeout(temporizador) 
+        temporizador = setTimeout("bucle()",1000); 
+      }
+    </script>
+  </body>
+</html>
+
+Esta actividad me ayudó a comprender mejor cómo manipular el DOM y reaccionar ante las interacciones de los usuarios. También muestra cómo se pueden utilizar estas habilidades en proyectos reales, por ejemplo, en juegos o páginas web interactivas, y refuerza los conceptos que aprendimos en clase de una manera práctica y sencilla.
