@@ -1,0 +1,37 @@
+En este ejercicio trabajo con condiciones en JavaScript para cambiar el color de un elemento en función de la longitud de la entrada del usuario. Practico cómo una página web puede reaccionar dinámicamente cuando el usuario escribe algo y cómo esto se relaciona con situaciones reales en las que se necesita validación o retroalimentación visual. Se trata de un escenario muy práctico de la vida real, en el que necesito, por ejemplo, una contraseña de una longitud exacta.
+Utilicé el campo de entrada y añadí un detector de eventos con JavaScript. Cada vez que el usuario escribe, el script comprueba la longitud del texto. Si la entrada tiene exactamente 9 caracteres, el programa añade la clase verde y elimina la roja. En cualquier otro caso, elimina la clase verde y aplica la roja. Solo utilicé HTML, CSS y JavaScript.
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <title>Ejercicio de Estilo Condicional</title>
+    <style>
+      .rojo { background: rgb(255, 200, 200); } /* Rojo claro */
+      .verde { background: rgb(200, 255, 200); } /* Verde claro */
+    </style>
+  </head>
+  <body>
+    <input type="text" id="entrada">
+    <script>
+      let entrada = document.getElementById("entrada");
+entrada.addEventListener("input", function() {
+  let valor = this.value;
+  let longitud = valor.length;
+  if (longitud == 9) {
+    this.classList.add("verde");
+    this.classList.remove("rojo");
+  } else {
+    this.classList.remove("verde");
+    this.classList.add("rojo");
+  }
+});
+
+/*
+Cuando tengo una entrada de exactamente 9 caracteres, cambia a verde como se supone que debe hacerlo.
+*/
+    </script>
+  </body>
+</html>
+
+Esta actividad me ayudó a comprender mejor cómo trabajar con el DOM y cómo aplicar estilos condicionales de una manera sencilla pero práctica. Muestra cómo técnicas sencillas pueden ser útiles en proyectos reales, por ejemplo, para validar formularios o dar feedback al usuario, y utiliza lo que aprendimos en clase de una manera práctica y clara.
