@@ -1,4 +1,47 @@
-"""En esta actividad aplico los conocimientos de lectura y escritura de información en Python utilizando el formato JSON para los datos y HTML para la presentación.
+<!doctype html>
+<html lang='es'>
+  <head>
+    <title>JOCARSAblog</title>
+    <meta charset='utf-8'>
+    <style>
+      body{background:steelblue;color:steelblue;font-family:sans-serif;}
+    </style>
+  </head>
+  <body>
+    <header><h1>JOCARSAblog</h1></header>
+    <main>
+      <article>
+        <h2>Primer artículo</h2>
+        <p><em>2025-10-16 - Jose Vicente Carratala</em></p>
+        <p>Este es el contenido del primer artículo</p>
+      </article>
+      <article>
+        <h2>Segundo artículo</h2>
+        <p><em>2025-10-17 - Jose Vicente Carratala</em></p>
+        <p>Este es el contenido del segundo artículo</p>
+      </article>
+    </main>
+    <footer>(c)2025 Jose Vicente Carratalá</footer>
+  </body>
+</html>
+
+[
+    {
+      "titulo": "Primer artículo",
+      "fecha": "2025-10-16",
+      "autor": "Jose Vicente Carratala",
+      "contenido": "Este es el contenido del primer artículo"
+    },
+    {
+      "titulo": "Segundo artículo",
+      "fecha": "2025-10-17",
+      "autor": "Jose Vicente Carratala",
+      "contenido": "Este es el contenido del segundo artículo"
+    }
+  ]
+
+
+  """En esta actividad aplico los conocimientos de lectura y escritura de información en Python utilizando el formato JSON para los datos y HTML para la presentación.
 El contexto se centra en José Vicente, un programador al que le apasiona el gimnasio y la cocina saludable, que desea crear un blog sencillo donde compartir sus recetas y rutinas de entrenamiento.
 A través de este ejercicio aprendo a conectar el manejo de ficheros con una aplicación práctica cercana a la programación web, transformando datos estructurados en una página visible en el navegador."""
 
