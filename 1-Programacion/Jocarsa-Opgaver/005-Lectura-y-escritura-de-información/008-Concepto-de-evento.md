@@ -1,23 +1,50 @@
-En este ejercicio, utilizo sesiones PHP para mantener la información disponible entre diferentes páginas web. Las variables normales se pierden al pasar de una página a otra, por lo que se necesita un mecanismo para mantener los datos del usuario en toda la aplicación. Este mecanismo son las sesiones. Esta situación es habitual en proyectos web reales en los que es importante la coherencia entre las páginas.
 
-Por supuesto, utilizo sesiones PHP para esta tarea. Inicio la sesión con session_start() y almaceno el valor en la matriz $_SESSION en origen.php. A continuación, en destino.php, inicio la sesión de nuevo y recupero la misma variable. Esto garantiza que los datos persistan entre páginas sin utilizar variables globales ni bibliotecas externas.
+En este ejercicio, creo una pequeña aplicación relacionada con ir al gimnasio. Utilizo el gimnasio porque hace que la tarea sea más personal. La aplicación sirve para registrar las sesiones de entrenamiento en el gimnasio de mis amigos mediante una interfaz gráfica. Lo hago de forma sencilla utilizando Python con Tkinter y una base de datos MySQL.
 
-# ---------- Enunciado paso a paso 1-4 ----------
+Utilizo Tkinter para crear una interfaz gráfica sencilla con etiquetas, campos de entrada y un botón. El usuario puede introducir el nombre, los apellidos y la fecha de entrenamiento. Al pulsar el botón «Registrar», se ejecuta una función que inserta los datos en la base de datos MySQL que he creado. Para ello, utilizo un conector MySQL.
 
-Para lograr este tarea, utilizo sesiones.
-- origin.php
-<?php
-	session_start();
-	$_SESSION['nombre'] = "Jose Vicente";
-?>
-<a href="destino.php">Vamos a otra página</a>
+# ---------- Enunciado paso a paso ----------
+- Crea la interfaz gráfica, Implementa la funcionalidad de inserción, Prueba tu aplicación
+import tkinter as tk
+import mysql.connector
 
-- destino.php
+conexion = mysql.connector.connect(host="localhost",user="personaltrainor",password="personaltrainor123$",database="gimnasio_info")
 
-<?php
-	session_start();
-	echo $_SESSION['nombre'];
-?>
+cursor = conexion.cursor()
+ventana = tk.Tk()
+
+-  Función para registrar la información del cliente. Esto funciona con la base de datos.
+def registrar():
+  cursor.execute('''
+    INSERT INTO info
+    VALUES(
+      NULL,
+      "'''+nombre.get()+'''",
+      "'''+apellidos.get()+'''",
+      "'''+fecha.get()+'''"
+    );
+  ''')
+  conexion.commit()
+marco = tk.Frame(ventana)
+tk.Label(marco,text="Introduce el nombre del cliente").pack(padx=10,pady=10)
+nombre = tk.Entry(marco)
+nombre.pack(padx=10,pady=10)
+
+tk.Label(marco,text="Introduce los apellidos del cliente").pack(padx=10,pady=10)
+apellidos = tk.Entry(marco)
+apellidos.pack(padx=10,pady=10)
 
 
-Al utilizar sesiones, puedo mantener la información del usuario disponible en varias páginas de forma controlada y correcta. Esto me resulta muy útil para mi proyecto final de programación, en el que los usuarios navegarán entre páginas y esperarán que sus datos se mantengan coherentes en toda la aplicación. Como ya he empezado el otro proyecto, puedo decir que esta mini tarea me ha resultado muy útil y me ha ayudado mucho.
+tk.Label(marco,text="Introduce el fecha de entrenamiento").pack(padx=10,pady=10)
+fecha = tk.Entry(marco)
+fecha.pack(padx=10,pady=10)
+
+
+tk.Button(marco,text="Registrar",command = registrar).pack(padx=10,pady=10)
+marco.pack(padx=20,pady=20)
+
+ventana.mainloop()
+
+- Todo funciona correctamente en tkinter. La base de datos también funciona correctamente y guardan los datos. 
+
+Con este ejercicio, utilizo lo que hemos aprendido en clase sobre Tkinter y las conexiones a bases de datos en Python. El programa muestra cómo una interfaz gráfica puede interactuar con una base de datos para almacenar datos reales relacionados con el gimnasio. Esto me ayuda a comprender mejor cómo se pueden utilizar las aplicaciones de Python en situaciones de la vida real.
