@@ -10,3 +10,13 @@ Entrenar una IA desde cero
 = Millones de dólares
 
 Afinar (fine-tune) una IA, es mucho menos costoso
+
+Podemos descargar (ollama pull) modelos preentrenados
+Hay muchos libres en HuggingFace
+Las grandes tecnológicas comparten modelos abiertos
+Siempre se quedan para ellos los más potentes
+
+Trabajo para estos días (pero no en clase, sino en casa):
+Descargar y probar y comparar diferentes modelos de IA
+
+Control+D para salir de ollama run (Control+Z)
