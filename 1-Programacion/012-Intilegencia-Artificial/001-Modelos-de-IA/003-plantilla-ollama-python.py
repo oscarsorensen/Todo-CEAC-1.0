@@ -2,7 +2,7 @@ import json
 import urllib.request
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
-MODEL = "qwen2.5:3b-instruct"
+MODEL = "qwen2.5:7b-instruct"
 
 prompt = "Explica qué es PHP."
 
