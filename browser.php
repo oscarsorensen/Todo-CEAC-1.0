@@ -284,11 +284,10 @@ h1 {
   position: absolute;
   top: 40px;
   right: 50px;
-  width: 120px;
   pointer-events: none; /* så den ikke blokerer klik */
   opacity: 0.9;         /* lidt diskret */
   z-index: 9999;
-  width: 280px;
+  width: 180px;
 
 }
 
@@ -337,11 +336,10 @@ h1 {
 </head>
 <body>
 
-<!--<img class="corner-gif" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExb2Ewa3Y2eDk1NHVnYWttaHE1MzI3MGJvYTNiZmoyaXdkeGM4OXptZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/MGaacoiAlAti0/giphy.gif">-->
 
+<img class="corner-gif" src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ2ZvcTN3eG5zMnp5N2NycHBqZXNoeWN3djFoMGI3eGNycmgwcjV2ZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/66M6ZwJkTLYikvhrqZ/giphy.gif"> 
 
-<img class="corner-gif" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOG9kM3U1Y2oxaGg3dGowenEzbWJ6czR6ZjBzMDV3NnZ2azhhdXpudyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/13HgwGsXF0aiGY/giphy.gif"> 
-<!--<img class="corner-gif" src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExdGhkNW1pZGZ0YW16OGV1MHFoNzZ1OWZjYWRnMGE0aWh1YXFjbzRhdCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/4H3Ii5eLChYul9p7NL/giphy.gif">-->
+<!--<img class="corner-gif" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOG9kM3U1Y2oxaGg3dGowenEzbWJ6czR6ZjBzMDV3NnZ2azhhdXpudyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/13HgwGsXF0aiGY/giphy.gif"> -->
 <!--<img class="corner-gif" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExc2xpZDlkYjI4Y2tzdXA2M3o4OHg1dm5rbWNhaXhsN2diajZrdG5odCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/GghGKaZ8JeHJx0apQC/giphy.gif"> -->
 
 
