@@ -670,8 +670,14 @@ h1 {
 
 <?php foreach ($folders as $item):
     $path = $item;
+
+    if (is_link($path) || !is_readable($path)) {
+        continue;
+    }
+
     $modified = date("d/m/Y H:i", filemtime($path));
 ?>
+
 
 <?php if (is_dir($path)): ?>
     <!-- MAPPE -->
