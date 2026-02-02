@@ -143,7 +143,7 @@
       </section>
     </main>
     <footer>
-      (c) 2026 Jose Vicente Carratala
+      (c) 2026 Oscar Sorensen
     </footer>
   </body>
   <script>
@@ -181,7 +181,11 @@
       }
       console.log(pedido)
       // Y los envio para guardar
-      fetch("guardamongo.php?json="+JSON.stringify(pedido))
+      fetch("guardamongo.php", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(pedido)
+});
     }
   </script>
 </html>
