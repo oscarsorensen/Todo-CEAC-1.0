@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <style>
+            canvas {
+                border: 1px solid black;
+            }
+        </style>
+    </head>
+
+    <body>
+        <canvas></canvas>
+        <script>
+            let lienzo = document.querySelector("canvas");
+            let contexto = lienzo.getContext("2d");
+            lienzo.width = 512;
+            lienzo.height = 512;
+            contexto.fillStyle = "red";
+            contexto.fillRect(40, 40, 70, 70); // x,y,w,h
+            // Circulo
+            contexto.fillStyle = "green";
+            contexto.beginPath();
+            contexto.arc(150,150,50,0,Math.PI*2)// x,y,r,ang_inicio,ang_final
+            contexto.fill();
+
+            // https://search.brave.com/images?q=html5+canvas+cheet+sheet&source=web
+
+
+        </script>
+    </body>
+    
+</html>
