@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="da">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Link vs Skeletons: Wild</title>
+    <style>
+      :root{
+        --bg0:#070b14;
+        --bg1:#0c1426;
+        --bg2:#182642;
+        --accent:#ffd166;
+        --accent2:#06d6a0;
+        --danger:#ef476f;
+        --ui:#e9edf7;
+        --muted:#aab2c5;
+        --gold:#ffb703;
+      }
+      *{box-sizing:border-box;}
+      body{
+        margin:0;
+        min-height:100vh;
+        display:grid;
+        place-items:center;
+        background:
+          radial-gradient(1200px 700px at 70% -10%, #2c3e69 0%, transparent 60%),
+          radial-gradient(900px 600px at -10% 10%, #1f2a44 0%, transparent 60%),
+          linear-gradient(180deg, var(--bg0), var(--bg2));
+        color:var(--ui);
+        font-family: "Fira Sans", system-ui, -apple-system, sans-serif;
+      }
+      .wrap{
+        display:grid;
+        gap:12px;
+        justify-items:center;
+        width:min(94vw, 900px);
+      }
+      .hud{
+        width:min(94vw, 900px);
+        display:grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items:center;
+        font-size:14px;
+        letter-spacing:0.2px;
+        opacity:0.95;
+      }
+      .hud .left, .hud .right{display:flex; gap:18px; align-items:center;}
+      .hud .right{justify-self:end;}
+      .chip{
+        padding:6px 10px;
+        border-radius:999px;
+        background:rgba(255,255,255,0.06);
+        border:1px solid rgba(255,255,255,0.08);
+        box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2);
+      }
+      .chip b{color:var(--accent);}
+      .title{
+        font-size:16px;
+        font-weight:700;
+        text-transform:uppercase;
+        letter-spacing:1.5px;
+        color:var(--accent);
+        justify-self:center;
+      }
+      canvas{
+        width:min(94vw, 980px);
+        height:min(94vw, 980px);
+        max-width:980px;
+        max-height:980px;
+        border:2px solid #2b375a;
+        border-radius:16px;
+        background:
+          radial-gradient(900px 900px at 50% 50%, #1a243b 0%, #0f1425 70%);
+        box-shadow:0 35px 80px rgba(0,0,0,0.45);
+      }
+      .controls{
+        width:min(94vw, 980px);
+        display:flex;
+        justify-content:space-between;
+        font-size:13px;
+        opacity:0.85;
+      }
+      .controls .badge{color:var(--accent); font-weight:700;}
+      .controls .hint{color:var(--muted);}
+      .footer{
+        font-size:12px;
+        opacity:0.65;
+      }
+      @keyframes floaty{
+        0%{transform:translateY(0)}
+        50%{transform:translateY(-6px)}
+        100%{transform:translateY(0)}
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="hud">
+        <div class="left">
+          <div id="score" class="chip">Score: <b>0</b></div>
+          <div id="combo" class="chip">Combo: <b>x1</b></div>
+          <div id="gold" class="chip">Gold: <b>0</b></div>
+        </div>
+        <div class="title">Link vs Skeletons</div>
+        <div class="right">
+          <div id="health" class="chip">HP: <b>5</b></div>
+          <div id="wave" class="chip">Wave: <b>1</b></div>
+          <div id="timer" class="chip">Time: <b>0:00</b></div>
+        </div>
+      </div>
+      <canvas id="game" width="640" height="640"></canvas>
+      <div class="controls">
+        <div>Move: <span class="badge">WASD</span> · Dash: <span class="badge">Shift</span> · Slash: <span class="badge">Space</span></div>
+        <div class="hint">Pause: <span class="badge">P</span> · Restart: <span class="badge">R</span></div>
+      </div>
+      <div class="footer">Tip: Hold Shift for a short burst, then time your slash when they bunch up.</div>
+    </div>
+
+    <script>
+      const canvas = document.getElementById("game");
+      const ctx = canvas.getContext("2d");
+      const scoreEl = document.getElementById("score");
+      const healthEl = document.getElementById("health");
+      const waveEl = document.getElementById("wave");
+      const comboEl = document.getElementById("combo");
+      const goldEl = document.getElementById("gold");
+      const timerEl = document.getElementById("timer");
+
+      const heroImg = new Image();
+      heroImg.src = "link.png";
+      const npcImg = new Image();
+      npcImg.src = "spritenpc.png";
+      const boomImg = new Image();
+      boomImg.src = "explosion.png";
+
+      const keys = new Set();
+      document.addEventListener("keydown", (e) => {
+        keys.add(e.key.toLowerCase());
+        if (e.key.toLowerCase() === "r") reset();
+        if (e.key.toLowerCase() === "p") paused = !paused;
+        if (state === "title" && e.key === "Enter") startGame();
+      });
+      document.addEventListener("keyup", (e) => keys.delete(e.key.toLowerCase()));
+
+      const W = canvas.width;
+      const H = canvas.height;
+      const rand = (a,b) => Math.random()*(b-a)+a;
+
+      const hero = {
+        x: W/2,
+        y: H/2,
+        r: 16,
+        speed: 2.3,
+        dash: 0,
+        hp: 5,
+        slash: 0,
+        invuln: 0,
+      };
+
+      let score = 0;
+      let gold = 0;
+      let wave = 1;
+      let gameOver = false;
+      let state = "title"; // title, playing, over
+      let paused = false;
+      let combo = 1;
+      let comboTimer = 0;
+      let startTime = 0;
+
+      const npcs = [];
+      const explosions = [];
+      const particles = [];
+      const stars = Array.from({length: 180}, () => ({x: rand(0,W), y: rand(0,H), r: rand(0.4,1.6), s: rand(0.2,0.8)}));
+      let shake = 0;
+
+      function spawnNPC(n=6){
+        for(let i=0;i<n;i++){
+          const edge = Math.floor(Math.random()*4);
+          let x = edge < 2 ? (edge===0? -20 : W+20) : rand(0,W);
+          let y = edge >= 2 ? (edge===2? -20 : H+20) : rand(0,H);
+          npcs.push({
+            x, y, r: 14,
+            vx: rand(-0.6,0.6),
+            vy: rand(-0.6,0.6),
+            speed: rand(0.7,1.35) + wave*0.02,
+            hp: 2 + Math.floor(wave/3),
+            sparkle: rand(0,100),
+          });
+        }
+      }
+
+      function reset(){
+        hero.x = W/2; hero.y = H/2; hero.hp = 5; hero.slash = 0; hero.dash = 0; hero.invuln = 0;
+        score = 0; gold = 0; wave = 1; gameOver = false; paused = false;
+        combo = 1; comboTimer = 0; startTime = performance.now();
+        npcs.length = 0; explosions.length = 0; particles.length = 0;
+        spawnNPC(6);
+        state = "playing";
+        updateHUD();
+      }
+
+      function startGame(){
+        reset();
+      }
+
+      function updateHUD(){
+        scoreEl.innerHTML = `Score: <b>${score}</b>`;
+        healthEl.innerHTML = `HP: <b>${hero.hp}</b>`;
+        waveEl.innerHTML = `Wave: <b>${wave}</b>`;
+        comboEl.innerHTML = `Combo: <b>x${combo}</b>`;
+        goldEl.innerHTML = `Gold: <b>${gold}</b>`;
+        const t = Math.floor((performance.now() - startTime)/1000);
+        const mm = Math.floor(t/60);
+        const ss = String(t%60).padStart(2,"0");
+        timerEl.innerHTML = `Time: <b>${mm}:${ss}</b>`;
+      }
+
+      function distance(a,b){
+        const dx = a.x-b.x; const dy = a.y-b.y;
+        return Math.hypot(dx,dy);
+      }
+
+      function explode(x,y,hard=false){
+        explosions.push({x,y,t:0});
+        shake = Math.min(10, shake + (hard ? 6 : 3));
+        for(let i=0;i<10;i++){
+          particles.push({x,y, vx: rand(-1.5,1.5), vy: rand(-1.5,1.5), life: rand(18,30), c: i%2?"#ffd166":"#ef476f"});
+        }
+      }
+
+      function tickStars(){
+        for(const s of stars){
+          s.y += s.s; if(s.y > H+2){ s.y = -2; s.x = rand(0,W); }
+        }
+      }
+
+      function step(){
+        if (state === "title") { render(); requestAnimationFrame(step); return; }
+        if (paused) { render(); requestAnimationFrame(step); return; }
+        if (gameOver) { render(); requestAnimationFrame(step); return; }
+
+        // Input
+        let sp = hero.speed;
+        if(keys.has("shift")) { hero.dash = Math.min(hero.dash+0.5, 8); }
+        if(hero.dash>0){ sp += 2.8; hero.dash -= 0.18; }
+        if(keys.has("w")) hero.y -= sp;
+        if(keys.has("s")) hero.y += sp;
+        if(keys.has("a")) hero.x -= sp;
+        if(keys.has("d")) hero.x += sp;
+
+        if(keys.has(" ") && hero.slash<=0){ hero.slash = 14; }
+
+        hero.x = Math.max(hero.r, Math.min(W-hero.r, hero.x));
+        hero.y = Math.max(hero.r, Math.min(H-hero.r, hero.y));
+
+        // NPC AI
+        npcs.forEach(npc => {
+          const dx = hero.x - npc.x;
+          const dy = hero.y - npc.y;
+          const dist = Math.hypot(dx,dy) || 1;
+          npc.vx += (dx/dist) * 0.03;
+          npc.vy += (dy/dist) * 0.03;
+          const v = Math.hypot(npc.vx,npc.vy) || 1;
+          npc.vx = (npc.vx/v) * npc.speed;
+          npc.vy = (npc.vy/v) * npc.speed;
+          npc.x += npc.vx; npc.y += npc.vy;
+          npc.sparkle += 1;
+        });
+
+        // Slash attack
+        if(hero.slash>0){
+          hero.slash -= 1;
+          npcs.forEach(npc => {
+            if(distance(hero,npc) < hero.r + npc.r + 20){
+              npc.hp -= 1;
+              explode(npc.x,npc.y);
+              comboTimer = 60;
+            }
+          });
+        }
+
+        // Collisions
+        if(hero.invuln>0) hero.invuln -= 1;
+        npcs.forEach(npc => {
+          if(distance(hero,npc) < hero.r + npc.r && hero.invuln<=0){
+            hero.hp -= 1;
+            hero.invuln = 40;
+            explode(hero.x, hero.y, true);
+            npc.x += rand(-40,40); npc.y += rand(-40,40);
+          }
+        });
+
+        // Cleanup
+        for(let i=npcs.length-1;i>=0;i--){
+          if(npcs[i].hp<=0){
+            npcs.splice(i,1);
+            score += 10 * combo;
+            gold += 1;
+            combo = Math.min(9, combo + 1);
+          }
+        }
+
+        if(comboTimer>0) comboTimer -= 1; else combo = 1;
+
+        if(npcs.length===0){
+          wave += 1;
+          spawnNPC(4 + wave*2);
+        }
+
+        if(hero.hp<=0){
+          gameOver = true;
+          state = "over";
+        }
+
+        // Explosions
+        for(let i=explosions.length-1;i>=0;i--){
+          explosions[i].t += 1;
+          if(explosions[i].t>18) explosions.splice(i,1);
+        }
+
+        // Particles
+        for(let i=particles.length-1;i>=0;i--){
+          const p = particles[i];
+          p.x += p.vx; p.y += p.vy; p.life -= 1;
+          if(p.life<=0) particles.splice(i,1);
+        }
+
+        tickStars();
+        updateHUD();
+        render();
+        requestAnimationFrame(step);
+      }
+
+      function render(){
+        const sx = rand(-shake, shake);
+        const sy = rand(-shake, shake);
+        if(shake>0) shake *= 0.85;
+
+        ctx.save();
+        ctx.clearRect(0,0,W,H);
+        ctx.translate(sx, sy);
+
+        // starfield
+        ctx.fillStyle = "#0a0f1f";
+        ctx.fillRect(0,0,W,H);
+        ctx.fillStyle = "#a8b7ff";
+        for(const s of stars){
+          ctx.globalAlpha = 0.6;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+
+        // arena glow
+        ctx.save();
+        ctx.globalAlpha = 0.2;
+        ctx.fillStyle = "#6aa2ff";
+        ctx.beginPath();
+        ctx.arc(W/2,H/2,260,0,Math.PI*2);
+        ctx.fill();
+        ctx.restore();
+
+        // hero
+        if(hero.invuln>0 && Math.floor(hero.invuln/4)%2===0){
+          ctx.globalAlpha = 0.35;
+        }
+        ctx.drawImage(heroImg, hero.x-22, hero.y-22, 44, 44);
+        ctx.globalAlpha = 1;
+
+        // slash ring
+        if(hero.slash>0){
+          ctx.save();
+          ctx.strokeStyle = "#ffd166";
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(hero.x, hero.y, hero.r+18, 0, Math.PI*2);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // npcs
+        npcs.forEach(npc => {
+          ctx.drawImage(npcImg, npc.x-18, npc.y-18, 36, 36);
+          if(npc.sparkle%40<10){
+            ctx.fillStyle = "rgba(255,209,102,0.5)";
+            ctx.beginPath();
+            ctx.arc(npc.x+10, npc.y-12, 2, 0, Math.PI*2);
+            ctx.fill();
+          }
+        });
+
+        // explosions
+        explosions.forEach(ex => {
+          const s = 28 + ex.t*1.6;
+          ctx.globalAlpha = Math.max(0, 1 - ex.t/18);
+          ctx.drawImage(boomImg, ex.x - s/2, ex.y - s/2, s, s);
+          ctx.globalAlpha = 1;
+        });
+
+        // particles
+        for(const p of particles){
+          ctx.globalAlpha = Math.max(0, p.life/30);
+          ctx.fillStyle = p.c;
+          ctx.fillRect(p.x, p.y, 2, 2);
+        }
+        ctx.globalAlpha = 1;
+
+        if(state === "title"){
+          drawOverlay("LINK VS SKELETONS", "Press Enter to Start", true);
+        }
+
+        if(paused){
+          drawOverlay("PAUSED", "Press P to resume", false);
+        }
+
+        if(gameOver){
+          drawOverlay("GAME OVER", "Press R to restart", false);
+        }
+
+        ctx.restore();
+      }
+
+      function drawOverlay(title, subtitle, glow){
+        ctx.fillStyle = "rgba(0,0,0,0.6)";
+        ctx.fillRect(0,0,W,H);
+        if(glow){
+          ctx.save();
+          ctx.globalAlpha = 0.35;
+          ctx.fillStyle = "#ffd166";
+          ctx.beginPath();
+          ctx.arc(W/2,H/2-30,160,0,Math.PI*2);
+          ctx.fill();
+          ctx.restore();
+        }
+        ctx.fillStyle = "#fff";
+        ctx.textAlign = "center";
+        ctx.font = "bold 32px Fira Sans";
+        ctx.fillText(title, W/2, H/2 - 10);
+        ctx.font = "16px Fira Sans";
+        ctx.fillStyle = "#e0e6ff";
+        ctx.fillText(subtitle, W/2, H/2 + 22);
+        ctx.textAlign = "start";
+      }
+
+      startTime = performance.now();
+      render();
+      requestAnimationFrame(step);
+    </script>
+  </body>
+</html>
