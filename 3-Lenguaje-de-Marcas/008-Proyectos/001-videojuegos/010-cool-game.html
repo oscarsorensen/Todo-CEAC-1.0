@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Link vs Skeletons</title>
+    <style>
+      :root{
+        --bg1:#0c0f1a;
+        --bg2:#1b2740;
+        --accent:#ffd166;
+        --danger:#ef476f;
+        --good:#06d6a0;
+        --ui:#e7e7e7;
+      }
+      *{box-sizing:border-box;}
+      body{
+        margin:0;
+        min-height:100vh;
+        display:grid;
+        place-items:center;
+        background:
+          radial-gradient(1200px 700px at 70% -10%, #2c3e69 0%, transparent 60%),
+          radial-gradient(900px 600px at -10% 10%, #1f2a44 0%, transparent 60%),
+          linear-gradient(180deg, var(--bg1), var(--bg2));
+        color:var(--ui);
+        font-family: "Fira Sans", system-ui, -apple-system, sans-serif;
+      }
+      .wrap{
+        display:grid;
+        gap:10px;
+        justify-items:center;
+      }
+      canvas{
+        width:min(92vw, 720px);
+        height:min(92vw, 720px);
+        max-width:720px;
+        max-height:720px;
+        border:2px solid #2b375a;
+        border-radius:14px;
+        background:
+          radial-gradient(650px 650px at 50% 50%, #1a243b 0%, #0f1425 70%);
+        box-shadow:0 25px 60px rgba(0,0,0,0.35);
+      }
+      .hud{
+        width:min(92vw, 720px);
+        display:flex;
+        justify-content:space-between;
+        font-size:14px;
+        letter-spacing:0.2px;
+        opacity:0.9;
+      }
+      .controls{
+        font-size:13px;
+        opacity:0.8;
+        text-align:center;
+      }
+      .badge{color:var(--accent); font-weight:700;}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="hud">
+        <div id="score">Score: 0</div>
+        <div id="health">HP: 5</div>
+        <div id="wave">Wave: 1</div>
+      </div>
+      <canvas id="game" width="512" height="512"></canvas>
+      <div class="controls">
+        Move: <span class="badge">WASD</span> · Dash: <span class="badge">Shift</span> · Slash: <span class="badge">Space</span> · Restart: <span class="badge">R</span>
+      </div>
+    </div>
+
+    <script>
+      const canvas = document.getElementById("game");
+      const ctx = canvas.getContext("2d");
+      const scoreEl = document.getElementById("score");
+      const healthEl = document.getElementById("health");
+      const waveEl = document.getElementById("wave");
+
+      const heroImg = new Image();
+      heroImg.src = "link.png";
+      const npcImg = new Image();
+      npcImg.src = "spritenpc.png";
+      const boomImg = new Image();
+      boomImg.src = "explosion.png";
+
+      const keys = new Set();
+      document.addEventListener("keydown", (e) => {
+        keys.add(e.key.toLowerCase());
+        if (e.key.toLowerCase() === "r") reset();
+      });
+      document.addEventListener("keyup", (e) => keys.delete(e.key.toLowerCase()));
+
+      const W = canvas.width;
+      const H = canvas.height;
+      const rand = (a,b) => Math.random()*(b-a)+a;
+
+      const hero = {
+        x: W/2,
+        y: H/2,
+        r: 16,
+        speed: 2.2,
+        dash: 0,
+        hp: 5,
+        slash: 0,
+      };
+
+      let score = 0;
+      let wave = 1;
+      let gameOver = false;
+
+      const npcs = [];
+      const explosions = [];
+
+      function spawnNPC(n=6){
+        for(let i=0;i<n;i++){
+          const edge = Math.floor(Math.random()*4);
+          let x = edge < 2 ? (edge===0? -20 : W+20) : rand(0,W);
+          let y = edge >= 2 ? (edge===2? -20 : H+20) : rand(0,H);
+          npcs.push({
+            x, y, r: 14,
+            vx: rand(-0.6,0.6),
+            vy: rand(-0.6,0.6),
+            speed: rand(0.6,1.2),
+            hp: 2,
+          });
+        }
+      }
+
+      function reset(){
+        hero.x = W/2; hero.y = H/2; hero.hp = 5; hero.slash = 0; hero.dash = 0;
+        score = 0; wave = 1; gameOver = false;
+        npcs.length = 0; explosions.length = 0;
+        spawnNPC(6);
+        updateHUD();
+      }
+
+      function updateHUD(){
+        scoreEl.textContent = `Score: ${score}`;
+        healthEl.textContent = `HP: ${hero.hp}`;
+        waveEl.textContent = `Wave: ${wave}`;
+      }
+
+      function distance(a,b){
+        const dx = a.x-b.x; const dy = a.y-b.y;
+        return Math.hypot(dx,dy);
+      }
+
+      function explode(x,y){
+        explosions.push({x,y,t:0});
+      }
+
+      function step(){
+        if (gameOver) { render(); requestAnimationFrame(step); return; }
+
+        // Input
+        let sp = hero.speed;
+        if(keys.has("shift")) { hero.dash = Math.min(hero.dash+0.5, 8); }
+        if(hero.dash>0){ sp += 2.5; hero.dash -= 0.15; }
+        if(keys.has("w")) hero.y -= sp;
+        if(keys.has("s")) hero.y += sp;
+        if(keys.has("a")) hero.x -= sp;
+        if(keys.has("d")) hero.x += sp;
+
+        if(keys.has(" ") && hero.slash<=0){ hero.slash = 12; }
+
+        hero.x = Math.max(hero.r, Math.min(W-hero.r, hero.x));
+        hero.y = Math.max(hero.r, Math.min(H-hero.r, hero.y));
+
+        // NPC AI
+        npcs.forEach(npc => {
+          const dx = hero.x - npc.x;
+          const dy = hero.y - npc.y;
+          const dist = Math.hypot(dx,dy) || 1;
+          npc.vx += (dx/dist) * 0.03;
+          npc.vy += (dy/dist) * 0.03;
+          const v = Math.hypot(npc.vx,npc.vy) || 1;
+          npc.vx = (npc.vx/v) * npc.speed;
+          npc.vy = (npc.vy/v) * npc.speed;
+          npc.x += npc.vx; npc.y += npc.vy;
+        });
+
+        // Slash attack
+        if(hero.slash>0){
+          hero.slash -= 1;
+          npcs.forEach(npc => {
+            if(distance(hero,npc) < hero.r + npc.r + 18){
+              npc.hp -= 1;
+              explode(npc.x,npc.y);
+            }
+          });
+        }
+
+        // Collisions
+        npcs.forEach(npc => {
+          if(distance(hero,npc) < hero.r + npc.r){
+            hero.hp -= 1;
+            explode(hero.x, hero.y);
+            npc.x += rand(-30,30); npc.y += rand(-30,30);
+          }
+        });
+
+        // Cleanup
+        for(let i=npcs.length-1;i>=0;i--){
+          if(npcs[i].hp<=0){
+            npcs.splice(i,1);
+            score += 10;
+          }
+        }
+
+        if(npcs.length===0){
+          wave += 1;
+          spawnNPC(4 + wave*2);
+        }
+
+        if(hero.hp<=0) gameOver = true;
+
+        // Explosions
+        for(let i=explosions.length-1;i>=0;i--){
+          explosions[i].t += 1;
+          if(explosions[i].t>18) explosions.splice(i,1);
+        }
+
+        updateHUD();
+        render();
+        requestAnimationFrame(step);
+      }
+
+      function render(){
+        ctx.clearRect(0,0,W,H);
+
+        // arena glow
+        ctx.save();
+        ctx.globalAlpha = 0.15;
+        ctx.fillStyle = "#6aa2ff";
+        ctx.beginPath();
+        ctx.arc(W/2,H/2,220,0,Math.PI*2);
+        ctx.fill();
+        ctx.restore();
+
+        // hero
+        ctx.drawImage(heroImg, hero.x-20, hero.y-20, 40, 40);
+
+        // slash ring
+        if(hero.slash>0){
+          ctx.save();
+          ctx.strokeStyle = "#ffd166";
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(hero.x, hero.y, hero.r+16, 0, Math.PI*2);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // npcs
+        npcs.forEach(npc => {
+          ctx.drawImage(npcImg, npc.x-18, npc.y-18, 36, 36);
+        });
+
+        // explosions
+        explosions.forEach(ex => {
+          const s = 26 + ex.t*1.5;
+          ctx.globalAlpha = Math.max(0, 1 - ex.t/18);
+          ctx.drawImage(boomImg, ex.x - s/2, ex.y - s/2, s, s);
+          ctx.globalAlpha = 1;
+        });
+
+        if(gameOver){
+          ctx.fillStyle = "rgba(0,0,0,0.6)";
+          ctx.fillRect(0,0,W,H);
+          ctx.fillStyle = "#fff";
+          ctx.font = "bold 26px Fira Sans";
+          ctx.textAlign = "center";
+          ctx.fillText("Game Over", W/2, H/2 - 10);
+          ctx.font = "16px Fira Sans";
+          ctx.fillText("Press R to restart", W/2, H/2 + 18);
+          ctx.textAlign = "start";
+        }
+      }
+
+      reset();
+      requestAnimationFrame(step);
+    </script>
+  </body>
+</html>

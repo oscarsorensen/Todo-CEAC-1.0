@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="da">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>011 — Link vs Skeletons</title>
+    <style>
+      :root{
+        --bg1:#0b0f18;
+        --bg2:#142036;
+        --panel:#0f1627;
+        --accent:#f4d35e;
+        --danger:#ef476f;
+        --good:#06d6a0;
+        --ui:#eaeaea;
+      }
+      *{box-sizing:border-box;}
+      body{
+        margin:0;
+        min-height:100vh;
+        display:grid;
+        place-items:center;
+        background:
+          radial-gradient(900px 600px at 80% -5%, #283a64 0%, transparent 60%),
+          radial-gradient(700px 500px at -10% 15%, #1b2a4a 0%, transparent 60%),
+          linear-gradient(180deg, var(--bg1), var(--bg2));
+        color:var(--ui);
+        font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
+      }
+      .wrap{display:grid; gap:10px; justify-items:center;}
+      canvas{
+        width:min(92vw, 720px);
+        height:min(92vw, 720px);
+        max-width:720px;
+        max-height:720px;
+        border:2px solid #2b375a;
+        border-radius:16px;
+        background:
+          radial-gradient(650px 650px at 50% 50%, #1a243b 0%, #0f1425 70%);
+        box-shadow:0 25px 60px rgba(0,0,0,0.35);
+      }
+      .hud{
+        width:min(92vw, 720px);
+        display:grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap:8px;
+        align-items:center;
+      }
+      .panel{
+        background:linear-gradient(180deg, #111b2f, #0c1324);
+        border:1px solid #213052;
+        border-radius:10px;
+        padding:6px 10px;
+        font-size:13px;
+        letter-spacing:0.2px;
+        display:flex;
+        justify-content:space-between;
+        gap:10px;
+      }
+      .center{text-align:center; font-weight:600;}
+      .controls{font-size:12px; opacity:0.85; text-align:center;}
+      .badge{color:var(--accent); font-weight:700;}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="hud">
+        <div class="panel" id="left">HP: 5 · Shield: 0</div>
+        <div class="panel center" id="center">Wave 1</div>
+        <div class="panel" id="right">Score: 0 · Combo: x1</div>
+      </div>
+      <canvas id="game" width="512" height="512"></canvas>
+      <div class="controls">
+        Move: <span class="badge">WASD</span> · Dash: <span class="badge">Shift</span> · Slash: <span class="badge">Space</span> · Bomb: <span class="badge">E</span> · Restart: <span class="badge">R</span>
+      </div>
+    </div>
+
+    <script>
+      const canvas = document.getElementById("game");
+      const ctx = canvas.getContext("2d");
+      const leftEl = document.getElementById("left");
+      const rightEl = document.getElementById("right");
+      const centerEl = document.getElementById("center");
+
+      const heroImg = new Image(); heroImg.src = "link.png";
+      const npcImg = new Image(); npcImg.src = "spritenpc.png";
+      const boomImg = new Image(); boomImg.src = "explosion.png";
+
+      const W = canvas.width; const H = canvas.height;
+      const keys = new Set();
+      document.addEventListener("keydown", (e)=>{
+        keys.add(e.key.toLowerCase());
+        if(e.key.toLowerCase()==="r") reset();
+      });
+      document.addEventListener("keyup", (e)=> keys.delete(e.key.toLowerCase()));
+
+      const rand = (a,b)=>Math.random()*(b-a)+a;
+      const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
+      const dist = (a,b)=>Math.hypot(a.x-b.x, a.y-b.y);
+
+      const hero = {
+        x: W/2, y: H/2, r: 16,
+        hp: 5, shield: 0,
+        speed: 2.3, dash: 0,
+        slash: 0,
+        bomb: 2,
+        iFrames: 0,
+      };
+
+      let score = 0;
+      let wave = 1;
+      let combo = 1;
+      let comboTimer = 0;
+      let gameOver = false;
+
+      const npcs = [];
+      const explosions = [];
+      const orbs = [];
+
+      function spawnNPC(count){
+        for(let i=0;i<count;i++){
+          const edge = Math.floor(Math.random()*4);
+          const x = edge < 2 ? (edge===0? -20 : W+20) : rand(0,W);
+          const y = edge >= 2 ? (edge===2? -20 : H+20) : rand(0,H);
+          const type = Math.random() < 0.25 ? "runner" : "grunt";
+          npcs.push({
+            x, y, r: type==="runner"?12:15,
+            type,
+            speed: type==="runner"?1.6:1.0,
+            hp: type==="runner"?1:2,
+            vx: rand(-0.6,0.6),
+            vy: rand(-0.6,0.6),
+          });
+        }
+      }
+
+      function dropOrb(x,y){
+        orbs.push({x,y,r:10,t:0});
+      }
+
+      function explode(x,y, power=1){
+        explosions.push({x,y,t:0,p:power});
+      }
+
+      function reset(){
+        hero.x=W/2; hero.y=H/2; hero.hp=5; hero.shield=0;
+        hero.bomb=2; hero.slash=0; hero.dash=0; hero.iFrames=0;
+        score=0; wave=1; combo=1; comboTimer=0; gameOver=false;
+        npcs.length=0; explosions.length=0; orbs.length=0;
+        spawnNPC(6);
+        updateHUD();
+      }
+
+      function updateHUD(){
+        leftEl.textContent = `HP: ${hero.hp} · Shield: ${hero.shield}`;
+        rightEl.textContent = `Score: ${score} · Combo: x${combo}`;
+        centerEl.textContent = `Wave ${wave}`;
+      }
+
+      function step(){
+        if(gameOver){ render(); requestAnimationFrame(step); return; }
+
+        // Input & movement
+        let sp = hero.speed;
+        if(keys.has("shift")) hero.dash = Math.min(hero.dash+0.6, 10);
+        if(hero.dash>0){ sp += 2.8; hero.dash -= 0.2; }
+        if(keys.has("w")) hero.y -= sp;
+        if(keys.has("s")) hero.y += sp;
+        if(keys.has("a")) hero.x -= sp;
+        if(keys.has("d")) hero.x += sp;
+        hero.x = clamp(hero.x, hero.r, W-hero.r);
+        hero.y = clamp(hero.y, hero.r, H-hero.r);
+
+        if(keys.has(" ") && hero.slash<=0) hero.slash = 12;
+        if(keys.has("e") && hero.bomb>0){
+          hero.bomb -= 1; hero.iFrames = 10;
+          explode(hero.x, hero.y, 2.2);
+        }
+
+        // NPC AI
+        npcs.forEach(npc => {
+          const dx = hero.x - npc.x;
+          const dy = hero.y - npc.y;
+          const d = Math.hypot(dx,dy) || 1;
+          let pull = npc.type === "runner" ? 0.05 : 0.03;
+          npc.vx += (dx/d) * pull;
+          npc.vy += (dy/d) * pull;
+          const v = Math.hypot(npc.vx,npc.vy) || 1;
+          npc.vx = (npc.vx/v) * npc.speed;
+          npc.vy = (npc.vy/v) * npc.speed;
+          npc.x += npc.vx; npc.y += npc.vy;
+        });
+
+        // Slash attack
+        if(hero.slash>0){
+          hero.slash -= 1;
+          npcs.forEach(npc => {
+            if(dist(hero,npc) < hero.r + npc.r + 20){
+              npc.hp -= 1;
+              explode(npc.x,npc.y);
+            }
+          });
+        }
+
+        // Bomb explosion damage
+        explosions.forEach(ex => {
+          if(ex.t === 1){
+            npcs.forEach(npc => {
+              if(Math.hypot(npc.x-ex.x, npc.y-ex.y) < 80*ex.p){
+                npc.hp -= 2;
+              }
+            });
+          }
+        });
+
+        // Collisions
+        if(hero.iFrames>0) hero.iFrames--;
+        npcs.forEach(npc => {
+          if(dist(hero,npc) < hero.r + npc.r){
+            if(hero.iFrames<=0){
+              if(hero.shield>0){ hero.shield -= 1; }
+              else hero.hp -= 1;
+              hero.iFrames = 15;
+            }
+            npc.x += rand(-40,40); npc.y += rand(-40,40);
+          }
+        });
+
+        // Cleanup NPCs
+        for(let i=npcs.length-1;i>=0;i--){
+          if(npcs[i].hp<=0){
+            score += 10 * combo;
+            combo = Math.min(5, combo + 1);
+            comboTimer = 120;
+            if(Math.random()<0.25) dropOrb(npcs[i].x, npcs[i].y);
+            npcs.splice(i,1);
+          }
+        }
+
+        // Orbs (pickups)
+        for(let i=orbs.length-1;i>=0;i--){
+          orbs[i].t += 1;
+          if(dist(hero, orbs[i]) < hero.r + orbs[i].r){
+            hero.shield = Math.min(3, hero.shield+1);
+            hero.bomb = Math.min(3, hero.bomb+1);
+            orbs.splice(i,1);
+          }else if(orbs[i].t>360){
+            orbs.splice(i,1);
+          }
+        }
+
+        // Wave progression
+        if(npcs.length===0){
+          wave += 1;
+          spawnNPC(4 + wave*2);
+        }
+
+        // Combo decay
+        if(comboTimer>0) comboTimer--;
+        else combo = 1;
+
+        // Explosions lifetime
+        for(let i=explosions.length-1;i>=0;i--){
+          explosions[i].t += 1;
+          if(explosions[i].t>22) explosions.splice(i,1);
+        }
+
+        if(hero.hp<=0) gameOver = true;
+        updateHUD();
+        render();
+        requestAnimationFrame(step);
+      }
+
+      function render(){
+        ctx.clearRect(0,0,W,H);
+
+        // arena glow
+        ctx.save();
+        ctx.globalAlpha = 0.18;
+        ctx.fillStyle = "#6aa2ff";
+        ctx.beginPath();
+        ctx.arc(W/2,H/2,230,0,Math.PI*2);
+        ctx.fill();
+        ctx.restore();
+
+        // pickups
+        orbs.forEach(o=>{
+          ctx.save();
+          ctx.globalAlpha = 0.7;
+          ctx.strokeStyle = "#06d6a0";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(o.x,o.y, o.r + Math.sin(o.t*0.1)*2, 0, Math.PI*2);
+          ctx.stroke();
+          ctx.restore();
+        });
+
+        // hero
+        ctx.drawImage(heroImg, hero.x-20, hero.y-20, 40, 40);
+
+        // slash ring
+        if(hero.slash>0){
+          ctx.save();
+          ctx.strokeStyle = "#ffd166";
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(hero.x, hero.y, hero.r+18, 0, Math.PI*2);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // npcs
+        npcs.forEach(npc => {
+          ctx.drawImage(npcImg, npc.x-18, npc.y-18, 36, 36);
+        });
+
+        // explosions
+        explosions.forEach(ex => {
+          const s = 30 + ex.t*2.2;
+          ctx.globalAlpha = Math.max(0, 1 - ex.t/22);
+          ctx.drawImage(boomImg, ex.x - s/2, ex.y - s/2, s, s);
+          ctx.globalAlpha = 1;
+        });
+
+        if(gameOver){
+          ctx.fillStyle = "rgba(0,0,0,0.65)";
+          ctx.fillRect(0,0,W,H);
+          ctx.fillStyle = "#fff";
+          ctx.font = "bold 26px Space Grotesk";
+          ctx.textAlign = "center";
+          ctx.fillText("Game Over", W/2, H/2 - 10);
+          ctx.font = "16px Space Grotesk";
+          ctx.fillText("Press R to restart", W/2, H/2 + 18);
+          ctx.textAlign = "start";
+        }
+      }
+
+      reset();
+      requestAnimationFrame(step);
+    </script>
+  </body>
+</html>

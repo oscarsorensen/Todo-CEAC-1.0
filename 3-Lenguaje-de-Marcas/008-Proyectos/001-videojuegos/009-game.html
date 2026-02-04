@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Link vs Skeletons</title>
+    <style>
+      :root{
+        --bg1:#0b1020;
+        --bg2:#13203d;
+        --accent:#7cffd6;
+        --danger:#ff7a7a;
+        --text:#e9f0ff;
+      }
+      html,body{
+        margin:0;
+        height:100%;
+        background: radial-gradient(1200px 600px at 20% 10%, #1b2a52 0%, #0b1020 55%, #070b16 100%);
+        color:var(--text);
+        font-family: "Trebuchet MS", "Verdana", "Tahoma", sans-serif;
+      }
+      .wrap{
+        height:100%;
+        display:grid;
+        place-items:center;
+      }
+      .frame{
+        position:relative;
+        padding:14px;
+        border-radius:18px;
+        background: linear-gradient(160deg, rgba(124,255,214,0.08), rgba(124,255,214,0.02));
+        box-shadow: 0 30px 80px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(124,255,214,0.15);
+      }
+      canvas{
+        display:block;
+        border-radius:12px;
+        background: linear-gradient(180deg, var(--bg2), var(--bg1));
+        box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+      }
+      .hud{
+        position:absolute;
+        left:24px;
+        top:22px;
+        font-size:14px;
+        letter-spacing:0.5px;
+        text-shadow:0 2px 10px rgba(0,0,0,0.7);
+      }
+      .hud b{color:var(--accent)}
+      .hint{
+        position:absolute;
+        right:24px;
+        top:22px;
+        text-align:right;
+        font-size:12px;
+        opacity:0.8;
+        max-width:220px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="frame">
+        <canvas id="game" width="720" height="420"></canvas>
+        <div class="hud" id="hud"></div>
+        <div class="hint">Move: WASD / Arrows<br />Attack: Space<br />Start/Restart: Enter</div>
+      </div>
+    </div>
+    <script>
+      const canvas = document.getElementById("game");
+      const ctx = canvas.getContext("2d");
+      const hud = document.getElementById("hud");
+
+      const ASSETS = {
+        hero: "link.png",
+        npc: "spritenpc.png",
+        boom: "explosion.png"
+      };
+
+      const images = {};
+      let loaded = 0;
+      const total = Object.keys(ASSETS).length;
+
+      Object.entries(ASSETS).forEach(([key, src]) => {
+        const img = new Image();
+        img.onload = () => {
+          loaded++;
+          if (loaded === total) start();
+        };
+        img.src = src;
+        images[key] = img;
+      });
+
+      const state = {
+        playing: false,
+        over: false,
+        time: 0,
+        score: 0,
+        wave: 1,
+        shake: 0
+      };
+
+      const keys = {};
+      document.addEventListener("keydown", (e) => {
+        keys[e.key.toLowerCase()] = true;
+        if (e.key === "Enter") {
+          if (!state.playing) reset();
+        }
+        if (e.key === " ") e.preventDefault();
+      });
+      document.addEventListener("keyup", (e) => {
+        keys[e.key.toLowerCase()] = false;
+      });
+
+      function rand(min, max){ return Math.random() * (max - min) + min; }
+      function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
+
+      const player = {
+        x: canvas.width * 0.5,
+        y: canvas.height * 0.5,
+        vx: 0,
+        vy: 0,
+        speed: 0.6,
+        radius: 18,
+        hp: 5,
+        invuln: 0,
+        facing: 1,
+        attack: 0
+      };
+
+      const npcs = [];
+      const explosions = [];
+      const stars = Array.from({length: 80}, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        s: rand(0.3, 1.2),
+        v: rand(0.2, 0.8)
+      }));
+
+      function spawnNpc(){
+        const edge = Math.floor(Math.random() * 4);
+        let x = 0, y = 0;
+        if (edge === 0){ x = -30; y = rand(0, canvas.height); }
+        if (edge === 1){ x = canvas.width + 30; y = rand(0, canvas.height); }
+        if (edge === 2){ x = rand(0, canvas.width); y = -30; }
+        if (edge === 3){ x = rand(0, canvas.width); y = canvas.height + 30; }
+        npcs.push({
+          x, y,
+          vx: 0, vy: 0,
+          speed: rand(0.4, 0.9) + state.wave * 0.05,
+          radius: 16,
+          hp: 1
+        });
+      }
+
+      function boom(x, y){
+        explosions.push({x, y, t: 0});
+        state.shake = 6;
+      }
+
+      function reset(){
+        state.playing = true;
+        state.over = false;
+        state.time = 0;
+        state.score = 0;
+        state.wave = 1;
+        state.shake = 0;
+        player.x = canvas.width * 0.5;
+        player.y = canvas.height * 0.5;
+        player.vx = 0;
+        player.vy = 0;
+        player.hp = 5;
+        player.invuln = 0;
+        player.attack = 0;
+        npcs.length = 0;
+        explosions.length = 0;
+        for (let i = 0; i < 6; i++) spawnNpc();
+      }
+
+      function start(){
+        requestAnimationFrame(loop);
+      }
+
+      function update(dt){
+        if (!state.playing) return;
+        state.time += dt;
+        if (player.invuln > 0) player.invuln -= dt;
+        if (player.attack > 0) player.attack -= dt;
+
+        const up = keys["w"] || keys["arrowup"];
+        const down = keys["s"] || keys["arrowdown"];
+        const left = keys["a"] || keys["arrowleft"];
+        const right = keys["d"] || keys["arrowright"];
+        if (left) player.facing = -1;
+        if (right) player.facing = 1;
+
+        player.vx += (right - left) * player.speed;
+        player.vy += (down - up) * player.speed;
+        player.vx *= 0.86;
+        player.vy *= 0.86;
+        player.x += player.vx;
+        player.y += player.vy;
+        player.x = clamp(player.x, 20, canvas.width - 20);
+        player.y = clamp(player.y, 20, canvas.height - 20);
+
+        if ((keys[" "] || keys["space"]) && player.attack <= 0){
+          player.attack = 0.35;
+          // melee swipe
+          npcs.forEach((npc) => {
+            const dx = npc.x - player.x;
+            const dy = npc.y - player.y;
+            const dist = Math.hypot(dx, dy);
+            if (dist < 50){
+              npc.hp = 0;
+              state.score += 10;
+              boom(npc.x, npc.y);
+            }
+          });
+        }
+
+        // NPC AI
+        npcs.forEach((npc) => {
+          const dx = player.x - npc.x;
+          const dy = player.y - npc.y;
+          const dist = Math.hypot(dx, dy) || 1;
+          npc.vx += (dx / dist) * npc.speed;
+          npc.vy += (dy / dist) * npc.speed;
+          npc.vx *= 0.9;
+          npc.vy *= 0.9;
+          npc.x += npc.vx;
+          npc.y += npc.vy;
+
+          if (dist < npc.radius + player.radius){
+            if (player.invuln <= 0){
+              player.hp -= 1;
+              player.invuln = 1.0;
+              state.shake = 10;
+              boom(player.x + rand(-8, 8), player.y + rand(-8, 8));
+              if (player.hp <= 0){
+                state.over = true;
+                state.playing = false;
+              }
+            }
+          }
+        });
+
+        // Cleanup dead npcs
+        for (let i = npcs.length - 1; i >= 0; i--){
+          if (npcs[i].hp <= 0) npcs.splice(i, 1);
+        }
+
+        // Spawn logic
+        if (npcs.length < 4 + state.wave){
+          spawnNpc();
+        }
+        if (state.score > state.wave * 100){
+          state.wave++;
+        }
+
+        // Explosions
+        for (let i = explosions.length - 1; i >= 0; i--){
+          explosions[i].t += dt;
+          if (explosions[i].t > 0.6) explosions.splice(i, 1);
+        }
+
+        // Stars
+        stars.forEach((s) => {
+          s.x -= s.v;
+          if (s.x < -5){ s.x = canvas.width + 5; s.y = rand(0, canvas.height); }
+        });
+
+        if (state.shake > 0) state.shake -= dt * 12;
+      }
+
+      function draw(){
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Background stars
+        ctx.save();
+        ctx.fillStyle = "rgba(255,255,255,0.8)";
+        stars.forEach((s) => {
+          ctx.globalAlpha = s.s;
+          ctx.fillRect(s.x, s.y, s.s * 2, s.s * 2);
+        });
+        ctx.restore();
+
+        if (state.shake > 0){
+          ctx.save();
+          ctx.translate(rand(-state.shake, state.shake), rand(-state.shake, state.shake));
+        }
+
+        // NPCs
+        npcs.forEach((npc) => {
+          ctx.drawImage(images.npc, npc.x - 16, npc.y - 16, 32, 32);
+        });
+
+        // Player
+        ctx.save();
+        ctx.translate(player.x, player.y);
+        ctx.scale(player.facing, 1);
+        if (player.invuln > 0 && Math.floor(player.invuln * 10) % 2 === 0){
+          ctx.globalAlpha = 0.5;
+        }
+        ctx.drawImage(images.hero, -20, -20, 40, 40);
+        ctx.restore();
+
+        // Attack arc
+        if (player.attack > 0){
+          ctx.save();
+          ctx.strokeStyle = "rgba(124,255,214,0.6)";
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.arc(player.x, player.y, 40, -0.7, 0.7);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // Explosions
+        explosions.forEach((ex) => {
+          const p = ex.t / 0.6;
+          const size = 28 + p * 40;
+          ctx.globalAlpha = 1 - p;
+          ctx.drawImage(images.boom, ex.x - size/2, ex.y - size/2, size, size);
+          ctx.globalAlpha = 1;
+        });
+
+        if (state.shake > 0) ctx.restore();
+
+        // UI overlay
+        if (!state.playing){
+          ctx.save();
+          ctx.fillStyle = "rgba(8,10,18,0.7)";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = "#e9f0ff";
+          ctx.font = "bold 36px Trebuchet MS";
+          ctx.textAlign = "center";
+          ctx.fillText(state.over ? "Game Over" : "Link vs Skeletons", canvas.width/2, canvas.height/2 - 10);
+          ctx.font = "16px Trebuchet MS";
+          ctx.fillStyle = "rgba(233,240,255,0.8)";
+          ctx.fillText("Press Enter to start", canvas.width/2, canvas.height/2 + 24);
+          ctx.restore();
+        }
+      }
+
+      function loop(ts){
+        const dt = Math.min(0.033, (ts - (loop.last || ts)) / 1000);
+        loop.last = ts;
+        update(dt);
+        draw();
+        hud.innerHTML = `HP: <b>${player.hp}</b> | Score: <b>${state.score}</b> | Wave: <b>${state.wave}</b>`;
+        requestAnimationFrame(loop);
+      }
+    </script>
+  </body>
+</html>
