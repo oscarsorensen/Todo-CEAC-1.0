@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Farm NPC Simulation</title>
+    <style>
+      :root {
+        --sky: #cfefff;
+        --field-1: #8fcf6b;
+        --field-2: #7fbe5f;
+        --fence: #8b5a2b;
+        --ui-bg: rgba(0, 0, 0, 0.55);
+        --ui-text: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(180deg, var(--sky) 0 35%, #c8e7af 35% 100%);
+        font-family: "Trebuchet MS", "Verdana", sans-serif;
+      }
+
+      .wrap {
+        width: min(94vw, 740px);
+      }
+
+      canvas {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        display: block;
+        border: 8px solid var(--fence);
+        border-radius: 10px;
+        background: repeating-linear-gradient(
+          45deg,
+          var(--field-1),
+          var(--field-1) 22px,
+          var(--field-2) 22px,
+          var(--field-2) 44px
+        );
+        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.25);
+      }
+
+      .hud {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        background: var(--ui-bg);
+        color: var(--ui-text);
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 14px;
+      }
+
+      button {
+        border: 0;
+        border-radius: 6px;
+        padding: 6px 10px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <canvas id="farm"></canvas>
+      <div class="hud">
+        <span id="status">Farm running...</span>
+        <button id="reset">Reset NPCs</button>
+      </div>
+    </div>
+
+    <script>
+      const SIZE = 512;
+      const NPC_COUNT = 50;
+      const STORAGE_KEY = "farm_npcs_v1";
+      const FRICTION = 0.98;
+      const WANDER_STRENGTH = 0.07;
+      const AVOID_RADIUS = 26;
+      const AVOID_FORCE = 0.32;
+
+      const canvas = document.querySelector("#farm");
+      const ctx = canvas.getContext("2d");
+      const statusText = document.querySelector("#status");
+      const resetBtn = document.querySelector("#reset");
+
+      canvas.width = SIZE;
+      canvas.height = SIZE;
+
+      class Npc {
+        constructor() {
+          this.x = Math.random() * SIZE;
+          this.y = Math.random() * SIZE;
+          this.radius = 6 + Math.random() * 8;
+          this.angle = Math.random() * Math.PI * 2;
+          this.speed = 0.5 + Math.random() * 1.3;
+          this.vx = Math.cos(this.angle) * this.speed;
+          this.vy = Math.sin(this.angle) * this.speed;
+          this.color = [
+            Math.round(Math.random() * 255),
+            Math.round(Math.random() * 255),
+            Math.round(Math.random() * 255)
+          ];
+        }
+      }
+
+      const game = {
+        npcs: [],
+        frame: 0
+      };
+
+      // 1) Create initial conditions
+      function createInitialConditions() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          try {
+            const parsed = JSON.parse(saved);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              return parsed.map((item) => ({
+                x: Number(item.x) || Math.random() * SIZE,
+                y: Number(item.y) || Math.random() * SIZE,
+                radius: Number(item.radius || item.radio) || 8,
+                angle: Number(item.angle) || Math.random() * Math.PI * 2,
+                speed: Number(item.speed) || 1,
+                vx: Number(item.vx) || Math.cos(Number(item.angle) || 0),
+                vy: Number(item.vy) || Math.sin(Number(item.angle) || 0),
+                color: Array.isArray(item.color) ? item.color : [120, 120, 120]
+              }));
+            }
+          } catch (_e) {
+            // If data is broken, create fresh NPCs.
+          }
+        }
+
+        const fresh = [];
+        for (let i = 0; i < NPC_COUNT; i += 1) {
+          fresh.push(new Npc());
+        }
+        return fresh;
+      }
+
+      // 2) Create init function
+      function init() {
+        game.npcs = createInitialConditions();
+        game.frame = 0;
+        statusText.textContent = `Farm running with ${game.npcs.length} NPCs`;
+      }
+
+      function saveState() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(game.npcs));
+      }
+
+      function clampColor(v) {
+        return Math.max(0, Math.min(255, Math.round(v)));
+      }
+
+      function npcColor(npc) {
+        return `rgb(${clampColor(npc.color[0])}, ${clampColor(npc.color[1])}, ${clampColor(npc.color[2])})`;
+      }
+
+      function updateNpc(npc, i) {
+        // 4) Give NPCs angle and speed (already in model), add movement dynamics.
+        npc.angle += (Math.random() - 0.5) * WANDER_STRENGTH;
+        npc.vx += Math.cos(npc.angle) * 0.05 * npc.speed;
+        npc.vy += Math.sin(npc.angle) * 0.05 * npc.speed;
+
+        // 5) Make them move and avoid each other.
+        for (let j = 0; j < game.npcs.length; j += 1) {
+          if (j === i) continue;
+          const other = game.npcs[j];
+          const dx = npc.x - other.x;
+          const dy = npc.y - other.y;
+          const distSq = dx * dx + dy * dy;
+          if (distSq === 0) continue;
+
+          if (distSq < AVOID_RADIUS * AVOID_RADIUS) {
+            const dist = Math.sqrt(distSq);
+            const push = (AVOID_RADIUS - dist) / AVOID_RADIUS;
+            npc.vx += (dx / dist) * push * AVOID_FORCE;
+            npc.vy += (dy / dist) * push * AVOID_FORCE;
+          }
+        }
+
+        npc.vx *= FRICTION;
+        npc.vy *= FRICTION;
+
+        const velocity = Math.hypot(npc.vx, npc.vy);
+        if (velocity > npc.speed * 2.2) {
+          const scale = (npc.speed * 2.2) / velocity;
+          npc.vx *= scale;
+          npc.vy *= scale;
+        }
+
+        npc.x += npc.vx;
+        npc.y += npc.vy;
+
+        // 6) Border collision so they do not escape.
+        if (npc.x < npc.radius) {
+          npc.x = npc.radius;
+          npc.vx *= -0.9;
+          npc.angle = Math.PI - npc.angle;
+        }
+        if (npc.x > SIZE - npc.radius) {
+          npc.x = SIZE - npc.radius;
+          npc.vx *= -0.9;
+          npc.angle = Math.PI - npc.angle;
+        }
+        if (npc.y < npc.radius) {
+          npc.y = npc.radius;
+          npc.vy *= -0.9;
+          npc.angle = -npc.angle;
+        }
+        if (npc.y > SIZE - npc.radius) {
+          npc.y = SIZE - npc.radius;
+          npc.vy *= -0.9;
+          npc.angle = -npc.angle;
+        }
+      }
+
+      function drawNpc(npc) {
+        // 7) Apply color.
+        ctx.beginPath();
+        ctx.arc(npc.x, npc.y, npc.radius, 0, Math.PI * 2);
+        ctx.fillStyle = npcColor(npc);
+        ctx.fill();
+
+        // Direction marker.
+        const eyeX = npc.x + Math.cos(npc.angle) * npc.radius * 0.7;
+        const eyeY = npc.y + Math.sin(npc.angle) * npc.radius * 0.7;
+        ctx.beginPath();
+        ctx.arc(eyeX, eyeY, Math.max(1.5, npc.radius * 0.18), 0, Math.PI * 2);
+        ctx.fillStyle = "#111";
+        ctx.fill();
+      }
+
+      function renderFarmDecor() {
+        ctx.save();
+        ctx.strokeStyle = "rgba(255,255,255,0.15)";
+        ctx.lineWidth = 1;
+        for (let i = 32; i < SIZE; i += 32) {
+          ctx.beginPath();
+          ctx.moveTo(i, 0);
+          ctx.lineTo(i, SIZE);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(0, i);
+          ctx.lineTo(SIZE, i);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      // 3) Create loop function
+      function loop() {
+        game.frame += 1;
+
+        ctx.clearRect(0, 0, SIZE, SIZE);
+        renderFarmDecor();
+
+        game.npcs.forEach((npc, i) => {
+          updateNpc(npc, i);
+          drawNpc(npc);
+        });
+
+        if (game.frame % 120 === 0) {
+          saveState();
+        }
+
+        requestAnimationFrame(loop);
+      }
+
+      resetBtn.addEventListener("click", () => {
+        localStorage.removeItem(STORAGE_KEY);
+        init();
+      });
+
+      window.addEventListener("beforeunload", saveState);
+
+      init();
+      loop();
+    </script>
+  </body>
+</html>

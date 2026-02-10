@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html>
   <head>
@@ -26,10 +25,15 @@
         }
       }
       var npcs = []
-      var numeronpc = 50;
-      
-      for(let i = 0;i<numeronpc;i++){
-      	npcs.push(new Npc);
+      if(localStorage.getItem("npcs") != undefined){
+        // Si hay npcs guardados vamos a cargarlos
+        npcs = JSON.parse(localStorage.getItem("npcs"))
+      }else{
+        // Si no hay npcs guardados los creamos
+        var numeronpc = 50;
+        for(let i = 0;i<numeronpc;i++){
+          npcs.push(new Npc);
+        }
       }
       
       // Los pinto en la pantalla
@@ -46,4 +50,4 @@
       
     </script>
   </body>
-</html>
+</html> - turn this into a "farm" videogame, 1.-create initial conditions 2.-create init function 3.-create loop function 4.-give npcs angle and speed 5.-make them move and avoid themselves 6.-make them collide with borders to not escape 7.-apply color

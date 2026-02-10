@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Farm Game</title>
+    <style>
+      :root {
+        --sky: #d9f0ff;
+        --grass-a: #83c86a;
+        --grass-b: #72b95a;
+        --soil: #8a5f39;
+        --ui-bg: rgba(0, 0, 0, 0.65);
+        --ui-text: #fff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(180deg, var(--sky) 0 36%, #c6e8af 36% 100%);
+        font-family: "Trebuchet MS", Verdana, sans-serif;
+      }
+
+      .wrap {
+        width: min(94vw, 760px);
+      }
+
+      canvas {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        display: block;
+        border: 8px solid #8b5a2b;
+        border-radius: 10px;
+        background: repeating-linear-gradient(
+          45deg,
+          var(--grass-a),
+          var(--grass-a) 24px,
+          var(--grass-b) 24px,
+          var(--grass-b) 48px
+        );
+        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .hud {
+        margin-top: 10px;
+        background: var(--ui-bg);
+        color: var(--ui-text);
+        padding: 10px 12px;
+        border-radius: 8px;
+        display: grid;
+        gap: 6px;
+        font-size: 14px;
+      }
+
+      .row {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      button {
+        border: 0;
+        border-radius: 6px;
+        padding: 6px 10px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <canvas id="game"></canvas>
+      <div class="hud">
+        <div class="row">
+          <span id="stats">Loading...</span>
+          <button id="reset">Reset Save</button>
+        </div>
+        <div id="hint">WASD/Arrows move | E interact (plant, harvest, trade, talk)</div>
+      </div>
+    </div>
+
+    <script>
+      const SIZE = 640;
+      const STORAGE_KEY = "farm_game_v2";
+      const NPC_COUNT = 40;
+      const TILE = 40;
+      const FARM_COLS = 8;
+      const FARM_ROWS = 6;
+      const FARM_X = 80;
+      const FARM_Y = 300;
+
+      const AVOID_RADIUS = 28;
+      const AVOID_FORCE = 0.26;
+      const WANDER_STRENGTH = 0.07;
+
+      const canvas = document.querySelector("#game");
+      const ctx = canvas.getContext("2d");
+      const statsEl = document.querySelector("#stats");
+      const hintEl = document.querySelector("#hint");
+      const resetBtn = document.querySelector("#reset");
+      canvas.width = SIZE;
+      canvas.height = SIZE;
+
+      class Npc {
+        constructor() {
+          this.x = Math.random() * SIZE;
+          this.y = Math.random() * SIZE;
+          this.radius = 7 + Math.random() * 6;
+          this.angle = Math.random() * Math.PI * 2;
+          this.speed = 26 + Math.random() * 34;
+          this.vx = Math.cos(this.angle) * this.speed * 0.3;
+          this.vy = Math.sin(this.angle) * this.speed * 0.3;
+          this.color = [
+            Math.round(Math.random() * 255),
+            Math.round(Math.random() * 255),
+            Math.round(Math.random() * 255)
+          ];
+          this.lastTalk = 0;
+        }
+      }
+
+      const game = {
+        time: 0,
+        npcs: [],
+        crops: [],
+        player: null,
+        keys: Object.create(null),
+        justInteracted: false,
+        message: "Welcome to your farm"
+      };
+
+      function makePlayer() {
+        return {
+          x: SIZE / 2,
+          y: SIZE / 2,
+          radius: 10,
+          speed: 130,
+          seeds: 6,
+          harvest: 0,
+          score: 0,
+          facing: 0
+        };
+      }
+
+      function makeCrops() {
+        const crops = [];
+        for (let row = 0; row < FARM_ROWS; row += 1) {
+          for (let col = 0; col < FARM_COLS; col += 1) {
+            crops.push({
+              x: FARM_X + col * TILE,
+              y: FARM_Y + row * TILE,
+              state: 0,
+              growth: 0
+            });
+          }
+        }
+        return crops;
+      }
+
+      function clamp(v, min, max) {
+        return Math.max(min, Math.min(max, v));
+      }
+
+      function distance(a, b) {
+        return Math.hypot(a.x - b.x, a.y - b.y);
+      }
+
+      function loadState() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) return null;
+        try {
+          const parsed = JSON.parse(saved);
+          if (!parsed || !Array.isArray(parsed.npcs) || !Array.isArray(parsed.crops) || !parsed.player) {
+            return null;
+          }
+          return parsed;
+        } catch (_err) {
+          return null;
+        }
+      }
+
+      function saveState() {
+        const snapshot = {
+          npcs: game.npcs,
+          crops: game.crops,
+          player: game.player
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+      }
+
+      function init() {
+        const loaded = loadState();
+        if (loaded) {
+          game.npcs = loaded.npcs;
+          game.crops = loaded.crops;
+          game.player = loaded.player;
+          game.message = "Loaded saved farm";
+        } else {
+          game.npcs = [];
+          for (let i = 0; i < NPC_COUNT; i += 1) game.npcs.push(new Npc());
+          game.crops = makeCrops();
+          game.player = makePlayer();
+          game.message = "New farm created";
+        }
+        game.time = 0;
+      }
+
+      function buyZone() {
+        return { x: 555, y: 95, radius: 26, label: "Well" };
+      }
+
+      function sellZone() {
+        return { x: 560, y: 185, radius: 28, label: "Crate" };
+      }
+
+      function nearestCropInRange(player, maxDist) {
+        let best = null;
+        let bestD = Infinity;
+        for (const crop of game.crops) {
+          const center = { x: crop.x + TILE / 2, y: crop.y + TILE / 2 };
+          const d = distance(player, center);
+          if (d < bestD && d <= maxDist) {
+            best = crop;
+            bestD = d;
+          }
+        }
+        return best;
+      }
+
+      function nearestNpcInRange(player, maxDist) {
+        let best = null;
+        let bestD = Infinity;
+        for (const npc of game.npcs) {
+          const d = distance(player, npc);
+          if (d < bestD && d <= maxDist) {
+            best = npc;
+            bestD = d;
+          }
+        }
+        return best;
+      }
+
+      function handleInteract() {
+        if (game.justInteracted) return;
+        game.justInteracted = true;
+
+        const p = game.player;
+        const b = buyZone();
+        const s = sellZone();
+
+        if (distance(p, b) <= b.radius + 22) {
+          if (p.score >= 3) {
+            p.score -= 3;
+            p.seeds += 3;
+            game.message = "+3 seeds for 3 coins";
+          } else {
+            game.message = "Need 3 coins to buy seeds";
+          }
+          return;
+        }
+
+        if (distance(p, s) <= s.radius + 22) {
+          if (p.harvest > 0) {
+            const earned = p.harvest * 2;
+            p.score += earned;
+            p.harvest = 0;
+            game.message = `Sold crops for ${earned} coins`;
+          } else {
+            game.message = "No harvested crops to sell";
+          }
+          return;
+        }
+
+        const crop = nearestCropInRange(p, 38);
+        if (crop) {
+          if (crop.state === 0) {
+            if (p.seeds > 0) {
+              p.seeds -= 1;
+              crop.state = 1;
+              crop.growth = 0;
+              game.message = "Seed planted";
+            } else {
+              game.message = "No seeds left";
+            }
+            return;
+          }
+
+          if (crop.state === 2) {
+            crop.state = 0;
+            crop.growth = 0;
+            p.harvest += 1;
+            p.score += 1;
+            if (Math.random() < 0.25) p.seeds += 1;
+            game.message = "Harvested crop (+1 coin)";
+            return;
+          }
+
+          game.message = "Crop is still growing";
+          return;
+        }
+
+        const npc = nearestNpcInRange(p, 40);
+        if (npc) {
+          if (game.time - npc.lastTalk > 2.5) {
+            npc.lastTalk = game.time;
+            game.player.score += 1;
+            game.message = "NPC trade bonus (+1 coin)";
+          } else {
+            game.message = "NPC has nothing new yet";
+          }
+          return;
+        }
+
+        game.message = "Nothing to interact with nearby";
+      }
+
+      function updatePlayer(dt) {
+        const p = game.player;
+        let dx = 0;
+        let dy = 0;
+
+        if (game.keys["ArrowUp"] || game.keys["w"] || game.keys["W"]) dy -= 1;
+        if (game.keys["ArrowDown"] || game.keys["s"] || game.keys["S"]) dy += 1;
+        if (game.keys["ArrowLeft"] || game.keys["a"] || game.keys["A"]) dx -= 1;
+        if (game.keys["ArrowRight"] || game.keys["d"] || game.keys["D"]) dx += 1;
+
+        const len = Math.hypot(dx, dy) || 1;
+        dx /= len;
+        dy /= len;
+
+        p.x += dx * p.speed * dt;
+        p.y += dy * p.speed * dt;
+
+        if (dx !== 0 || dy !== 0) p.facing = Math.atan2(dy, dx);
+
+        p.x = clamp(p.x, p.radius, SIZE - p.radius);
+        p.y = clamp(p.y, p.radius, SIZE - p.radius);
+      }
+
+      function updateNpcs(dt) {
+        for (let i = 0; i < game.npcs.length; i += 1) {
+          const npc = game.npcs[i];
+
+          npc.angle += (Math.random() - 0.5) * WANDER_STRENGTH;
+          npc.vx += Math.cos(npc.angle) * 3.2 * dt * npc.speed;
+          npc.vy += Math.sin(npc.angle) * 3.2 * dt * npc.speed;
+
+          for (let j = 0; j < game.npcs.length; j += 1) {
+            if (i === j) continue;
+            const other = game.npcs[j];
+            const ddx = npc.x - other.x;
+            const ddy = npc.y - other.y;
+            const distSq = ddx * ddx + ddy * ddy;
+            if (distSq === 0) continue;
+            if (distSq < AVOID_RADIUS * AVOID_RADIUS) {
+              const dist = Math.sqrt(distSq);
+              const push = (AVOID_RADIUS - dist) / AVOID_RADIUS;
+              npc.vx += (ddx / dist) * push * AVOID_FORCE * npc.speed;
+              npc.vy += (ddy / dist) * push * AVOID_FORCE * npc.speed;
+            }
+          }
+
+          const speedNow = Math.hypot(npc.vx, npc.vy);
+          const maxSpeed = npc.speed;
+          if (speedNow > maxSpeed) {
+            const scale = maxSpeed / speedNow;
+            npc.vx *= scale;
+            npc.vy *= scale;
+          }
+
+          npc.x += npc.vx * dt;
+          npc.y += npc.vy * dt;
+
+          npc.vx *= 0.98;
+          npc.vy *= 0.98;
+
+          if (npc.x < npc.radius) {
+            npc.x = npc.radius;
+            npc.vx *= -0.9;
+          }
+          if (npc.x > SIZE - npc.radius) {
+            npc.x = SIZE - npc.radius;
+            npc.vx *= -0.9;
+          }
+          if (npc.y < npc.radius) {
+            npc.y = npc.radius;
+            npc.vy *= -0.9;
+          }
+          if (npc.y > SIZE - npc.radius) {
+            npc.y = SIZE - npc.radius;
+            npc.vy *= -0.9;
+          }
+        }
+      }
+
+      function updateCrops(dt) {
+        for (const crop of game.crops) {
+          if (crop.state === 1) {
+            crop.growth += dt / 12;
+            if (crop.growth >= 1) {
+              crop.growth = 1;
+              crop.state = 2;
+            }
+          }
+        }
+      }
+
+      function drawDecor() {
+        ctx.save();
+        ctx.strokeStyle = "rgba(255,255,255,0.15)";
+        ctx.lineWidth = 1;
+        for (let i = 40; i < SIZE; i += 40) {
+          ctx.beginPath();
+          ctx.moveTo(i, 0);
+          ctx.lineTo(i, SIZE);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(0, i);
+          ctx.lineTo(SIZE, i);
+          ctx.stroke();
+        }
+        ctx.restore();
+
+        ctx.fillStyle = "#7ab4ff";
+        ctx.beginPath();
+        ctx.arc(555, 95, 26, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#fff";
+        ctx.fillText("Well", 538, 100);
+
+        ctx.fillStyle = "#a66b32";
+        ctx.fillRect(532, 157, 56, 56);
+        ctx.fillStyle = "#fff";
+        ctx.fillText("Crate", 538, 186);
+      }
+
+      function drawCrops() {
+        for (const crop of game.crops) {
+          ctx.fillStyle = "#7a4f2b";
+          ctx.fillRect(crop.x + 2, crop.y + 2, TILE - 4, TILE - 4);
+
+          if (crop.state === 1) {
+            const h = clamp(crop.growth, 0, 1) * (TILE - 12);
+            ctx.fillStyle = "#58c43b";
+            ctx.fillRect(crop.x + 16, crop.y + (TILE - 6 - h), 8, h);
+          } else if (crop.state === 2) {
+            ctx.fillStyle = "#f2c94c";
+            ctx.beginPath();
+            ctx.arc(crop.x + TILE / 2, crop.y + TILE / 2, 9, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      }
+
+      function drawNpc(npc) {
+        const r = Math.round(npc.color[0]);
+        const g = Math.round(npc.color[1]);
+        const b = Math.round(npc.color[2]);
+
+        ctx.beginPath();
+        ctx.arc(npc.x, npc.y, npc.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgb(${r},${g},${b})`;
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(
+          npc.x + Math.cos(npc.angle) * npc.radius * 0.65,
+          npc.y + Math.sin(npc.angle) * npc.radius * 0.65,
+          2,
+          0,
+          Math.PI * 2
+        );
+        ctx.fillStyle = "#111";
+        ctx.fill();
+      }
+
+      function drawPlayer() {
+        const p = game.player;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = "#1f3f8e";
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(
+          p.x + Math.cos(p.facing) * p.radius * 0.72,
+          p.y + Math.sin(p.facing) * p.radius * 0.72,
+          3,
+          0,
+          Math.PI * 2
+        );
+        ctx.fillStyle = "#fff";
+        ctx.fill();
+      }
+
+      function render() {
+        ctx.clearRect(0, 0, SIZE, SIZE);
+        drawDecor();
+        drawCrops();
+        for (const npc of game.npcs) drawNpc(npc);
+        drawPlayer();
+      }
+
+      function updateStats() {
+        const p = game.player;
+        statsEl.textContent = `Coins: ${p.score} | Seeds: ${p.seeds} | Harvest: ${p.harvest}`;
+        hintEl.textContent = game.message;
+      }
+
+      let lastTs = 0;
+      function loop(ts) {
+        if (!lastTs) lastTs = ts;
+        const dt = Math.min(0.033, (ts - lastTs) / 1000);
+        lastTs = ts;
+        game.time += dt;
+
+        updatePlayer(dt);
+        updateNpcs(dt);
+        updateCrops(dt);
+        render();
+        updateStats();
+
+        if (Math.floor(game.time * 2) % 6 === 0) saveState();
+
+        requestAnimationFrame(loop);
+      }
+
+      window.addEventListener("keydown", (e) => {
+        game.keys[e.key] = true;
+        if (e.key === "e" || e.key === "E") handleInteract();
+      });
+
+      window.addEventListener("keyup", (e) => {
+        game.keys[e.key] = false;
+        if (e.key === "e" || e.key === "E") game.justInteracted = false;
+      });
+
+      resetBtn.addEventListener("click", () => {
+        localStorage.removeItem(STORAGE_KEY);
+        init();
+      });
+
+      window.addEventListener("beforeunload", saveState);
+
+      init();
+      requestAnimationFrame(loop);
+    </script>
+  </body>
+</html>
