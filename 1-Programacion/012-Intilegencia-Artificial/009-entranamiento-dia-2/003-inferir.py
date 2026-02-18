@@ -64,8 +64,8 @@ def main():
         {
             "role": "system",
             "content": (
-                "¿Quien es Jose Vicente Carratala?"
-                
+                "Responde a la pregunta que se realiza:"
+                "Si no conoces la respuesta, indicalo."
             ),
         },
         {"role": "user", "content": prompt},
@@ -96,7 +96,7 @@ def main():
         output_ids = model.generate(
             **inputs,
             max_new_tokens=256,
-            temperature=0.6,
+            temperature=0.1,
             do_sample=True,
             pad_token_id=tokenizer.eos_token_id,
             eos_token_id=tokenizer.eos_token_id,
