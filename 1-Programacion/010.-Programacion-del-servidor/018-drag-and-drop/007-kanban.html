@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Oscar Kanban Pro</title>
+    <style>
+      :root{
+        --bg:#eef2f8;
+        --panel:#ffffff;
+        --line:#d9e1ee;
+        --text:#10233f;
+        --muted:#5f7392;
+        --primary:#1d4fd7;
+        --danger:#b42318;
+        --todo:#eaf2ff;
+        --doing:#fff3e1;
+        --review:#f1ecff;
+        --done:#e7f9ee;
+      }
+
+      *{box-sizing:border-box;}
+      html,body{margin:0;padding:0;background:radial-gradient(circle at top right,#ffffff 0%,var(--bg) 65%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;}
+      .app{width:min(1380px,96vw);margin:16px auto 22px auto;}
+
+      .top{
+        background:var(--panel);
+        border:1px solid var(--line);
+        border-radius:14px;
+        padding:14px;
+        margin-bottom:12px;
+        box-shadow:0 6px 18px rgba(13,33,67,.06);
+      }
+      .head{display:flex;justify-content:space-between;align-items:center;gap:12px;}
+      h1{margin:0;font-size:1.4rem;}
+      .sub{margin:4px 0 0 0;color:var(--muted);font-size:.92rem;}
+      .head .actions{display:flex;gap:8px;}
+
+      button,input,select,textarea{font:inherit;}
+      button{
+        border:1px solid var(--line);
+        background:white;
+        color:var(--text);
+        border-radius:9px;
+        padding:8px 11px;
+        cursor:pointer;
+        font-weight:600;
+      }
+      button.primary{background:var(--primary);border-color:var(--primary);color:#fff;}
+      button.danger{color:var(--danger);background:#fff5f5;border-color:#efc5c5;}
+
+      .filters{
+        margin-top:12px;
+        display:grid;
+        grid-template-columns:2fr 1fr 1fr 1fr;
+        gap:8px;
+      }
+      .filters input,.filters select{
+        width:100%;
+        border:1px solid #c8d5e8;
+        border-radius:9px;
+        padding:9px;
+        background:#fbfdff;
+      }
+
+      .board{
+        display:grid;
+        grid-template-columns:repeat(4,minmax(250px,1fr));
+        gap:12px;
+      }
+      .col{
+        background:var(--panel);
+        border:1px solid var(--line);
+        border-radius:12px;
+        overflow:hidden;
+        min-height:620px;
+        display:flex;
+        flex-direction:column;
+      }
+      .col[data-col="todo"] .col-head{background:var(--todo);}
+      .col[data-col="doing"] .col-head{background:var(--doing);}
+      .col[data-col="review"] .col-head{background:var(--review);}
+      .col[data-col="done"] .col-head{background:var(--done);}
+
+      .col-head{
+        border-bottom:1px solid var(--line);
+        padding:10px 12px;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+      }
+      .col-head h2{margin:0;font-size:1rem;}
+      .count{font-size:.82rem;color:var(--muted);font-weight:700;}
+
+      .dropzone{
+        flex:1;
+        padding:10px;
+        display:flex;
+        flex-direction:column;
+        gap:8px;
+        min-height:140px;
+        border:2px dashed transparent;
+        transition:.15s ease;
+      }
+      .dropzone.active{border-color:#8db1ef;background:#f4f8ff;}
+
+      .card{
+        border:1px solid var(--line);
+        border-left:4px solid #7ea0cf;
+        border-radius:10px;
+        background:#fff;
+        padding:9px;
+        box-shadow:0 1px 2px rgba(5,22,50,.06);
+      }
+      .card[data-priority="high"]{border-left-color:#d92d20;}
+      .card[data-priority="medium"]{border-left-color:#f79009;}
+      .card[data-priority="low"]{border-left-color:#1570ef;}
+
+      .card.dragging{opacity:.45;}
+      .card h4{margin:0 0 6px 0;font-size:.95rem;}
+      .card p{margin:0 0 8px 0;color:var(--muted);font-size:.86rem;line-height:1.33;}
+      .meta{
+        display:flex;
+        flex-wrap:wrap;
+        gap:6px;
+        margin-bottom:8px;
+      }
+      .tag{
+        background:#f2f6fc;
+        border:1px solid #d8e1f0;
+        border-radius:999px;
+        padding:2px 8px;
+        font-size:.75rem;
+        color:#385074;
+        font-weight:700;
+      }
+      .tag.overdue{
+        color:#9b1c1c;
+        background:#fff2f2;
+        border-color:#efc1c1;
+      }
+
+      .row{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:8px;
+      }
+      .mini{display:flex;gap:6px;}
+      .mini button{padding:5px 7px;font-size:.78rem;}
+
+      .empty{
+        color:#8a97ab;
+        text-align:center;
+        padding:16px 8px;
+        border:1px dashed #d7e0ed;
+        border-radius:8px;
+        background:#fcfdff;
+      }
+
+      .add{
+        border-top:1px solid var(--line);
+        padding:10px;
+        background:#fafcff;
+      }
+      .add input,.add textarea,.add select{
+        width:100%;
+        border:1px solid #c8d5e8;
+        border-radius:8px;
+        padding:8px;
+        margin-bottom:6px;
+      }
+      .add textarea{min-height:58px;resize:vertical;}
+      .add .grid{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:6px;
+      }
+
+      .modal{
+        position:fixed;
+        inset:0;
+        background:rgba(9,21,42,.48);
+        display:none;
+        align-items:center;
+        justify-content:center;
+        padding:18px;
+      }
+      .modal.show{display:flex;}
+      .modal-card{
+        width:min(620px,96vw);
+        border:1px solid var(--line);
+        border-radius:12px;
+        background:#fff;
+        padding:14px;
+      }
+      .modal-card h3{margin:0 0 10px 0;}
+      .modal-card input,.modal-card textarea,.modal-card select{
+        width:100%;
+        border:1px solid #c8d5e8;
+        border-radius:8px;
+        padding:9px;
+        margin-bottom:8px;
+      }
+      .modal-card textarea{min-height:95px;resize:vertical;}
+      .modal-card .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+      .modal-card .foot{display:flex;justify-content:flex-end;gap:8px;margin-top:6px;}
+
+      @media (max-width:1200px){.board{grid-template-columns:repeat(2,minmax(250px,1fr));}}
+      @media (max-width:760px){
+        .board{grid-template-columns:1fr;}
+        .filters{grid-template-columns:1fr;}
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <section class="top">
+        <div class="head">
+          <div>
+            <h1>Oscar Kanban</h1>
+            <p class="sub">Advanced mini app: add, edit, filter, drag-and-drop, deadline and local save.</p>
+          </div>
+          <div class="actions">
+            <button id="seedBtn">Demo</button>
+            <button id="clearBtn" class="danger">Clear</button>
+          </div>
+        </div>
+        <div class="filters">
+          <input id="searchInput" type="text" placeholder="Search title/description/label...">
+          <select id="priorityFilter">
+            <option value="">All priorities</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+          <select id="labelFilter">
+            <option value="">All labels</option>
+            <option value="frontend">frontend</option>
+            <option value="backend">backend</option>
+            <option value="database">database</option>
+            <option value="testing">testing</option>
+          </select>
+          <select id="deadlineFilter">
+            <option value="">All deadlines</option>
+            <option value="overdue">Overdue</option>
+            <option value="today">Today</option>
+            <option value="week">This week</option>
+            <option value="none">No deadline</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="board" id="board"></section>
+    </main>
+
+    <section class="modal" id="editModal">
+      <div class="modal-card">
+        <h3>Edit card</h3>
+        <input id="editTitle" type="text" placeholder="Title">
+        <textarea id="editDesc" placeholder="Description"></textarea>
+        <div class="grid">
+          <select id="editPriority">
+            <option value="high">High priority</option>
+            <option value="medium">Medium priority</option>
+            <option value="low">Low priority</option>
+          </select>
+          <input id="editDeadline" type="date">
+        </div>
+        <input id="editLabel" type="text" placeholder="Label (e.g. frontend)">
+        <div class="foot">
+          <button id="cancelEdit">Cancel</button>
+          <button id="saveEdit" class="primary">Save</button>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      const STORAGE_KEY = "oscar-kanban-v2"
+      const COLS = [
+        {id:"todo",title:"To Do"},
+        {id:"doing",title:"Doing"},
+        {id:"review",title:"Review"},
+        {id:"done",title:"Done"}
+      ]
+
+      let state = loadState()
+      let dragCardId = null
+      let editId = null
+
+      const board = document.getElementById("board")
+      const searchInput = document.getElementById("searchInput")
+      const priorityFilter = document.getElementById("priorityFilter")
+      const labelFilter = document.getElementById("labelFilter")
+      const deadlineFilter = document.getElementById("deadlineFilter")
+      const modal = document.getElementById("editModal")
+      const editTitle = document.getElementById("editTitle")
+      const editDesc = document.getElementById("editDesc")
+      const editPriority = document.getElementById("editPriority")
+      const editDeadline = document.getElementById("editDeadline")
+      const editLabel = document.getElementById("editLabel")
+
+      render()
+
+      searchInput.oninput = render
+      priorityFilter.onchange = render
+      labelFilter.onchange = render
+      deadlineFilter.onchange = render
+
+      document.getElementById("clearBtn").onclick = function(){
+        if(confirm("Delete every card?")){
+          state.cards = []
+          save()
+          render()
+        }
+      }
+
+      document.getElementById("seedBtn").onclick = function(){
+        state.cards = [
+          makeCard("todo","Design dashboard","Build clean cards and navigation.","high","frontend",plusDays(2)),
+          makeCard("doing","Create API routes","Add CRUD endpoints for tasks.","medium","backend",plusDays(5)),
+          makeCard("review","Review SQL model","Check PK/FK and indexes.","low","database",todayISO()),
+          makeCard("done","Setup project","Folders and base scripts.","medium","testing","")
+        ]
+        save()
+        render()
+      }
+
+      document.getElementById("cancelEdit").onclick = closeModal
+      modal.onclick = function(e){ if(e.target === modal) closeModal() }
+      document.getElementById("saveEdit").onclick = function(){
+        const card = state.cards.find(c => c.id === editId)
+        if(!card) return
+        const title = editTitle.value.trim()
+        if(title === "") return
+        card.title = title
+        card.desc = editDesc.value.trim()
+        card.priority = editPriority.value
+        card.deadline = editDeadline.value
+        card.label = editLabel.value.trim().toLowerCase()
+        save()
+        render()
+        closeModal()
+      }
+
+      function render(){
+        board.innerHTML = ""
+
+        COLS.forEach(function(col){
+          const column = document.createElement("article")
+          column.className = "col"
+          column.dataset.col = col.id
+
+          const cards = filterCards(state.cards.filter(c => c.col === col.id))
+          const header = document.createElement("div")
+          header.className = "col-head"
+          header.innerHTML = "<h2>"+col.title+"</h2><span class='count'>"+cards.length+"</span>"
+
+          const drop = document.createElement("div")
+          drop.className = "dropzone"
+          enableDrop(drop, col.id)
+
+          if(cards.length === 0){
+            const e = document.createElement("div")
+            e.className = "empty"
+            e.textContent = "No matching cards"
+            drop.appendChild(e)
+          }else{
+            cards.forEach(function(card){
+              drop.appendChild(renderCard(card))
+            })
+          }
+
+          const add = renderAdd(col.id)
+          column.appendChild(header)
+          column.appendChild(drop)
+          column.appendChild(add)
+          board.appendChild(column)
+        })
+      }
+
+      function renderCard(card){
+        const el = document.createElement("div")
+        el.className = "card"
+        el.draggable = true
+        el.dataset.id = card.id
+        el.dataset.priority = card.priority
+        el.dataset.col = card.col
+
+        const tags = []
+        tags.push("<span class='tag'>"+escapeHtml(card.priority)+"</span>")
+        if(card.label) tags.push("<span class='tag'>"+escapeHtml(card.label)+"</span>")
+        if(card.deadline){
+          const overdue = isOverdue(card.deadline) && card.col !== "done"
+          tags.push("<span class='tag "+(overdue?"overdue":"")+"'>"+(overdue?"Overdue ":"Due ")+escapeHtml(card.deadline)+"</span>")
+        }else{
+          tags.push("<span class='tag'>No deadline</span>")
+        }
+
+        el.innerHTML =
+          "<h4>"+escapeHtml(card.title)+"</h4>"+
+          "<p>"+(card.desc?escapeHtml(card.desc):"No description")+"</p>"+
+          "<div class='meta'>"+tags.join("")+"</div>"+
+          "<div class='row'>"+
+            "<small>"+new Date(card.createdAt).toLocaleDateString()+"</small>"+
+            "<div class='mini'>"+
+              "<button data-act='up'>Up</button>"+
+              "<button data-act='down'>Down</button>"+
+              "<button data-act='edit'>Edit</button>"+
+              "<button data-act='delete'>Delete</button>"+
+            "</div>"+
+          "</div>"
+
+        el.ondragstart = function(e){
+          dragCardId = card.id
+          el.classList.add("dragging")
+          e.dataTransfer.setData("text/plain", card.id)
+        }
+        el.ondragend = function(){
+          el.classList.remove("dragging")
+          dragCardId = null
+          document.querySelectorAll(".dropzone").forEach(z => z.classList.remove("active"))
+        }
+
+        el.querySelector("[data-act='delete']").onclick = function(){
+          state.cards = state.cards.filter(c => c.id !== card.id)
+          save(); render()
+        }
+        el.querySelector("[data-act='edit']").onclick = function(){
+          editId = card.id
+          editTitle.value = card.title
+          editDesc.value = card.desc
+          editPriority.value = card.priority
+          editDeadline.value = card.deadline || ""
+          editLabel.value = card.label || ""
+          modal.classList.add("show")
+          editTitle.focus()
+        }
+        el.querySelector("[data-act='up']").onclick = function(){ moveInsideColumn(card.id,-1) }
+        el.querySelector("[data-act='down']").onclick = function(){ moveInsideColumn(card.id,1) }
+
+        return el
+      }
+
+      function renderAdd(colId){
+        const box = document.createElement("div")
+        box.className = "add"
+        box.innerHTML =
+          "<input type='text' placeholder='Card title'>"+
+          "<textarea placeholder='Description'></textarea>"+
+          "<div class='grid'>"+
+            "<select><option value='high'>High priority</option><option value='medium' selected>Medium priority</option><option value='low'>Low priority</option></select>"+
+            "<input type='date'>"+
+          "</div>"+
+          "<input type='text' placeholder='Label (frontend/backend/database/testing)'>"+
+          "<button class='primary'>Add card</button>"
+
+        const title = box.querySelector("input[type='text']")
+        const desc = box.querySelector("textarea")
+        const pri = box.querySelector("select")
+        const date = box.querySelector("input[type='date']")
+        const label = box.querySelectorAll("input[type='text']")[1]
+        const btn = box.querySelector("button")
+
+        btn.onclick = function(){
+          const t = title.value.trim()
+          if(t === "") return
+          state.cards.push(makeCard(colId,t,desc.value.trim(),pri.value,label.value.trim().toLowerCase(),date.value))
+          save()
+          render()
+        }
+        return box
+      }
+
+      function enableDrop(zone, colId){
+        zone.ondragover = function(e){ e.preventDefault(); zone.classList.add("active") }
+        zone.ondragleave = function(){ zone.classList.remove("active") }
+        zone.ondrop = function(e){
+          e.preventDefault()
+          zone.classList.remove("active")
+          const id = e.dataTransfer.getData("text/plain") || dragCardId
+          const card = state.cards.find(c => c.id === id)
+          if(!card) return
+          card.col = colId
+          save()
+          render()
+        }
+      }
+
+      function moveInsideColumn(id,delta){
+        const card = state.cards.find(c => c.id === id)
+        if(!card) return
+        const sameCol = state.cards.filter(c => c.col === card.col)
+        const idx = sameCol.findIndex(c => c.id === id)
+        const target = idx + delta
+        if(target < 0 || target >= sameCol.length) return
+        const a = sameCol[idx].id
+        const b = sameCol[target].id
+        const ia = state.cards.findIndex(c => c.id === a)
+        const ib = state.cards.findIndex(c => c.id === b)
+        const temp = state.cards[ia]
+        state.cards[ia] = state.cards[ib]
+        state.cards[ib] = temp
+        save(); render()
+      }
+
+      function filterCards(cards){
+        const q = searchInput.value.trim().toLowerCase()
+        const p = priorityFilter.value
+        const l = labelFilter.value
+        const d = deadlineFilter.value
+
+        return cards.filter(function(c){
+          if(p && c.priority !== p) return false
+          if(l && c.label !== l) return false
+          if(q){
+            const hay = (c.title+" "+c.desc+" "+(c.label||"")).toLowerCase()
+            if(!hay.includes(q)) return false
+          }
+          if(d){
+            if(d === "none" && c.deadline) return false
+            if(d === "overdue" && !isOverdue(c.deadline)) return false
+            if(d === "today" && c.deadline !== todayISO()) return false
+            if(d === "week" && !isThisWeek(c.deadline)) return false
+          }
+          return true
+        })
+      }
+
+      function loadState(){
+        try{
+          const raw = localStorage.getItem(STORAGE_KEY)
+          if(!raw) return {cards:[]}
+          const data = JSON.parse(raw)
+          if(!data || !Array.isArray(data.cards)) return {cards:[]}
+          return data
+        }catch(_){
+          return {cards:[]}
+        }
+      }
+      function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)) }
+
+      function makeCard(col,title,desc,priority,label,deadline){
+        return {
+          id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()+Math.random()),
+          col, title, desc, priority,
+          label: label || "",
+          deadline: deadline || "",
+          createdAt: Date.now()
+        }
+      }
+
+      function closeModal(){ modal.classList.remove("show"); editId = null }
+
+      function todayISO(){
+        const d = new Date()
+        const m = String(d.getMonth()+1).padStart(2,"0")
+        const day = String(d.getDate()).padStart(2,"0")
+        return d.getFullYear()+"-"+m+"-"+day
+      }
+      function plusDays(n){
+        const d = new Date()
+        d.setDate(d.getDate()+n)
+        const m = String(d.getMonth()+1).padStart(2,"0")
+        const day = String(d.getDate()).padStart(2,"0")
+        return d.getFullYear()+"-"+m+"-"+day
+      }
+      function isOverdue(dateStr){
+        if(!dateStr) return false
+        return dateStr < todayISO()
+      }
+      function isThisWeek(dateStr){
+        if(!dateStr) return false
+        const d = new Date(dateStr+"T00:00:00")
+        const now = new Date()
+        const day = now.getDay() || 7
+        const start = new Date(now)
+        start.setDate(now.getDate() - day + 1)
+        start.setHours(0,0,0,0)
+        const end = new Date(start)
+        end.setDate(start.getDate() + 6)
+        end.setHours(23,59,59,999)
+        return d >= start && d <= end
+      }
+      function escapeHtml(str){
+        return String(str)
+          .replaceAll("&","&amp;")
+          .replaceAll("<","&lt;")
+          .replaceAll(">","&gt;")
+          .replaceAll('"',"&quot;")
+          .replaceAll("'","&#039;")
+      }
+    </script>
+  </body>
+</html>
