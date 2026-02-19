@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Oscar Kanban</title>
+    <style>
+      :root{
+        --bg:#f4f7fb;
+        --card:#ffffff;
+        --line:#d9e1ec;
+        --text:#132035;
+        --muted:#5b6b82;
+        --todo:#e8f1ff;
+        --doing:#fff5e5;
+        --review:#ece9ff;
+        --done:#e7faee;
+        --primary:#0f4eb3;
+      }
+
+      *{box-sizing:border-box;}
+      html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;}
+
+      .app{
+        width:min(1300px,95vw);
+        margin:18px auto 24px auto;
+      }
+
+      .topbar{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:12px;
+        padding:14px 16px;
+        background:linear-gradient(120deg,#ffffff,#eef4ff);
+        border:1px solid var(--line);
+        border-radius:12px;
+        margin-bottom:14px;
+      }
+
+      h1{
+        margin:0;
+        font-size:1.35rem;
+      }
+
+      .hint{
+        margin:2px 0 0 0;
+        font-size:.9rem;
+        color:var(--muted);
+      }
+
+      .actions{
+        display:flex;
+        gap:8px;
+      }
+
+      button{
+        border:1px solid var(--line);
+        background:white;
+        color:var(--text);
+        border-radius:8px;
+        padding:8px 11px;
+        cursor:pointer;
+        font-weight:600;
+      }
+      button.primary{
+        background:var(--primary);
+        color:white;
+        border-color:var(--primary);
+      }
+
+      .board{
+        display:grid;
+        grid-template-columns:repeat(4,minmax(240px,1fr));
+        gap:12px;
+      }
+
+      .column{
+        background:var(--card);
+        border:1px solid var(--line);
+        border-radius:12px;
+        min-height:540px;
+        display:flex;
+        flex-direction:column;
+        overflow:hidden;
+      }
+
+      .column-header{
+        padding:10px 12px;
+        border-bottom:1px solid var(--line);
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+      }
+
+      .column[data-col="todo"] .column-header{background:var(--todo);}
+      .column[data-col="doing"] .column-header{background:var(--doing);}
+      .column[data-col="review"] .column-header{background:var(--review);}
+      .column[data-col="done"] .column-header{background:var(--done);}
+
+      .column-title{
+        margin:0;
+        font-size:1rem;
+      }
+
+      .count{
+        font-size:.83rem;
+        color:var(--muted);
+        font-weight:700;
+      }
+
+      .cards{
+        flex:1;
+        padding:10px;
+        display:flex;
+        flex-direction:column;
+        gap:8px;
+      }
+
+      .dropzone{
+        flex:1;
+        min-height:120px;
+        border:2px dashed transparent;
+        border-radius:9px;
+        transition:border-color .2s ease,background .2s ease;
+      }
+      .dropzone.active{
+        border-color:#8ab2f0;
+        background:#f5f9ff;
+      }
+
+      .card{
+        background:white;
+        border:1px solid var(--line);
+        border-left:4px solid #8ea9ce;
+        border-radius:10px;
+        padding:9px;
+        box-shadow:0 1px 2px rgba(12,27,59,.06);
+      }
+      .card[data-col="todo"]{border-left-color:#5d8fe3;}
+      .card[data-col="doing"]{border-left-color:#f0aa39;}
+      .card[data-col="review"]{border-left-color:#8b73de;}
+      .card[data-col="done"]{border-left-color:#35a05f;}
+
+      .card.dragging{
+        opacity:.45;
+      }
+
+      .card h4{
+        margin:0 0 6px 0;
+        font-size:.95rem;
+      }
+
+      .card p{
+        margin:0 0 8px 0;
+        color:var(--muted);
+        font-size:.87rem;
+        line-height:1.35;
+      }
+
+      .card .row{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:8px;
+      }
+
+      .card small{
+        color:#7b8aa0;
+      }
+
+      .card .mini{
+        display:flex;
+        gap:6px;
+      }
+      .card .mini button{
+        padding:5px 7px;
+        font-size:.78rem;
+      }
+
+      .add-box{
+        padding:10px;
+        border-top:1px solid var(--line);
+        background:#fafcff;
+      }
+
+      .add-box input,.add-box textarea{
+        width:100%;
+        border:1px solid #cdd8e7;
+        border-radius:8px;
+        padding:8px;
+        margin-bottom:6px;
+        font:inherit;
+      }
+      .add-box textarea{min-height:66px;resize:vertical;}
+      .add-box .row{
+        display:flex;
+        gap:6px;
+      }
+
+      .empty{
+        padding:16px 10px;
+        text-align:center;
+        color:#8a96aa;
+        font-size:.9rem;
+      }
+
+      .modal{
+        position:fixed;
+        inset:0;
+        background:rgba(10,18,33,.45);
+        display:none;
+        align-items:center;
+        justify-content:center;
+        padding:20px;
+      }
+      .modal.show{display:flex;}
+
+      .modal-card{
+        width:min(520px,95vw);
+        background:white;
+        border-radius:12px;
+        border:1px solid var(--line);
+        padding:14px;
+      }
+      .modal-card h3{margin:0 0 10px 0;}
+      .modal-card input,.modal-card textarea{
+        width:100%;
+        border:1px solid #cdd8e7;
+        border-radius:8px;
+        padding:9px;
+        margin-bottom:8px;
+        font:inherit;
+      }
+      .modal-card textarea{min-height:95px;resize:vertical;}
+      .modal-card .row{display:flex;justify-content:flex-end;gap:8px;}
+
+      @media (max-width:1100px){
+        .board{grid-template-columns:repeat(2,minmax(250px,1fr));}
+      }
+      @media (max-width:700px){
+        .board{grid-template-columns:1fr;}
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <header class="topbar">
+        <div>
+          <h1>Oscar Kanban</h1>
+          <p class="hint">Add, edit, delete and drag cards between four columns.</p>
+        </div>
+        <div class="actions">
+          <button id="seedBtn">Demo cards</button>
+          <button id="clearBtn">Clear all</button>
+        </div>
+      </header>
+
+      <section class="board" id="board"></section>
+    </main>
+
+    <section class="modal" id="editModal">
+      <div class="modal-card">
+        <h3>Edit card</h3>
+        <input id="editTitle" type="text" placeholder="Card title">
+        <textarea id="editDesc" placeholder="Card description"></textarea>
+        <div class="row">
+          <button id="cancelEdit">Cancel</button>
+          <button id="saveEdit" class="primary">Save</button>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      const STORAGE_KEY = "oscar-kanban-v1"
+      const COLUMN_META = [
+        {id:"todo", title:"To Do"},
+        {id:"doing", title:"Doing"},
+        {id:"review", title:"Review"},
+        {id:"done", title:"Done"}
+      ]
+
+      let state = loadState()
+      let dragCardId = null
+      let editingCardId = null
+
+      const boardEl = document.getElementById("board")
+      const modal = document.getElementById("editModal")
+      const editTitle = document.getElementById("editTitle")
+      const editDesc = document.getElementById("editDesc")
+
+      render()
+
+      document.getElementById("clearBtn").onclick = function(){
+        if(confirm("Delete all cards?")){
+          state.cards = []
+          persist()
+          render()
+        }
+      }
+
+      document.getElementById("seedBtn").onclick = function(){
+        if(state.cards.length > 0){
+          if(!confirm("Replace current cards with demo cards?")) return
+        }
+        state.cards = [
+          makeCard("todo","Design login page","Keep it simple and responsive."),
+          makeCard("doing","Connect MySQL","Create clean CRUD routes."),
+          makeCard("review","Code review","Check naming and security basics."),
+          makeCard("done","Project setup","Folders + base template ready.")
+        ]
+        persist()
+        render()
+      }
+
+      document.getElementById("cancelEdit").onclick = closeModal
+      modal.onclick = function(e){
+        if(e.target === modal) closeModal()
+      }
+      document.getElementById("saveEdit").onclick = function(){
+        const t = editTitle.value.trim()
+        const d = editDesc.value.trim()
+        if(t === "") return
+        const card = state.cards.find(c => c.id === editingCardId)
+        if(!card) return
+        card.title = t
+        card.desc = d
+        persist()
+        render()
+        closeModal()
+      }
+
+      function render(){
+        boardEl.innerHTML = ""
+
+        COLUMN_META.forEach(function(col){
+          const cards = state.cards.filter(c => c.col === col.id)
+
+          const column = document.createElement("article")
+          column.className = "column"
+          column.dataset.col = col.id
+
+          const header = document.createElement("div")
+          header.className = "column-header"
+          header.innerHTML = "<h2 class='column-title'>"+col.title+"</h2><span class='count'>"+cards.length+"</span>"
+
+          const cardsWrap = document.createElement("div")
+          cardsWrap.className = "cards"
+
+          const dropzone = document.createElement("div")
+          dropzone.className = "dropzone"
+          dropzone.dataset.col = col.id
+          enableDropzone(dropzone, col.id)
+
+          if(cards.length === 0){
+            const empty = document.createElement("div")
+            empty.className = "empty"
+            empty.textContent = "No cards yet"
+            dropzone.appendChild(empty)
+          }else{
+            cards.forEach(function(card){
+              dropzone.appendChild(renderCard(card))
+            })
+          }
+
+          cardsWrap.appendChild(dropzone)
+          cardsWrap.appendChild(renderAddBox(col.id))
+
+          column.appendChild(header)
+          column.appendChild(cardsWrap)
+          boardEl.appendChild(column)
+        })
+      }
+
+      function renderCard(card){
+        const el = document.createElement("div")
+        el.className = "card"
+        el.dataset.id = card.id
+        el.dataset.col = card.col
+        el.draggable = true
+
+        const safeTitle = escapeHtml(card.title)
+        const safeDesc = escapeHtml(card.desc || "")
+        const date = new Date(card.createdAt).toLocaleDateString()
+
+        el.innerHTML =
+          "<h4>"+safeTitle+"</h4>"+
+          "<p>"+(safeDesc || "No description")+"</p>"+
+          "<div class='row'>"+
+            "<small>"+date+"</small>"+
+            "<div class='mini'>"+
+              "<button data-act='edit'>Edit</button>"+
+              "<button data-act='delete'>Delete</button>"+
+            "</div>"+
+          "</div>"
+
+        el.ondragstart = function(e){
+          dragCardId = card.id
+          el.classList.add("dragging")
+          e.dataTransfer.setData("text/plain", card.id)
+        }
+        el.ondragend = function(){
+          el.classList.remove("dragging")
+          dragCardId = null
+          document.querySelectorAll(".dropzone").forEach(function(z){
+            z.classList.remove("active")
+          })
+        }
+
+        el.querySelector("[data-act='delete']").onclick = function(){
+          state.cards = state.cards.filter(c => c.id !== card.id)
+          persist()
+          render()
+        }
+        el.querySelector("[data-act='edit']").onclick = function(){
+          editingCardId = card.id
+          editTitle.value = card.title
+          editDesc.value = card.desc || ""
+          modal.classList.add("show")
+          editTitle.focus()
+        }
+
+        return el
+      }
+
+      function renderAddBox(colId){
+        const box = document.createElement("div")
+        box.className = "add-box"
+        box.innerHTML =
+          "<input type='text' placeholder='Card title'>"+
+          "<textarea placeholder='Short description'></textarea>"+
+          "<div class='row'>"+
+            "<button class='primary'>Add card</button>"+
+          "</div>"
+
+        const title = box.querySelector("input")
+        const desc = box.querySelector("textarea")
+        const btn = box.querySelector("button")
+
+        btn.onclick = function(){
+          const t = title.value.trim()
+          const d = desc.value.trim()
+          if(t === "") return
+          state.cards.push(makeCard(colId,t,d))
+          persist()
+          render()
+        }
+
+        return box
+      }
+
+      function enableDropzone(zone, colId){
+        zone.ondragover = function(e){
+          e.preventDefault()
+          zone.classList.add("active")
+        }
+        zone.ondragleave = function(){
+          zone.classList.remove("active")
+        }
+        zone.ondrop = function(e){
+          e.preventDefault()
+          zone.classList.remove("active")
+
+          const id = e.dataTransfer.getData("text/plain") || dragCardId
+          const card = state.cards.find(c => c.id === id)
+          if(!card) return
+          card.col = colId
+          persist()
+          render()
+        }
+      }
+
+      function loadState(){
+        try{
+          const raw = localStorage.getItem(STORAGE_KEY)
+          if(!raw) return {cards:[]}
+          const parsed = JSON.parse(raw)
+          if(!parsed || !Array.isArray(parsed.cards)) return {cards:[]}
+          return parsed
+        }catch(_){
+          return {cards:[]}
+        }
+      }
+
+      function persist(){
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+      }
+
+      function makeCard(col,title,desc){
+        return {
+          id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()+Math.random()),
+          col: col,
+          title: title,
+          desc: desc,
+          createdAt: Date.now()
+        }
+      }
+
+      function closeModal(){
+        modal.classList.remove("show")
+        editingCardId = null
+      }
+
+      function escapeHtml(str){
+        return str
+          .replaceAll("&","&amp;")
+          .replaceAll("<","&lt;")
+          .replaceAll(">","&gt;")
+          .replaceAll('"',"&quot;")
+          .replaceAll("'","&#039;")
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+  <meta charset="utf-8">
+<html>
+  <head>
+    <style>
+      body{font-family:sans-serif;margin:0;padding:20px;background:#f4f4f4;}
+      #kanban{display:flex;gap:10px;}
+      .columna{width:240px;min-height:320px;background:white;border:1px solid lightgrey;padding:10px;border-radius:8px;}
+      .columna h3{margin:0 0 10px 0;font-size:16px;}
+      .tarea{background:#ffe08a;border:1px solid #e0c46f;padding:8px;border-radius:6px;margin-bottom:8px;cursor:grab;}
+    </style>
+  </head>
+  <body>
+    <div id="kanban">
+      <div class="columna" id="todo">
+        <h3>To Do</h3>
+        <div class="tarea" id="t1" draggable="true">Diseñar layout</div>
+        <div class="tarea" id="t2" draggable="true">Conectar BD</div>
+        <div class="tarea" id="t3" draggable="true">Test login</div>
+      </div>
+
+      <div class="columna" id="doing">
+        <h3>Doing</h3>
+      </div>
+
+      <div class="columna" id="review">
+        <h3>Review</h3>
+      </div>
+
+      <div class="columna" id="done">
+        <h3>Done</h3>
+      </div>
+    </div>
+
+    <script>
+      let tareaActual = null
+
+      let tareas = document.querySelectorAll(".tarea")
+      let columnas = document.querySelectorAll(".columna")
+
+      tareas.forEach(function(tarea){
+        tarea.ondragstart = function(){
+          tareaActual = this
+        }
+      })
+
+      columnas.forEach(function(columna){
+        columna.ondragover = function(e){
+          e.preventDefault()
+        }
+
+        columna.ondrop = function(){
+          if(tareaActual){
+            this.appendChild(tareaActual)
+          }
+        }
+      })
+    </script>
+  </body>
+</html>
